@@ -12,8 +12,11 @@ composition of asynchronous operations.
 To the class declaration found in 30.6.6/3, add the following to the public
 functions:
 
-    bool ready() const;
+    bool is_ready() const;
     future(future<future<R>>&& rhs) noexcept;
+
+<!-- decay the function, refer to std::async -->
+<!-- result_of_t<decay_t<F>(future)> -->
 
     template<typename F>
     auto then(F&& func) -> future<decltype(func(*this))>;
@@ -35,6 +38,8 @@ Between 30.6.6/8 & 30.6.6/9, add the following:
 `rhs` and unwrapping the inner  future (see `unwrap()`).
 
 *Postconditions:*
+
+<!-- revisit: what happens when innner future is invalid? -->
 
 - `valid()` returns the same value as `rhs.valid()` prior to the 
 constructor invocation.
@@ -61,6 +66,8 @@ parameter and a callable object as the second parameter.  In cases where
 instead of  `future<future<R>>`.
 
 *Effects:*
+
+<!-- TODO: revisit the behavior of deferred -->
 
 -  The continuation is called when the object’s shared state is ready (has a
 value or exception  stored).
@@ -107,6 +114,9 @@ state of the returned future.
 that becomes ready when the shared state of the inner future is ready. When
 the inner `shared_future` is ready, its value (or exception) is copied to the
 shared state of the returned future.
+
+<!-- TODO: specify what to do when the inner future is invalid -->
+
 -  If the outer future throws an exception, and `get()` is called on the
 returned future, the returned future throws the same exception as the outer
 future. This is the case because the inner future didn't exit
@@ -298,8 +308,7 @@ _see below_ `when_any(InputIterator first, InputIterator last);`
 `template <typename... T>` \newline
 _see below_ `when_any(T&&... futures);`
 
-*Requires:* `T` is of type `future<R>` or `shared_future<R>`. All `R` types
-must be the same.
+*Requires:* `T` is of type `future<R>` or `shared_future<R>`.
 
 *Notes:*
 
@@ -393,6 +402,8 @@ compile time and  the iterator pair yields `shared_future<R>`. `R` may be
 
 ## 30.6.X Function template `make_ready_future` # futures.make_ready_future # futures.make-ready-future
 
+<!-- TODO: make it work with references -->
+
     template <typename T>
     future<typename decay<T>::type> make_ready_future(T&& value);
 
@@ -482,6 +493,6 @@ by the programmer.
 Change 30.6.8/8 as follows:
 
 *Remarks:* The first signature shall not participate in overload resolution
-if `decay<F>::type` is `std:: launch` or `std::executor`.
+if `decay<F>::type` is `std:: launch` or is derived from `std::executor`.
 
 \newpage
