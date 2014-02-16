@@ -13,6 +13,7 @@ To the class declaration found in 30.6.6/3, add the following to the public
 functions:
 
     bool is_ready() const;
+
     future(future<future<R>>&& rhs) noexcept;
 
 <!-- decay the function, refer to std::async -->
@@ -28,13 +29,13 @@ functions:
     auto then(launch policy, F&& func) -> future<decltype(func(*this))>;
 
     template<typename R2>
-    future<R2> future<R>::unwrap();
+    future<R2> unwrap();
 
 Between 30.6.6/8 & 30.6.6/9, add the following:
 
     future(future<future<R>>&& rhs) noexcept;
 
-*Effects:* constructs a `future` object by moving the instance referred to by
+*Effects:* Constructs a `future` object by moving the instance referred to by
 `rhs` and unwrapping the inner  future (see `unwrap()`).
 
 *Postconditions:*
@@ -121,7 +122,7 @@ shared state of the returned future.
 returned future, the returned future throws the same exception as the outer
 future. This is the case because the inner future didn't exit
 
-*Returns:* a `future` of type `R2`. The result of the inner `future` is moved out
+*Returns:* A `future` of type `R2`. The result of the inner `future` is moved out
 (`shared_future` is copied out) and stored in the shared state of the
 returned future when it is ready or the result of the inner future throws
 an exception.
@@ -150,15 +151,18 @@ an exception.
 To the class declaration found in 30.6.7/3, add the following to the public functions:
 
     bool is_ready() const;
-    template<typename F>
 
+    template<typename F>
     auto then(F&& func) -> future<decltype(func(*this))>;
-    template<typename F>
 
+    template<typename F>
     auto then(executor &ex, F&& func) -> future<decltype(func(*this))>;
-    template<typename F>
 
+    template<typename F>
     auto then(launch policy, F&& func) -> future<decltype(func(*this))>;
+
+	template<typename R2>
+	future<R2> unwrap();
 
 After 30.6.7/26, add the following:
 
@@ -230,7 +234,7 @@ copied to the shared state of the returned  future.
 future, the  returned future throws the same exception as the outer future. This
 is the case because the  inner future didn't exit.
 
-*Returns:* a future of type `R2`. The result of the inner future is moved
+*Returns:* A future of type `R2`. The result of the inner future is moved
 out (`shared_future` is copied out)  and stored in the shared state of the
 returned future when it is ready or the result of the inner future  throws an
 exception.
@@ -259,8 +263,8 @@ _see below_ `when_all(T&&... futures);`
 `InputIterators`. The  second takes any arbitrary number of `future<R0>` and
 `shared_future<R1>` objects, where `R0`  and `R1` need not be the same type.
 
--  Calling the first signature of `when_all` where `InputIterator` index first
-equals index last,  returns a future with an empty vector that is immediately
+-  Calling the first signature of `when_all` where `InputIterator` first
+equals last,  returns a future with an empty vector that is immediately
 ready.
 
 -  Calling the second signature of `when_any` with no arguments returns a
@@ -316,8 +320,8 @@ _see below_ `when_any(T&&... futures);`
 `InputIterators`. The  second takes any arbitrary number of `future<R>` and
 `shared_future<R>` objects, where `R` need  not be the same type.
 
--  Calling the first signature of `when_any` where `InputIterator` index first
-equals index last,  returns a future with an empty vector that is immediately
+-  Calling the first signature of `when_any` where `InputIterator` first
+equals last,  returns a future with an empty vector that is immediately
 ready.
 
 -  Calling the second signature of `when_any` with no arguments returns a
@@ -325,7 +329,7 @@ ready.
 
 *Effects:*
 
--  Each future and `shared_future` is waited upon. When at least one is ready,
+-  Each `future` and `shared_future` is waited upon. When at least one is ready,
 all the futures are  copied into the collection of the output (returned) future,
 maintaining the order of the futures  in the input collection.
 
@@ -370,7 +374,7 @@ or `shared_future<R>`. All `R` types  must be the same.
 
 -  The function `when_any_swapped` takes a pair of `InputIterators`.
 
--  Calling `when_any_swapped` where `InputIterato`r index first equals index
+-  Calling `when_any_swapped` where `InputIterator` first equals
 last, returns a `future` with an empty vector that is immediately ready.
 
 *Effects:*
@@ -409,8 +413,8 @@ compile time and  the iterator pair yields `shared_future<R>`. `R` may be
 
     future<void> make_ready_future();
 
-*Effects:* The value that is passed in to the function is moved to the shared state of the returned function if it 
-is an rvalue. Otherwise the value is copied to the shared state of the returned function.
+*Effects:* The value that is passed in to the function is moved to the shared state of the returned future if it 
+is an rvalue. Otherwise the value is copied to the shared state of the returned future.
 
 *Returns:*
 
@@ -422,7 +426,7 @@ is an rvalue. Otherwise the value is copied to the shared state of the returned 
 
 -  Returned `future<T>, valid() == true`
 
--  Returned `future<T>, is_ready() = true`
+-  Returned `future<T>, is_ready() == true`
 
 ## 30.6.8 Function template `async` # futures.async # futures.async
 
@@ -442,7 +446,7 @@ object with which it shares a shared state.
 
     template<class F, class... Args>
     future<typename result_of<typename decay<F>::type(typename decay<Args>::type...)>::type>
-    async(executor &ex, F&& f, Args&&... args);
+    async(executor& ex, F&& f, Args&&... args);
 
 
 Change 30.6.8/3 as follows:
@@ -493,6 +497,6 @@ by the programmer.
 Change 30.6.8/8 as follows:
 
 *Remarks:* The first signature shall not participate in overload resolution
-if `decay<F>::type` is `std:: launch` or is derived from `std::executor`.
+if `decay<F>::type` is `std::launch` or is derived from `std::executor`.
 
 \newpage
