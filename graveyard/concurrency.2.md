@@ -70,7 +70,7 @@ instead of  `future<future<R>>`.
 
 <!-- TODO: revisit the behavior of deferred -->
 
--  The continuation is called when the object’s shared state is ready (has a
+-  The continuation is called when the object's shared state is ready (has a
 value or exception  stored).
 -  The continuation launches according to the specified launch policy or
 executor.

@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<!-- Sources at https://github.com/cplusplus/fundamentals-ts -->
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><!--[if lte IE 8]><script>document.createElement("nav");document.createElement("section");document.createElement("time");document.createElement("CXX-TITLEPAGE");document.createElement("CXX-DOCNUM");document.createElement("CXX-REVISES");document.createElement("CXX-EDITOR");document.createElement("CXX-EMAIL");document.createElement("CXX-TOC");document.createElement("CXX-CLAUSE");document.createElement("CXX-SECTION");document.createElement("CXX-REF");document.createElement("CXX-FOOTNOTE");document.createElement("CXX-FOREIGN-INDEX");document.createElement("CXX-NOTE");document.createElement("CXX-FUNCTION");document.createElement("CXX-SIGNATURE");document.createElement("CXX-EFFECTS");document.createElement("CXX-SYNCHRONIZATION");document.createElement("CXX-NOTES");document.createElement("CXX-REQUIRES");document.createElement("CXX-RETURNS");document.createElement("CXX-THROWS");document.createElement("CXX-REMARKS");document.createElement("CXX-PUBLISH-BUTTON");</script><![endif]--><style>template {display: none !important;} /* injected by platform.js */</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; } 
+</style><style shim-shadowdom-css="">style { display: none !important; }
+cxx-function {
+	display: block;
+}
+
+cxx-function:not(:last-child) {
+	margin-bottom: 3ex;
+}
+
+cxx-function > dl {
+	margin: 0px 0px 0px 2em;
+}
+
+cxx-function > pre {
+	margin: 0px;
+}cxx-signature {
+	padding-left: 2em; display: block; text-indent: -2em;
+}
+
+cxx-signature.formatted {
+	text-indent: 0px;
+}cxx-attribute {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-attribute dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-attribute dd {
+	margin-left: 0em;
+}
+
+cxx-attribute dd > ul, cxx-attribute dd > ol {
+	clear: left;
+}cxx-requires {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-requires dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-requires dd {
+	margin-left: 0em;
+}
+
+cxx-requires dd > ul, cxx-requires dd > ol {
+	clear: left;
+}cxx-preconditions {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-preconditions dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-preconditions dd {
+	margin-left: 0em;
+}
+
+cxx-preconditions dd > ul, cxx-preconditions dd > ol {
+	clear: left;
+}cxx-effects {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-effects dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-effects dd {
+	margin-left: 0em;
+}
+
+cxx-effects dd > ul, cxx-effects dd > ol {
+	clear: left;
+}cxx-synchronization {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-synchronization dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-synchronization dd {
+	margin-left: 0em;
+}
+
+cxx-synchronization dd > ul, cxx-synchronization dd > ol {
+	clear: left;
+}cxx-postconditions {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-postconditions dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-postconditions dd {
+	margin-left: 0em;
+}
+
+cxx-postconditions dd > ul, cxx-postconditions dd > ol {
+	clear: left;
+}cxx-returns {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-returns dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-returns dd {
+	margin-left: 0em;
+}
+
+cxx-returns dd > ul, cxx-returns dd > ol {
+	clear: left;
+}cxx-throws {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-throws dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-throws dd {
+	margin-left: 0em;
+}
+
+cxx-throws dd > ul, cxx-throws dd > ol {
+	clear: left;
+}cxx-complexity {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-complexity dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-complexity dd {
+	margin-left: 0em;
+}
+
+cxx-complexity dd > ul, cxx-complexity dd > ol {
+	clear: left;
+}cxx-exception-safety {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-exception-safety dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-exception-safety dd {
+	margin-left: 0em;
+}
+
+cxx-exception-safety dd > ul, cxx-exception-safety dd > ol {
+	clear: left;
+}cxx-remarks {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-remarks dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-remarks dd {
+	margin-left: 0em;
+}
+
+cxx-remarks dd > ul, cxx-remarks dd > ol {
+	clear: left;
+}cxx-error-conditions {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-error-conditions dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-error-conditions dd {
+	margin-left: 0em;
+}
+
+cxx-error-conditions dd > ul, cxx-error-conditions dd > ol {
+	clear: left;
+}cxx-notes {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-notes dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-notes dd {
+	margin-left: 0em;
+}
+
+cxx-notes dd > ul, cxx-notes dd > ol {
+	clear: left;
+}cxx-section {
+	display: block;
+}
+
+cxx-section:target {
+	background-color: inherit;
+}
+
+cxx-section:target > section > h1 {
+	background-color: rgb(255, 238, 221);
+}
+
+cxx-section header > h1 {
+	display: inline; font-size: 100%;
+}
+
+cxx-section header {
+	font-weight: bold; margin-top: 20px; margin-bottom: 20px;
+}
+
+cxx-section header:after {
+	clear: both; display: block; content: " "; height: 0px;
+}cxx-clause {
+	display: block;
+}
+
+cxx-clause:target {
+	background-color: inherit;
+}
+
+cxx-clause:target > section > h1 {
+	background-color: rgb(255, 238, 221);
+}
+
+cxx-clause header > h1 {
+	display: inline; font-size: 100%;
+}
+
+cxx-clause header {
+	font-weight: bold; margin-top: 20px; margin-bottom: 20px;
+}
+
+cxx-clause header:after {
+	clear: both; display: block; content: " "; height: 0px;
+}[is=cxx-table] {
+	margin-left: auto; margin-right: auto; border-collapse: collapse; border: thin solid black;
+}
+
+[is=cxx-table] caption {
+	white-space: nowrap;
+}
+
+[is=cxx-table] caption caption {
+	display: inline;
+}
+
+[is=cxx-table] th, [is=cxx-table] td {
+	border-style: solid none; border-color: black; border-width: thin; padding: 0px 0.25em;
+}
+
+[is=cxx-table].column-rules th, [is=cxx-table].column-rules td {
+	border-left-style: solid; border-right-style: solid;
+}
+
+[is=cxx-table] th {
+	border-bottom: medium double;
+}
+
+[is=cxx-table].center td {
+	text-align: center;
+}
+
+[is=cxx-table].list td {
+	border: medium none;
+}cxx-figure {
+	margin-left: auto; margin-right: auto;
+}
+
+cxx-figure figcaption {
+	white-space: nowrap; text-align: center;
+}
+
+cxx-figure figcaption figcaption {
+	display: inline;
+}[is=cxx-definition-section] dt {
+	font-weight: bold;
+}
+
+[is=cxx-definition-section] dd {
+	margin-left: 0px;
+}cxx-toc {
+	display: block;
+}
+
+cxx-toc nav > ol {
+	font-weight: bold;
+}
+
+cxx-toc ol {
+	font-weight: normal; padding-left: 0px; margin-left: 0px;
+}
+
+cxx-toc li {
+	list-style-type: none;
+}
+
+cxx-toc .marker {
+	display: inline-block;
+}
+
+cxx-toc li .marker {
+	width: 2em; text-align: left;
+}
+
+cxx-toc ol ol {
+	margin-left: 2em;
+}
+
+cxx-toc li li .marker {
+	width: 3em;
+}
+
+cxx-toc ol ol ol {
+	margin-left: 3em;
+}
+
+cxx-toc li li li .marker {
+	width: 3.5em;
+}
+
+cxx-toc ol ol ol ol {
+	margin-left: 3.5em;
+}
+
+cxx-toc li li li li .marker {
+	width: 4.5em;
+}polymer-xhr {
+	display: none;
+}cxx-titlepage {
+	display: block; min-height: 100%;
+}
+
+cxx-titlepage  {
+	position: relative;
+}
+
+cxx-titlepage table {
+	position: absolute; right: 0px; top: 0px;
+}
+
+cxx-titlepage h1 {
+	position: absolute; top: 40%;
+}
+
+cxx-titlepage p.warning {
+	position: absolute; bottom: 5%;
+}
+
+cxx-titlepage h1 {
+	text-align: center;
+}
+
+cxx-titlepage th {
+	text-align: left; vertical-align: top;
+}cxx-ednote {
+	display: block;
+}
+
+cxx-ednote aside {
+	float: right; max-width: 40%; margin: 1ex; border: 1px dashed rgb(136, 136, 136); padding: 1ex; background-color: rgb(238, 238, 238);
+}cxx-note .nowrap {
+	white-space: nowrap;
+}cxx-footnote {
+	font-family: serif; white-space: normal; text-indent: initial;
+}
+
+@media screen {
+cxx-footnote aside {
+	float: right; max-width: 30%; margin-left: 1em;
+}
+
+
+}
+
+@media print {
+cxx-footnote sup, cxx-footnote .marker {
+	display: none;
+}
+
+aside {  }
+
+
+}cxx-example {
+	display: block;
+}
+
+cxx-example.inline {
+	display: inline;
+}
+
+cxx-example .nowrap {
+	white-space: nowrap;
+}cxx-publish-button {
+	display: block;
+}cxx-codeblock {
+	display: block;
+}bnf-grammar {
+	display: block; font-style: italic; margin-left: 0.35in;
+}bnf-rule {
+	display: block; margin-left: 0.6in;
+}bnf-alt {
+	display: block; margin-left: 1.2in;
+}bnf-terminal {
+	font-style: normal;
+}</style>
+  <meta charset="utf-8">
+  <style>[touch-action="none"]{ -ms-touch-action: none; touch-action: none; touch-action-delay: none; }
+body ^^ [touch-action="none"]{ -ms-touch-action: none; touch-action: none; touch-action-delay: none; }
+[touch-action="auto"]{ -ms-touch-action: auto; touch-action: auto; touch-action-delay: none; }
+body ^^ [touch-action="auto"]{ -ms-touch-action: auto; touch-action: auto; touch-action-delay: none; }
+[touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; touch-action-delay: none; }
+body ^^ [touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; touch-action-delay: none; }
+[touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; touch-action-delay: none; }
+body ^^ [touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; touch-action-delay: none; }
+[touch-action="pan-x pan-y"],[touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; touch-action-delay: none; }
+body ^^ [touch-action="pan-x pan-y"],body ^^ [touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; touch-action-delay: none; }
+</style>
+  <link rel="import" href="bower_components/cxx-html-doc-framework/framework.html">
+<style shim-shadowdom-css="">/* Copyright 2014 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+@page {
+    margin: 10%;
+    @top-left { content: "© ISO/IEC"; font-size: 10pt; }
+    @top-right { content: string(docnum); font-weight: bold; font-size: 10pt; }
+    @bottom-left { content: string(current-section, last); font-size: 10pt; }
+    @bottom-right { content: counter(page); font-size: 10pt; }
+}
+cxx-titlepage { page: title; page-break-after: always; }
+@page title {
+    @top-left { content: "© ISO 2014 — All rights reserved"; }
+    @top-right { content: normal; }
+    @bottom-left { content: normal; }
+    @bottom-right { content: normal; }
+}
+
+@media screen {
+    body { max-width: 7in;
+           /* Make room for paragraph numbers. */
+           margin-left: 2em }
+}
+
+@media print {
+    html { font-size: 10pt; }
+    *   pre, *   code { font-size: 8pt; }
+    /* Note that only Prince generates clickable links. */
+    *   a[href] { text-decoration:none; }
+}
+
+/* Needed to make the <cxx-titlepage>'s vertical spacing work. */
+html, body {height: 100%}
+
+cxx-docnum { string-set: docnum content(); }
+
+cxx-clause { page-break-before: always; }
+@media screen {
+    cxx-clause, cxx-toc { margin-top: 3em; }
+}
+
+cxx-clause   header { font-size: 150%; }
+cxx-toc   h1 { font-size: 150%; }
+cxx-clause cxx-section   header { font-size: 117%; }
+cxx-clause cxx-section cxx-section   header { font-size: 100%; }
+
+[data-bookmark-label] { bookmark-label: attr(data-bookmark-label); }
+h1 { bookmark-level: 1; }
+cxx-toc   h1 { bookmark-level: 2; }
+cxx-clause h1 { bookmark-level: 2; }
+cxx-clause cxx-section h1 { bookmark-level: 3; }
+cxx-clause cxx-section cxx-section h1 { bookmark-level: 4; }
+
+*   .section-number { string-set: current-section "§ " content(); }
+
+p {margin-top: .5em; margin-bottom: .5em}
+p:first-child, ul, ol {margin-top: 0}
+
+[para_num]::before { content: attr(para_num); float: left;
+                     font-size: 70%; margin-left: -2.5em; width: 1.5em; text-align: right; }
+
+del {text-decoration: line-through; color: #8B0040;}
+ins {text-decoration: underline; color: #005100;}
+
+pre {
+    margin-left: 1em;
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+pre > code { display: inline-block; }
+
+
+/* Use an em-dash for the list bullet. */
+ul {
+    list-style: none;
+    /* Relative positioning on the 'ul' lets the absolutely-positioned
+       marker align relative to it.*/
+    position: relative;
+}
+ul li:before {
+    content: "\2014";
+    position: absolute; left: 10px;
+}
+
+/* This is here rather than inside elements/toc.html because browsers
+   don't understand leader() or target-counter(), so they drop them
+   inside the CSSOM. */
+@media print {
+    /* Generate page numbers in the table of contents. */
+    cxx-toc   a[href]::after { content: leader(" . ") target-counter(attr(href), page); }
+
+    cxx-footnote   aside { float: footnote; footnote-policy: line; }
+}</style><title>C++ Extensions for Library Fundamentals, Working Draft</title></head>
+<body>
+<cxx-titlepage stage="draft">
+    
+    <table>
+      
+        <tbody><tr><th>Document Number:</th><td><cxx-docnum>N3970</cxx-docnum></td></tr>
+      
+      
+        <tr><th>Date:</th><td><time pubdate="">2014-05-??</time></td></tr>
+      
+      
+        <tr><th>Revises:</th><td><cxx-revises><a href="http://wiki.edg.com/twiki/pub/Wg21issaquah/SG1/concurrency_ts.pdf">N3904</a></cxx-revises></td></tr>
+      
+      
+        <tr><th>Editor:</th><td><cxx-editor>
+    Artur Laksberg<br>
+    Microsoft Corp.<br>
+    <cxx-email><a href="mailto:arturl@gmicrosoft.com">arturl@gmicrosoft.com</a></cxx-email>
+  </cxx-editor></td></tr>
+      
+    </tbody></table>
+    <h1>Working Draft, Information technology – Programming languages, 
+their environments and system software interfaces – C++ Extensions for 
+Library Fundamentals</h1>
+    
+      <p class="warning"><strong>Note: this is an early draft. It’s known to be
+      incomplet and incorrekt, and it has lots of b<span style="margin-left: -1.2pt; margin-right: 1pt">a</span>d<span style="width:1.5em"> </span>for<span style="margin-left:-3pt; margin-right:0.6pt">mat</span>ti<span style="position:relative; top:-0.15ex">n</span>g.</strong></p>
+    
+  </cxx-titlepage>
+
+<cxx-toc>
+    
+    <nav>
+      <h1>Contents</h1>
+      
+        
+          <ol>
+            
+              <li><span class="marker">1</span><a href="#general">General</a>
+        
+          <ol>
+            
+              <li><span class="marker">1.1</span><a href="#general.scope">Scope</a>
+        
+      </li>
+            
+              <li><span class="marker">1.2</span><a href="#general.references">Normative references</a>
+        
+      </li>
+            
+              <li><span class="marker">1.3</span><a href="#general.namespaces">Namespaces, headers, and modifications to standard classes</a>
+        
+      </li>
+            
+          </ol>
+        
+      </li>
+            
+              <li><span class="marker">2</span><a href="#executors">Executors and Schedulers</a>
+        
+          <ol>
+            
+              <li><span class="marker">2.1</span><a href="#exec.general">General</a>
+        
+      </li>
+            
+              <li><span class="marker">2.2</span><a href="#executors.base">Executor base classes</a>
+        
+      </li>
+            
+              <li><span class="marker">2.3</span><a href="#executor.synop">Header &lt;executor&gt; synopsis</a>
+        
+      </li>
+            
+              <li><span class="marker">2.4</span><a href="#executors.base.executor">Class executor</a>
+        
+      </li>
+            
+              <li><span class="marker">2.5</span><a href="#executors.base.scheduled_executor">Class scheduled_executor</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6</span><a href="#executors.classes">Concrete executor classes</a>
+        
+          <ol>
+            
+              <li><span class="marker">2.6.1</span><a href="#executors.classes.thread_pool">Class thread_pool</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.2</span><a href="#executors.classes.thread_pool.synop">Header &lt;thread_pool&gt; synopsis</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.3</span><a href="#executors.classes.serial">Class serial_executor</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.4</span><a href="#executors.classes.serial.synop">Header &lt;serial_executor&gt; synopsis</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.5</span><a href="#executors.classes.loop">Class loop_executor</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.6</span><a href="#executors.classes.loop.syn">Header &lt;loop_executor&gt; synopsis</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.7</span><a href="#executors.classes.inline">Class inline_executor</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.8</span><a href="#executors.classes.inline.syn">Header &lt;inline_executor&gt; synopsis</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.9</span><a href="#executors.classes.thread">Class thread_executor</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6.10</span><a href="#executors.classes.thread.syn">Header &lt;thread_executor&gt; synopsis</a>
+        
+      </li>
+            
+          </ol>
+        
+      </li>
+            
+          </ol>
+        
+      </li>
+            
+              <li><span class="marker">3</span><a href="#future"> Improvements to std::future&lt;T&gt; and Related APIs</a>
+        
+          <ol>
+            
+              <li><span class="marker">3.1</span><a href="#blah.blah.blah">TBD</a>
+        
+      </li>
+            
+          </ol>
+        
+      </li>
+            
+          </ol>
+        
+      
+    </nav>
+  </cxx-toc>
+
+<cxx-clause id="general">
+    
+
+    <section>
+      <header><span class="section-number">1</span> <h1 data-bookmark-label="1 General">General</h1> <span style="float:right"><a href="#general">[general]</a></span></header>
+      
+  
+  <cxx-section id="general.scope">
+    
+
+    <section>
+      <header><span class="section-number">1.1</span> <h1 data-bookmark-label="1.1 Scope">Scope</h1> <span style="float:right"><a href="#general.scope">[general.scope]</a></span></header>
+      
+    
+
+<p para_num="1" id="general.scope.1">This technical specification describes a number of concurrency extensions to
+the C++ Standard Library (<cxx-ref in="" to="general.references"><cxx-get-element-by-id elemid="" elem="{{inElem}}"></cxx-get-element-by-id><cxx-get-element-by-id elemid="general.references" elem="{{toElem}}"></cxx-get-element-by-id><a title="general.references" href="#general.references">1.2</a></cxx-ref>). These
+extensions are classes and functions that are likely to be used widely within a
+program and/or on the interface boundaries between libraries written by
+different organizations.</p>
+
+<p para_num="2" id="general.scope.2">This technical specification is non-normative. Some of the library components
+in this technical specification may be considered for standardization in a
+future version of C++, but they are not currently part of any C++ standard. Some
+of the components in this technical specification may never be standardized, and
+others may be standardized in a substantially changed form.</p>
+
+<p para_num="3" id="general.scope.3">The goal of this technical `specification` is to build more
+widespread existing practice for an expanded C++ standard
+library. It gives advice on extensions to those vendors who wish
+to provide them.</p>
+
+  
+    </section>
+  </cxx-section>
+
+  <cxx-section id="general.references">
+    
+
+    <section>
+      <header><span class="section-number">1.2</span> <h1 data-bookmark-label="1.2 Normative references">Normative references</h1> <span style="float:right"><a href="#general.references">[general.references]</a></span></header>
+      
+    
+
+    <p para_num="1" id="general.references.1">The following referenced document is indispensable for the
+    application of this document. For dated references, only the
+    edition cited applies. For undated references, the latest edition
+    of the referenced document (including any amendments) applies.</p>
+
+    <ul>
+      <li>ISO/IEC 14882:—<cxx-footnote><!--
+    Be sure not to introduce whitespace here, as it appears around the footnote.
+  --><sup id="footnote-call-1"><a href="#footnote-body-1">1</a></sup><aside class="footnote" id="footnote-body-1"><span class="marker"><a href="#footnote-call-1">1</a>) </span>To be published. Section references are relative to <a href="http://open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf">N3797</a>.</aside></cxx-footnote>,
+      <cite>Programming Languages — C++</cite>
+      <cxx-foreign-index id="cxx" src="cxx_N3797_index.json" name="C++14">
+    <polymer-ajax auto="" url="cxx_N3797_index.json" handleas="json" on-polymer-response="{{ attachIndex }}">
+    </polymer-ajax>
+  </cxx-foreign-index></li>
+
+      <li><a href="http://www.ietf.org/rfc/rfc2781.txt">RFC 2781</a>, <cite>UTF-16, an encoding of ISO 10646</cite></li>
+    </ul>
+
+    <p para_num="2" id="general.references.2">ISO/IEC 14882:— is herein called the <dfn>C++ Standard</dfn>.
+    References to clauses within the C++ Standard are written as "C++14
+    §3.2". The library described in ISO/IEC 14882:— clauses 17–30 is
+    herein called the <dfn>C++ Standard Library</dfn>.</p>
+
+  
+    </section>
+  </cxx-section>
+
+  <cxx-section id="general.namespaces">
+    
+
+    <section>
+      <header><span class="section-number">1.3</span> <h1 data-bookmark-label="1.3 Namespaces, headers, and modifications to standard classes">Namespaces, headers, and modifications to standard classes</h1> <span style="float:right"><a href="#general.namespaces">[general.namespaces]</a></span></header>
+      
+    
+
+<p para_num="1" id="general.namespaces.1"> Some of the extensions described in this Technical Specification represent
+types and functions that are currently not part of the C++ Standards Library,
+and because these extensions are experimental, they should not be declared
+directly within namespace <code>std</code>. Instead, such extensions are
+declared in namespace <code>std::experimental</code>. </p><p para_num="2" id="general.namespaces.2">
+
+      <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    
+Once standardized, these components are expected to be promoted to namespace <code>std</code>. 
+      
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note> </p><p para_num="3" id="general.namespaces.3">
+
+Unless otherwise specified, references to such entities described in this
+Technical Specification are assumed to be qualified with
+<code>std::experimental</code>, and references to entities described in the C++
+Standard Library are assumed to be qualified with <code>std::</code>.
+
+  
+
+
+<cxx-clause id="executors">
+    
+
+    </cxx-clause></p><section>
+      <header><span class="section-number">2</span> <h1 data-bookmark-label="2 Executors and Schedulers">Executors and Schedulers</h1> <span style="float:right"><a href="#executors">[executors]</a></span></header>
+      
+  
+
+  <cxx-section id="exec.general">
+    
+
+    <section>
+      <header><span class="section-number">2.1</span> <h1 data-bookmark-label="2.1 General">General</h1> <span style="float:right"><a href="#exec.general">[exec.general]</a></span></header>
+      
+    
+<p para_num="1" id="exec.general.1">
+This proposal includes two abstract base classes, <code>executor</code> and
+<code>scheduled_executor</code> (the latter of which inherits from the former); several
+concrete classes that inherit from <code>executor</code> or <code>scheduled_executor</code>; and
+several utility functions.</p>
+
+  
+    </section>
+  </cxx-section>
+
+    <table is="cxx-table" class="column-rules">
+    
+
+    <caption>Table 1 — <wbr><span>Executors library summary</span></caption>
+    
+      
+
+      <thead>
+        <tr>
+          <th>Subclause</th>
+          <th>Header(s)</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+        <td>[executors.base]</td>
+        <td><code>&lt;executor&gt;</code></td>
+      </tr>
+      <tr>
+        <td>[executors.classes]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;[executors.classes.thread_pool]</td>
+        <td><code>&lt;thread_pool&gt;</code></td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;[executors.classes.serial]</td>
+        <td><code>&lt;serial_executor&gt;</code></td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;[executors.classes.loop]</td>
+        <td><code>&lt;loop_executor&gt;</code></td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;[executors.classes.inline]</td>
+        <td><code>&lt;inline_executor&gt;</code></td>
+      </tr>
+      <tr>
+        <td>&nbsp;&nbsp;[executors.classes.thread]</td>
+        <td><code>&lt;thread_executor&gt;</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+<cxx-section id="executors.base">
+    
+
+    <section>
+      <header><span class="section-number">2.2</span> <h1 data-bookmark-label="2.2 Executor base classes">Executor base classes</h1> <span style="float:right"><a href="#executors.base">[executors.base]</a></span></header>
+      
+
+
+<p para_num="1" id="executors.base.1">
+The <code>&lt;executor&gt;</code> header defines abstract base classes for executors, as well as
+non-member functions that operate at the level of those abstract base classes. </p>
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executor.synop">
+    
+
+    <section>
+      <header><span class="section-number">2.3</span> <h1 data-bookmark-label="2.3 Header &lt;executor&gt; synopsis">Header <code>&lt;executor&gt;</code> synopsis</h1> <span style="float:right"><a href="#executor.synop">[executor.synop]</a></span></header>
+      
+
+
+<pre>    class executor;
+    class scheduled_executor;
+</pre>
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.base.executor">
+    
+
+    <section>
+      <header><span class="section-number">2.4</span> <h1 data-bookmark-label="2.4 Class executor">Class <code>executor</code></h1> <span style="float:right"><a href="#executors.base.executor">[executors.base.executor]</a></span></header>
+      
+
+
+<p para_num="1" id="executors.base.executor.1">
+Class <code>executor</code> is an abstract base class defining an abstract interface of
+objects that are capable of scheduling and coordinating work submitted by
+clients. Work units submitted to an executor may be executed in one or more
+separate threads. Implementations are required to avoid data races when work
+units are submitted concurrently.</p>
+
+<p para_num="2" id="executors.base.executor.2">
+All closures are defined to execute on some thread, but which thread is largely
+unspecified. As such accessing a <code>thread_local</code> variable is defined behavior,
+though it is unspecified which thread's <code>thread_local</code> will be accessed.</p>
+
+<p para_num="3" id="executors.base.executor.3">
+The initiation of a work unit is not necessarily ordered with respect to other
+initiations. </p>
+<p para_num="4" id="executors.base.executor.4"><cxx-note><span class="nowrap">[ <em>Note:</em></span>
+     Concrete executors may, and often do, provide stronger
+initiation order guarantees. Users may, for example, obtain serial execution
+guarantees by using the <code>serial_executor</code> wrapper.
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note> </p>
+
+<p para_num="5" id="executors.base.executor.5">There is no defined ordering of the execution or completion of closures added to the
+executor. </p>
+
+<p para_num="6" id="executors.base.executor.6">
+<cxx-note><span class="nowrap">[ <em>Note:</em></span>
+     The consequence is that closures should not wait on other
+closures executed by that executor. Mutual exclusion for critical sections is
+fine, but it can't be used for signalling between closures. Concrete executors
+may provide stronger execution order guarantees.
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note> </p>
+
+<pre>    class executor {
+    public:
+        virtual ~executor();
+        virtual void add(function&lt;void()&gt; closure) =0;
+        virtual size_t uninitiated_task_count() const =0;
+    };
+</pre>
+
+<cxx-function para_num="7" id="executors.base.executor.7">
+    
+    <pre><code><cxx-signature>executor::~executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="8" id="executors.base.executor.8">
+    
+    <dt>Effects:</dt><dd> Destroys the executor.</dd>
+  </cxx-effects>
+<cxx-synchronization para_num="9" id="executors.base.executor.9">
+    
+    <dt>Synchronization:</dt><dd> All closure initiations happen before the completion of the
+executor destructor. <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+     This means that closure initiations don't leak
+past the executor lifetime, and programmers can protect against data races with
+the destruction of the environment. There is no guarantee that all closures that
+have been added to the executor will execute, only that if a closure executes it
+will be initiated before the destructor executes. In some concrete subclasses
+the destructor may wait for task completion and in others the destructor may
+discard uninitiated tasks.
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note></dd>
+  </cxx-synchronization>
+<cxx-notes para_num="10" id="executors.base.executor.10">
+    
+    <dt>Notes:</dt><dd> If an executor is destroyed inside a closure running on that executor
+object, the behavior is undefined. <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+     one possible behavior is deadlock.
+
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note></dd>
+  </cxx-notes>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="11" id="executors.base.executor.11">
+    
+    <pre><code><cxx-signature>void executor::add(std::function<void> closure);</void></cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="12" id="executors.base.executor.12">
+    
+    <dt>Effects:</dt><dd> The specified function object shall be scheduled for execution by the
+executor at some point in the future. May throw exceptions if add cannot
+complete (due to shutdown or other conditions).</dd>
+  </cxx-effects>
+<cxx-synchronization para_num="13" id="executors.base.executor.13">
+    
+    <dt>Synchronization:</dt><dd> completion of closure on a particular thread happens before
+destruction of that thread's thread-duration variables. <cxx-notes>
+    
+    </cxx-notes></dd><dt>Notes:</dt><dd> The consequence
+is that closures may use thread-duration variables, but in general such use is
+risky. In general executors don't make guarantees about which thread an
+individual closure executes in. </dd>
+  
+  </cxx-synchronization>
+<cxx-requires para_num="14" id="executors.base.executor.14">
+    
+    <dt>Requires:</dt><dd> The invoked closure should not throw an exception.</dd>
+  </cxx-requires>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="15" id="executors.base.executor.15">
+    
+    <pre><code><cxx-signature>size_t executor::uninitiated_task_count();</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-returns para_num="16" id="executors.base.executor.16">
+    
+    <dt>Returns:</dt><dd> the number of function objects waiting to be executed. <cxx-notes>
+    
+    </cxx-notes></dd><dt>Notes:</dt><dd> this is
+intended for logging/debugging and for coarse load balancing decisions. Other
+uses are inherently risky because other threads may be executing or adding
+closures.</dd>
+  
+  </cxx-returns>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.base.scheduled_executor">
+    
+
+    <section>
+      <header><span class="section-number">2.5</span> <h1 data-bookmark-label="2.5 Class scheduled_executor">Class <code>scheduled_executor</code></h1> <span style="float:right"><a href="#executors.base.scheduled_executor">[executors.base.scheduled_executor]</a></span></header>
+      
+
+
+<p para_num="1" id="executors.base.scheduled_executor.1">
+Class <code>scheduled_executor</code> is an abstract base class that extends the executor
+interface by allowing clients to pass in work items that will be executed some
+time in the future.
+</p>
+
+<pre>    class scheduled_executor : public executor {
+    public:
+        virtual void add_at(const chrono::system_clock::time_point&amp; abs_time,
+                            function&lt;void()&gt; closure) = 0;
+        virtual void add_after(const chrono::system_clock::duration&amp; rel_time,
+                               function&lt;void()&gt; closure) = 0;
+    };
+</pre>
+
+<cxx-function para_num="2" id="executors.base.scheduled_executor.2">
+    
+    <pre><code><cxx-signature>void add_at(const chrono::system_clock::time_point&amp; abs_time, function&lt;void()&gt; closure);</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="3" id="executors.base.scheduled_executor.3">
+    
+    <dt>Effects:</dt><dd> The specified function object shall be scheduled for execution by the executor at
+some point in the future no sooner than the time represented by <code>abs_time</code>.</dd>
+  </cxx-effects>
+<cxx-synchronization para_num="4" id="executors.base.scheduled_executor.4">
+    
+    <dt>Synchronization:</dt><dd> completion of closure on a particular thread happens before
+destruction of that thread's thread-duration variables.</dd>
+  </cxx-synchronization>
+<cxx-requires para_num="5" id="executors.base.scheduled_executor.5">
+    
+    <dt>Requires:</dt><dd> The invoked closure should not throw an exception.</dd>
+  </cxx-requires>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="6" id="executors.base.scheduled_executor.6">
+    
+    <pre><code><cxx-signature>void add_after(const chrono::system_clock::duration&amp; rel_time, function&lt;void()&gt; closure);</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="7" id="executors.base.scheduled_executor.7">
+    
+    <dt>Effects:</dt><dd> The specified function object shall be scheduled for execution by the
+executor at some point in the future no sooner than time <code>rel_time</code> from now.</dd>
+  </cxx-effects>
+<cxx-synchronization para_num="8" id="executors.base.scheduled_executor.8">
+    
+    <dt>Synchronization:</dt><dd> completion of closure on a particular thread happens before
+destruction of that thread's thread-duration variables.</dd>
+  </cxx-synchronization>
+<cxx-requires para_num="9" id="executors.base.scheduled_executor.9">
+    
+    <dt>Requires:</dt><dd> The invoked closure should not throw an exception.</dd>
+  </cxx-requires>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes">
+    
+
+    <section>
+      <header><span class="section-number">2.6</span> <h1 data-bookmark-label="2.6 Concrete executor classes">Concrete executor classes</h1> <span style="float:right"><a href="#executors.classes">[executors.classes]</a></span></header>
+      
+
+
+This section defines executor classes that encapsulate a variety of closure-
+execution policies.
+
+<cxx-section id="executors.classes.thread_pool">
+    
+
+    <section>
+      <header><span class="section-number">2.6.1</span> <h1 data-bookmark-label="2.6.1 Class thread_pool">Class <code>thread_pool</code></h1> <span style="float:right"><a href="#executors.classes.thread_pool">[executors.classes.thread_pool]</a></span></header>
+      
+
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes.thread_pool.synop">
+    
+
+    <section>
+      <header><span class="section-number">2.6.2</span> <h1 data-bookmark-label="2.6.2 Header &lt;thread_pool&gt; synopsis">Header <code>&lt;thread_pool&gt;</code> synopsis</h1> <span style="float:right"><a href="#executors.classes.thread_pool.synop">[executors.classes.thread_pool.synop]</a></span></header>
+      
+
+
+<pre>    class thread_pool;
+</pre>
+
+<p para_num="1" id="executors.classes.thread_pool.synop.1">
+Class <code>thread_pool</code> is a simple thread pool class that creates a fixed number of
+threads in its constructor and that multiplexes closures onto them.
+</p>
+
+<pre>    class thread_pool : public scheduled_executor {
+       public:
+       explicit thread_pool(int num_threads);
+       ~thread_pool();
+       // [executor methods omitted]
+    };
+</pre>
+
+<cxx-function para_num="2" id="executors.classes.thread_pool.synop.2">
+    
+    <pre><code><cxx-signature>thread_pool::thread_pool(int num_threads)</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="3" id="executors.classes.thread_pool.synop.3">
+    
+    <dt>Effects:</dt><dd> Creates an executor that runs closures on <code>num_threads</code> threads.</dd>
+  </cxx-effects>
+<cxx-throws para_num="4" id="executors.classes.thread_pool.synop.4">
+    
+    <dt>Throws:</dt><dd> <code>system_error</code> if the threads can't be created and <code>started.thread_pool::~thread_pool()</code></dd>
+  </cxx-throws>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="5" id="executors.classes.thread_pool.synop.5">
+    
+    <pre><code><cxx-signature>thread_pool::~thread_pool()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="6" id="executors.classes.thread_pool.synop.6">
+    
+    <dt>Effects:</dt><dd> Waits for closures (if any) to complete, then joins and destroys the threads.</dd>
+  </cxx-effects>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes.serial">
+    
+
+    <section>
+      <header><span class="section-number">2.6.3</span> <h1 data-bookmark-label="2.6.3 Class serial_executor">Class <code>serial_executor</code></h1> <span style="float:right"><a href="#executors.classes.serial">[executors.classes.serial]</a></span></header>
+      
+
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes.serial.synop">
+    
+
+    <section>
+      <header><span class="section-number">2.6.4</span> <h1 data-bookmark-label="2.6.4 Header &lt;serial_executor&gt; synopsis">Header <code>&lt;serial_executor&gt;</code> synopsis</h1> <span style="float:right"><a href="#executors.classes.serial.synop">[executors.classes.serial.synop]</a></span></header>
+      
+
+
+<pre>    class serial_executor;
+</pre>
+
+<p para_num="1" id="executors.classes.serial.synop.1">
+Class <code>serial_executor</code> is an adaptor that runs its closures by scheduling them
+on another (not necessarily single-threaded) executor. It runs added closures
+inside a series of closures added to an underlying executor in such a way so
+that the closures execute serially. For any two closures <code>c1</code> and <code>c2</code> added to
+a <code>serial_executor</code> <code>e</code>, either the completion of <code>c1</code> happens before (1.10
+[intro.multithread]) the execution of <code>c2</code> begins, or vice versa. If <code>e.add(c1)</code>
+happens before <code>e.add(c2)</code>, then <code>c1</code> is executed before <code>c2</code>.</p>
+
+<p para_num="2" id="executors.classes.serial.synop.2">
+The number of <code>add()</code> calls on the underlying executor is unspecified, and if
+the underlying executor guarantees an ordering on its closures, that ordering
+won't necessarily extend to closures added through a <code>serial_executor</code>. <cxx-notes>
+    
+    </cxx-notes></p><dt>Notes:</dt><dd>
+this is because serial_executor can batch <code>add()</code> calls to the underlying
+executor. </dd>
+   <p></p>
+
+<pre>    class serial_executor : public executor {
+    public
+        explicit serial_executor(executor&amp; underlying_executor);
+        virtual ~serial_executor();
+        executor&amp; underlying_executor();
+        // [executor methods omitted]
+    };
+</pre>
+
+<cxx-function para_num="3" id="executors.classes.serial.synop.3">
+    
+    <pre><code><cxx-signature>serial_executor::serial_executor(executor&amp; underlying_executor)</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-requires para_num="4" id="executors.classes.serial.synop.4">
+    
+    <dt>Requires:</dt><dd> <code>underlying_executor</code> shall not be null.</dd>
+  </cxx-requires>
+<cxx-effects para_num="5" id="executors.classes.serial.synop.5">
+    
+    <dt>Effects:</dt><dd> Creates a <code>serial_executor</code> that executes closures in FIFO order by
+passing them to <code>underlying_executor</code>.
+</dd>
+  </cxx-effects>
+<cxx-notes para_num="6" id="executors.classes.serial.synop.6">
+    
+    <dt>Notes:</dt><dd> several <code>serial_executor</code> objects may share a single underlying executor. </dd>
+  </cxx-notes>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="7" id="executors.classes.serial.synop.7">
+    
+    <pre><code><cxx-signature>serial_executor::~serial_executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="8" id="executors.classes.serial.synop.8">
+    
+    <dt>Effects:</dt><dd> Finishes running any currently executing closure, then destroys all remaining
+closures and returns.
+</dd>
+  </cxx-effects>
+<p para_num="9" id="executors.classes.serial.synop.9">
+If a <code>serial_executor</code> is destroyed inside a closure running on
+that <code>serial_executor</code> object, the behavior is undefined. 
+<cxx-note><span class="nowrap">[ <em>Note:</em></span>
+     one possible behavior is deadlock. 
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note>
+</p>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="10" id="executors.classes.serial.synop.10">
+    
+    <pre><code><cxx-signature>executor&amp; serial_executor::underlying_executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-returns para_num="11" id="executors.classes.serial.synop.11">
+    
+    <dt>Returns:</dt><dd> The underlying executor that was passed to the constructor.</dd>
+  </cxx-returns>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes.loop">
+    
+
+    <section>
+      <header><span class="section-number">2.6.5</span> <h1 data-bookmark-label="2.6.5 Class loop_executor">Class <code>loop_executor</code></h1> <span style="float:right"><a href="#executors.classes.loop">[executors.classes.loop]</a></span></header>
+      
+
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes.loop.syn">
+    
+
+    <section>
+      <header><span class="section-number">2.6.6</span> <h1 data-bookmark-label="2.6.6 Header &lt;loop_executor&gt; synopsis">Header <code>&lt;loop_executor&gt;</code> synopsis</h1> <span style="float:right"><a href="#executors.classes.loop.syn">[executors.classes.loop.syn]</a></span></header>
+      
+
+
+<pre>    class loop_executor;
+</pre>
+
+<p para_num="1" id="executors.classes.loop.syn.1">
+Class <code>loop_executor</code> is a single-threaded executor that executes closures by
+taking control of a host thread. Closures are executed via one of three closure-
+executing methods: <code>loop()</code>, <code>run_queued_closures()</code>, and
+<code>try_run_one_closure()</code>. Closures are executed in FIFO order. Closure-executing
+methods may not be called concurrently with each other, but may be called
+concurrently with other member functions.
+</p>
+
+<pre>    class loop_executor : public executor {
+    public:
+        loop_executor();
+        virtual ~loop_executor();
+        void loop();
+        void run_queued_closures();
+        bool try_run_one_closure();
+        void make_loop_exit();
+        // [executor methods omitted]
+    };
+</pre>
+
+<cxx-function para_num="2" id="executors.classes.loop.syn.2">
+    
+    <pre><code><cxx-signature>loop_executor::loop_executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+  
+  <cxx-effects para_num="3" id="executors.classes.loop.syn.3">
+    
+    <dt>Effects:</dt><dd> Creates a <code>loop_executor</code> object. Does not spawn any threads. <p></p></dd>
+  </cxx-effects>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="4" id="executors.classes.loop.syn.4">
+    
+    <pre><code><cxx-signature>loop_executor::~loop_executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+  
+  <cxx-effects para_num="5" id="executors.classes.loop.syn.5">
+    
+    <dt>Effects:</dt><dd> Destroys the <code>loop_executor</code> object. Any closures that haven't been
+  executed by a closure-executing method when the destructor runs will never be
+  executed.</dd>
+  </cxx-effects>
+  <cxx-synchronization para_num="6" id="executors.classes.loop.syn.6">
+    
+    <dt>Synchronization:</dt><dd> Must not be called concurrently with any of the
+  closure-executing methods.</dd>
+  </cxx-synchronization>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="7" id="executors.classes.loop.syn.7">
+    
+    <pre><code><cxx-signature>void loop_executor::loop()</cxx-signature></code></pre>
+
+    <dl>
+      
+  
+  <cxx-effects para_num="8" id="executors.classes.loop.syn.8">
+    
+    <dt>Effects:</dt><dd> Runs closures on the current thread until <code>make_loop_exit()</code> is called.</dd>
+  </cxx-effects>
+  <cxx-requires para_num="9" id="executors.classes.loop.syn.9">
+    
+    <dt>Requires:</dt><dd> No closure-executing method is currently running.</dd>
+  </cxx-requires>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="10" id="executors.classes.loop.syn.10">
+    
+    <pre><code><cxx-signature>void loop_executor::run_queued_closures()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-effects para_num="11" id="executors.classes.loop.syn.11">
+    
+    <dt>Effects:</dt><dd> Runs closures that were already queued for execution when this
+function was called, returning either when all of them have been executed or
+when <code>make_loop_exit()</code> is called. Does not execute any additional closures that
+have been added after this function is called. Invoking <code>make_loop_exit()</code> from
+within a closure run by <code>run_queued_closures()</code> does not affect the behavior of
+subsequent closure-executing methods.</dd>
+  </cxx-effects>
+
+<cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    
+this requirement disallows an implementation like
+<pre>        void run_queued_closures() {
+            add([](){make_loop_exit();});
+            loop();
+        }
+</pre>
+
+
+because that would cause early exit from a subsequent invocation of <code>loop()</code>.
+
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note>
+
+<cxx-requires para_num="12" id="executors.classes.loop.syn.12">
+    
+    <dt>Requires:</dt><dd> No closure-executing method is currently running.</dd>
+  </cxx-requires>
+
+<cxx-remarks para_num="13" id="executors.classes.loop.syn.13">
+    
+    <dt>Remarks:</dt><dd> This function is primarily intended for testing.</dd>
+  </cxx-remarks>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="14" id="executors.classes.loop.syn.14">
+    
+    <pre><code><cxx-signature>bool loop_executor::try_run_one_closure()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-effects para_num="15" id="executors.classes.loop.syn.15">
+    
+    <dt>Effects:</dt><dd> If at least one closure is queued, this method executes the next
+closure and returns.</dd>
+  </cxx-effects>
+
+<cxx-returns para_num="16" id="executors.classes.loop.syn.16">
+    
+    <dt>Returns:</dt><dd> <code>true</code> if a closure was run, otherwise <code>false</code>.</dd>
+  </cxx-returns>
+
+<cxx-requires para_num="17" id="executors.classes.loop.syn.17">
+    
+    <dt>Requires:</dt><dd> No closure-executing method is currently running.</dd>
+  </cxx-requires>
+
+<cxx-remarks para_num="18" id="executors.classes.loop.syn.18">
+    
+    <dt>Remarks:</dt><dd> This function is primarily intended for testing.</dd>
+  </cxx-remarks>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="19" id="executors.classes.loop.syn.19">
+    
+    <pre><code><cxx-signature>void loop_executor::make_loop_exit()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-effects para_num="20" id="executors.classes.loop.syn.20">
+    
+    <dt>Effects:</dt><dd>
+ Causes <code>loop()</code> or <code>run_queued_closures()</code> to finish executing
+closures and return as soon as the current closure has finished. There is no
+effect if <code>loop()</code> or <code>run_queued_closures()</code> isn't currently executing.
+</dd>
+  </cxx-effects>
+<cxx-notes para_num="21" id="executors.classes.loop.syn.21">
+    
+    <dt>Notes:</dt><dd>
+ <code>make_loop_exit()</code> is typically called from a closure. After a closure-
+executing method has returned, it is legal to call another closure-executing
+function. 
+</dd>
+  </cxx-notes>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes.inline">
+    
+
+    <section>
+      <header><span class="section-number">2.6.7</span> <h1 data-bookmark-label="2.6.7 Class inline_executor">Class <code>inline_executor</code></h1> <span style="float:right"><a href="#executors.classes.inline">[executors.classes.inline]</a></span></header>
+      
+
+
+
+    </section>
+  </cxx-section>
+<cxx-section id="executors.classes.inline.syn">
+    
+
+    <section>
+      <header><span class="section-number">2.6.8</span> <h1 data-bookmark-label="2.6.8 Header &lt;inline_executor&gt; synopsis">Header <code>&lt;inline_executor&gt;</code> synopsis</h1> <span style="float:right"><a href="#executors.classes.inline.syn">[executors.classes.inline.syn]</a></span></header>
+      
+
+
+<pre>    class inline_executor;
+</pre>
+
+<p para_num="1" id="executors.classes.inline.syn.1">
+Class <code>inline_executor</code> is a simple executor which intrinsically only provides the <code>add()</code>
+interface as it provides no queuing and instead immediately executes work on the calling thread.
+This is effectively an adapter over the executor interface but keeps everything on the caller's
+context.
+</p>
+
+<pre>    class inline_executor : public executor {
+    public
+        explicit inline_executor();
+        // [executor methods omitted]
+    };
+</pre>
+
+<cxx-function para_num="2" id="executors.classes.inline.syn.2">
+    
+    <pre><code><cxx-signature>inline_executor::inline_executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-effects para_num="3" id="executors.classes.inline.syn.3">
+    
+    <dt>Effects:</dt><dd>
+ Creates a dummy executor object which only responds to the <code>add()</code>
+call by immediately executing the provided function in the caller's thread.
+</dd>
+  </cxx-effects>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="executors.classes.thread">
+    
+
+    <section>
+      <header><span class="section-number">2.6.9</span> <h1 data-bookmark-label="2.6.9 Class thread_executor">Class <code>thread_executor</code></h1> <span style="float:right"><a href="#executors.classes.thread">[executors.classes.thread]</a></span></header>
+      
+
+
+
+    </section>
+  </cxx-section>
+<cxx-section id="executors.classes.thread.syn">
+    
+
+    <section>
+      <header><span class="section-number">2.6.10</span> <h1 data-bookmark-label="2.6.10 Header &lt;thread_executor&gt; synopsis">Header <code>&lt;thread_executor&gt;</code> synopsis</h1> <span style="float:right"><a href="#executors.classes.thread.syn">[executors.classes.thread.syn]</a></span></header>
+      
+
+
+<pre>    class thread_executor;
+</pre>
+
+<p para_num="1" id="executors.classes.thread.syn.1">
+Class <code>thread_executor</code> is a simple executor that executes each task (closure)
+on its own <code>std::thread</code> instance.
+</p>
+
+<pre>    class thread_executor : public executor {
+    public:
+        explicit thread_executor();
+        ~thread_executor();
+        // [executor methods omitted]
+    };
+</pre>
+
+<cxx-function para_num="2" id="executors.classes.thread.syn.2">
+    
+    <pre><code><cxx-signature>thread_executor::thread_executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="3" id="executors.classes.thread.syn.3">
+    
+    <dt>Effects:</dt><dd>Creates an executor that runs each closure on a separate thread.</dd>
+  </cxx-effects>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="4" id="executors.classes.thread.syn.4">
+    
+    <pre><code><cxx-signature>thread_executor::~thread_executor()</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-effects para_num="5" id="executors.classes.thread.syn.5">
+    
+    <dt>Effects:</dt><dd> Waits for all added closures (if any) to complete, then joins and
+destroys the threads.</dd>
+  </cxx-effects>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+    </section>
+  </cxx-section>
+    </section>
+  
+
+<cxx-clause id="future">
+    
+
+    <section>
+      <header><span class="section-number">3</span> <h1 data-bookmark-label="3  Improvements to std::future&lt;T&gt; and Related APIs"> Improvements to <code>std::future&lt;T&gt;</code> and Related APIs</h1> <span style="float:right"><a href="#future">[future]</a></span></header>
+      
+  
+
+  <cxx-section id="blah.blah.blah">
+    
+
+    <section>
+      <header><span class="section-number">3.1</span> <h1 data-bookmark-label="3.1 TBD">TBD</h1> <span style="float:right"><a href="#blah.blah.blah">[blah.blah.blah]</a></span></header>
+      
+    
+
+    <p para_num="1" id="blah.blah.blah.1">
+work in progress
+    </p>
+
+  
+    </section>
+  </cxx-section>
+
+    </section>
+  </cxx-clause>
+
+
+
+
+
+<p></p>
+    </section>
+  </cxx-section>
+    </section>
+  </cxx-clause></body></html>
