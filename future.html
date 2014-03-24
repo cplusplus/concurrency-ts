@@ -1,12 +1,55 @@
 <cxx-clause id="future">
-  <h1> Improvements to <code>std::future&lt;T></code> and Related APIs</h1>
+<h1> Improvements to <code>std::future&lt;T></code> and Related APIs</h1>
 
-  <cxx-section id="blah.blah.blah">
-    <h1>TBD</h1>
+<cxx-section id="futures.general">
+<h1>General</h1>
 
-    <p>
-work in progress
-    </p>
+The extensions proposed here are an evolution of the functionality of
+<code>std::future</code> and <code>std::shared_future</code>. The extensions enable wait free
+composition of asynchronous operations.
+</cxx-section>
+
+<cxx-section id="futures.unique_future">
+<h1> Changes to class template <code>future</code></h1>
+
+<p>
+To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 3, add the following to the public
+functions:
+</p>
+
+<!-- decay the function, refer to std::async -->
+<!-- result_of_t<decay_t<F>(future)> -->
+
+<ins>
+<pre>
+bool is_ready() const;
+
+future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;
+
+template&lt;typename F>
+auto then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename F>
+auto then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename F>
+auto then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename R2>
+future&lt;R2> unwrap();
+</pre>
+</ins>
+
+<p>
+In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 and 9, add the following:
+</p>
+<ins>
+<cxx-function>
+<cxx-signature>future(future<future<R>>&amp;&amp; rhs) noexcept;</cxx-signature>
+</cxx-function>
+<cxx-Effects> Constructs a <code>future</code> object by moving the instance referred to by
+<code>rhs</code> and unwrapping the inner future (see <code>unwrap()</code>).</cxx-Effects>
+</ins>
 
   </cxx-section>
 </cxx-clause>
