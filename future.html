@@ -3,10 +3,11 @@
 
 <cxx-section id="futures.general">
 <h1>General</h1>
-
+<p>
 The extensions proposed here are an evolution of the functionality of
 <code>std::future</code> and <code>std::shared_future</code>. The extensions enable wait free
 composition of asynchronous operations.
+</p>
 </cxx-section>
 
 <cxx-section id="futures.unique_future">
@@ -20,7 +21,6 @@ functions:
 <!-- decay the function, refer to std::async -->
 <!-- result_of_t<decay_t<F>(future)> -->
 
-<ins>
 <pre>
 bool is_ready() const;
 
@@ -36,20 +36,600 @@ template&lt;typename F>
 auto then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
 
 template&lt;typename R2>
-future&lt;R2> unwrap();
+<em>see below</em> unwrap();
 </pre>
-</ins>
 
 <p>
 In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 and 9, add the following:
 </p>
-<ins>
 <cxx-function>
-<cxx-signature>future(future<future<R>>&amp;&amp; rhs) noexcept;</cxx-signature>
+  <cxx-signature>future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;</cxx-signature>
+  <cxx-Effects>Constructs a <code>future</code> object by moving the instance referred to by
+  <code>rhs</code> and unwrapping the inner future (see <code>unwrap()</code>).</cxx-Effects>
+  <cxx-postconditions>
+    <!-- revisit: what happens when innner future is invalid? -->
+    <ul>
+      <li><code>valid()</code> returns the same value as <code>rhs.valid()</code> prior to the 
+    constructor invocation.</li>
+      <li><code>rhs.valid() == false</code>.</li>
+    </ul>
+  </cxx-postconditions>
 </cxx-function>
-<cxx-Effects> Constructs a <code>future</code> object by moving the instance referred to by
-<code>rhs</code> and unwrapping the inner future (see <code>unwrap()</code>).</cxx-Effects>
+
+<p>
+After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add the following:
+</p>
+<cxx-function>
+  <cxx-signature>
+  template&lt;typename F>
+  auto then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+  template&lt;typename F>
+  auto then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+  template&lt;typename F>
+  auto then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+  </cxx-signature>
+  <cxx-Notes>  The three functions differ only by input parameters. The first only
+  takes a callable object which accepts a <code>future</code> object as a parameter. The
+  second function takes an <code>executor</code> as the first parameter and a callable object
+  as the second parameter. The third function takes a launch policy as the first
+  parameter and a callable object as the second parameter.  In cases where
+  <code>decltype(func(*this))</code> is <code>future&lt;R></code>, the resulting type is <code>future&lt;R></code>
+  instead of  <code>future&lt;future&lt;R>></code>.</cxx-Notes>
+  <cxx-Effects>
+    <ul>
+      <li>The continuation is called when the object's shared state is ready (has a
+      value or exception  stored).</li>
+      <li>The continuation launches according to the specified launch policy or
+      <code>executor</code>.</li>
+      <li>When the<code>executor</code>or launch policy is not provided the continuation inherits
+      the parent's launch policy or<code>executor</code>.</li>
+      <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
+      no associated launch  policy), the continuation behaves the same as the third
+      overload with a policy argument of <code>launch::async | launch::deferred</code> and the
+      same argument for <code>func</code>.</li>
+      <li>If the parent has a policy of <code>launch::deferred</code> and the continuation does
+      not have a specified  launch policy or scheduler, then the parent is filled by
+      immediately calling <code>wait()</code>, and the  policy of the antecedent is
+      <code>launch::deferred</code>.</li>
+    </ul>
+  </cxx-Effects>
+  <cxx-Returns> An object of type <code>future&lt;decltype(func(*this))></code> that refers to the
+  shared state created by  the continuation.</cxx-Returns>
+  <cxx-Postconditions>
+  <ul>
+  <li>The <code>future</code> object is moved to the parameter of the continuation function.</li>
+  <li><code>valid() == false</code> on original <code>future</code> object immediately after it returns.</li>
+  </ul>
+  </cxx-Postconditions>
+</cxx-function>
+
+<!-- TODO: revisit the behavior of deferred above -->
+
+<cxx-function>
+  <cxx-signature>
+  template&lt;typename R2>
+  future&lt;R2> future&lt;R>::unwrap()</cxx-signature>
+
+  <cxx-Notes>
+    <ul>
+      <li><code>R</code> is a <code>future&lt;R2></code> or <code>shared_future&lt;R2></code>.</li>
+      <li>Removes the outer-most future and returns a proxy to the inner future.
+      The proxy is a  representation of the inner future and it holds the same value
+      (or exception) as the inner future.</li>
+    </ul>
+  </cxx-Notes>
+
+  <!-- TODO: specify what to do when the inner future is invalid -->
+
+  <cxx-Effects>
+    <ul>
+      <li><code>future&lt;R2> X = future&lt;future&lt;R2>>.unwrap()</code>, returns a 
+      <code>future&lt;R2></code> that
+      becomes ready when the shared state of the inner future is ready. When the
+      inner future is ready, its value (or exception) is moved to the shared
+      state of the returned future.</li>
+      <li><code>future&lt;R2> Y = future&lt;shared_future&lt;R2>>.unwrap()</code>, returns a <code>future&lt;R2></code>
+      that becomes ready when the shared state of the inner future is ready. When
+      the inner <code>shared_future</code> is ready, its value (or exception) is copied to the
+      shared state of the returned<code>future</code></li>
+      <li>If the outer future throws an exception, and <code>get()</code> is called on the
+      returned future, the returned future throws the same exception as the outer
+      future. This is the case because the inner future didn't exit.</li>
+    </ul>
+  </cxx-Effects>
+
+  <cxx-Returns>
+    A <code>future</code> of type <code>R2</code>. The result of the inner <code>future</code> is moved out
+    (<code>shared_future</code> is copied out) and stored in the shared state of the
+    returned future when it is ready or the result of the inner future throws
+    an exception.
+  </cxx-Returns>
+
+  <cxx-Postconditions>
+<ul>
+<li>The returned future has <code>valid() == true</code>, regardless of the
+    validity of the inner future.</li>
+</ul>
+  </cxx-Postconditions>
+
+  <cxx-Example>
+<pre>
+future&lt;int> work1(int value);
+int work(int value) {
+    future&lt;future&lt;int>> f1 = std::async([=] {return work1(value); });
+    future&lt;int> f2 = f1.unwrap();
+    return f2.get();
+}
+</pre>
+  </cxx-Example>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>bool is_ready() const;</cxx-signature>
+  <cxx-Returns> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</cxx-Returns>
+</cxx-function>
+
+</cxx-section>
+
+<cxx-section id="futures.shared_future">
+<h1>Changes to class template <code>shared_future</code></h1>
+<p>
+To the class declaration found in <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref>
+paragraph 3, add the following to the public functions:
+</p>
+
+<pre>
+bool is_ready() const;
+
+template&lt;typename F>
+auto then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename F>
+auto then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename F>
+auto then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename R2>
+future&lt;R2> unwrap();
+</pre>
+
+<p>
+After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add the following:
+</p>
+
+<cxx-function>
+<cxx-signature>
+template&lt;typename F>
+auto shared_future::then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename F>
+auto shared_future::then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+
+template&lt;typename F>
+auto shared_future::then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+</cxx-signature>
+
+<cxx-Notes>The three functions differ only by input parameters. The first
+only takes a callable object which  accepts a <code>shared_future</code> object as a
+parameter. The second function takes an <code>executor</code> as the first parameter and a
+callable object as the second parameter. The third function takes a launch
+policy as the  first parameter and a callable object as the second parameter.
+
+In cases where <code>decltype(func(*this))</code> is <code>future&lt;R></code>, the resulting type is
+<code>future&lt;R></code>instead of <code>future&lt;future&lt;R>></code>.
+</cxx-Notes>
+
+<cxx-Effects>
+  <ul>
+    <li>The continuation is called when the object's shared state is ready (has a
+    value or exception stored).</li>
+    <li>The continuation launches according to the specified policy or executor.</li>
+    <li>When the scheduler or launch policy is not provided the continuation
+    inherits the parent's launch policy or executor.</li>
+    <li>If the parent was created with <code>std::promise</code> (has no associated launch
+    policy), the continuation behaves the same as the third function with a policy
+    argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
+    <li>If the parent has a policy of <code>launch::deferred</code> and the continuation does not
+    have a specified  launch policy or scheduler, then the parent is filled by
+    immediately calling <code>wait</code>, and the  policy of the antecedent is
+    <code>launch::deferred</code>.</li>
+  </ul>
+</cxx-Effects>
+
+<cxx-Returns> An object of type <code>future&lt;decltype(func(*this))></code> that refers to
+the shared state created by the continuation.</cxx-Returns>
+
+<cxx-postconditions>
+  <ul>
+    <li>
+    The <code>shared_future</code> passed to the continuation function is
+    a copy of the original <code>shared_future</code>.
+    </li>
+    <li>
+    <code>valid() == true</code> on the original <code>shared_future</code> object.
+    </li>
+  </ul>
+</cxx-postconditions>
+
+</cxx-function>
+
+<cxx-function>
+<cxx-signature>
+template&lt;typename R2>
+future&lt;R2> shared_future&lt;R>::unwrap();</cxx-signature>
+
+<cxx-Requires> <code>R</code> is a <code>future&lt;R2></code> or <code>shared_future&lt;R2></code></cxx-Requires>
+
+<cxx-Notes> Removes the outer-most <code>shared_future</code> and returns a proxy to the
+inner future. The proxy is a representation of the inner future and it holds
+the same value (or exception) as the inner future.</cxx-Notes>
+
+<cxx-Effects>
+  <ul>
+    <li><code>future&lt;R2> X = shared_future&lt;future&lt;R2>>.unwrap()</code>, returns a <code>future&lt;R2></code>
+    that becomes  ready when the shared state of the inner future is ready. When the
+    inner future is ready, its  value (or exception) is moved to the shared state of
+    the returned future.</li>
+
+    <li><code>future&lt;R2> Y = shared_future&lt;shared_future&lt;R2>>.unwrap()</code>, returns a
+    <code>future&lt;R2></code> that  becomes ready when the shared state of the inner future is
+    ready. When the inner <code>shared_future</code> is ready, its value (or exception) is
+    copied to the shared state of the returned future.</li>
+
+    <li>If the outer future throws an exception, and <code>get()</code> is called on the returned
+    future, the  returned future throws the same exception as the outer future. This
+    is the case because the  inner future didn't exit.</li>
+  </ul>
+</cxx-Effects>
+
+<cxx-Returns> A<code>future</code>of type <code>R2</code>. The result of the inner<code>future</code>is moved
+out (<code>shared_future</code> is copied out) and stored in the shared state of the
+returned<code>future</code>when it is ready or the result of the inner future throws an
+exception.</cxx-Returns>
+
+<cxx-Postconditions>The returned<code>future</code>has <code>valid() == true</code>, regardless of
+the validity of the inner<code>future</code>.</cxx-Postconditions>
+
+</cxx-function>
+
+<cxx-function>
+<cxx-signature>bool is_ready() const;</cxx-signature>
+<cxx-Returns> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</cxx-Returns>
+</cxx-function>
+
+</cxx-section>
+
+<cxx-section id="futures.when_all">
+<h1> Function template <code>when_all</code></h1>
+<p>
+A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function>
+<cxx-signature>
+template <class InputIterator>
+<em>see below</em> when_all(InputIterator first, InputIterator last);
+
+template &lt;typename... T>
+<em>see below</em> when_all(T&amp;&amp;... futures);
+</cxx-signature>
+
+<cxx-Requires> <code>T</code> is of type <code>future&lt;R></code> or 
+<code>shared_future&lt;R></code>.</cxx-Requires>
+
+<cxx-Notes>
+  <ul>
+    <li>There are two variations of <code>when_all</code>. The first version takes a pair of
+    <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R0></code> and
+    <code>shared_future&lt;R1></code> objects, where <code>R0</code>  and <code>R1</code> need not be the same type.</li>
+
+    <li>Calling the first signature of <code>when_all</code> where <code>InputIterator</code> first
+    equals last,  returns a future with an empty vector that is immediately
+    ready.</li>
+
+    <li>Calling the second signature of <code>when_any</code> with no arguments returns a
+    <code>future&lt;tuple&lt;>></code> that is  immediately ready.</li>
+    </ul>
+</cxx-Notes>
+
+<cxx-Effects>
+  <ul>
+    <li>Each <code>future</code> and <code>shared_future</code> is waited upon and then copied into the
+    collection of the  output (returned) future, maintaining the order of the
+    futures in the input collection.</li>
+
+    <li>The future returned by <code>when_all</code> will not throw an exception, but the
+    futures held in the output collection may.</li>
+  </ul>
+</cxx-Effects>
+
+<cxx-Returns>
+  <ul>
+    <li><code>future&lt;tuple&lt;>></code> if <code>when_all</code> is called with zero arguments.</li>
+
+    <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
+    and the iterator pair  yields <code>future&lt;R></code>. <code>R</code> may be <code>void</code>. The order of the
+    futures in the output vector will be the same  as given by the input iterator.</li>
+
+    <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
+    compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
+    <code>void</code>. The order of the futures in the output  vector will be the same as given
+    by the input iterator.</li>
+
+    <li><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code> if inputs are fixed in
+    number. The  inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code>
+    objects. The type of the  element at each position of the tuple corresponds to
+    the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
+    may be <code>void</code>.</li>
+  </ul>
+</cxx-Returns>
+
+<cxx-Postconditions>
+  <ul>
+    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
+    <li>All output <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+  </ul>
+</cxx-Postconditions>
+</cxx-function>
+</cxx-section>
+
+<cxx-section id="futures.when_any">
+<h1> Function template <code>when_any</code></h1>
+<p>
+A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function>
+<cxx-signature>
+template &lt;class InputIterator>
+<em>see below</em> when_any(InputIterator first, InputIterator last);
+
+template &lt;typename... T>
+<em>see below</em> when_any(T&amp;&amp;... futures);
+</cxx-signature>
+
+<cxx-Requires> <code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.</cxx-Requires>
+
+<cxx-Notes>
+<ul>
+  <li>There are two variations of <code>when_any</code>. The first version takes a pair of
+  <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R></code> and
+  <code>shared_future&lt;R></code> objects, where <code>R</code> need  not be the same type.</li>
+
+  <li>Calling the first signature of <code>when_any</code> where <code>InputIterator</code> first
+  equals last, returns a future with an empty vector that is immediately
+  ready.</li>
+
+  <li>Calling the second signature of <code>when_any</code> with no arguments returns a
+  <code>future&lt;tuple&lt;>></code> that is  immediately ready.</li>
+</ul>
+</cxx-Notes>
+
+<cxx-Effects>
+<ul>
+  <li>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
+  all the futures are  copied into the collection of the output (returned) future,
+  maintaining the order of the futures  in the input collection.</li>
+
+  <li>The <code>future</code> returned by <code>when_any</code> will not throw an exception, but the
+  futures held in the  output collection may.</li>
+</ul>
+</cxx-Effects>
+
+<cxx-Returns>
+<ul>
+  <li><code>future&lt;tuple&lt;>></code> if <code>when_any</code> is called with zero arguments. </li>
+
+  <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
+  time and the  iterator pair yields <code>future&lt;R></code>. <code>R</code> may be void. The order of
+  the futures in the output vector will  be the same as given by the input
+  iterator.</li>
+
+  <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
+  compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
+  <code>void</code>. The order of the futures in the output  vector will be the same as given
+  by the input iterator.</li>
+
+  <li><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code> if inputs are fixed in
+  number. The  inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code>
+  objects. The type of the  element at each position of the tuple corresponds to
+  the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
+  maybe <code>void</code>.</li>
+</ul>
+</cxx-Returns>
+
+<cxx-Postconditions>
+<ul>
+  <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
+  <li>All input <code>shared_future&lt;T> valid() == true</code>.</li>
+</ul>
+</cxx-Postconditions>
+</cxx-function>
+</cxx-section>
+
+<cxx-section id="futures.when_any_swapped">
+<h1> Function template <code>when_any_swapped</code></h1>
+<p>
+A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function>
+<cxx-signature>
+template &lt;class InputIterator>
+<em>see below</em> when_any_swapped(InputIterator first, InputIterator last);
+</cxx-signature>
+
+<cxx-Requires> <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
+or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
+</cxx-Requires>
+
+<cxx-Notes>
+  <ul>
+    <li>The function <code>when_any_swapped</code> takes a pair of <code>InputIterators</code>.</li>
+    <li>Calling <code>when_any_swapped</code> where <code>InputIterator</code> first equals
+    last, returns a <code>future</code> with an empty vector that is immediately ready.</li>
+  </ul>
+</cxx-Notes>
+
+<cxx-Effects>
+  <ul>
+    <li>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
+    all the futures are  copied into the collection of the output (returned)
+    <code>future</code>.</li>
+
+    <li>After the copy, the <code>future</code> or <code>shared_future</code> that was first detected as
+    being ready swaps its  position with that of the last element of the result
+    collection, so that the ready <code>future</code> or <code>shared_future</code> may be identified in
+    constant time. Only one <code>future</code> or <code>shared_future</code> is thus  moved.</li>
+
+    <li>The <code>future</code> returned by <code>when_any_swapped</code> will not throw an exception, but
+    the futures held in  the output collection may.</li>
+  </ul>
+</cxx-Effects>
+
+<cxx-Returns>
+  <ul>
+    <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
+    time and the  iterator pair yields <code>future&lt;R></code>. <code>R</code> may be <code>void</code>.</li>
+    <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
+    compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
+    <code>void</code>.</li>
+  </ul>
+</cxx-Returns>
+
+<cxx-Postconditions>
+  <ul>
+    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
+    <li>All input <code>shared_future<T> valid() == true</code>.</li>
+  </ul>
+</cxx-Postconditions>
+</cxx-function>
+</cxx-section>
+
+<!-- TODO: make make_ready_future below work with references -->
+
+<cxx-section id="futures.make_ready_future">
+<h1> Function template <code>make_ready_future</code></h1>
+<p>
+A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function>
+  <cxx-signature>
+  template &lt;typename T>
+  future&lt;typename decay&lt;T>::type> make_ready_future(T&amp;&amp; value);
+
+  future&lt;void> make_ready_future();
+  </cxx-signature>
+
+  <cxx-Effects> The value that is passed in to the function is moved to the shared state of the returned future if it 
+  is an rvalue. Otherwise the value is copied to the shared state of the returned future.
+  </cxx-Effects>
+
+  <cxx-Returns>
+    <ul>
+      <li><code>future&lt;T></code>, if function is given a value of type <code>T</code>.</li>
+      <li><code>future&lt;void></code>, if the function is not given any inputs. </li>
+    </ul>
+  </cxx-Returns>
+
+  <cxx-postconditions>
+    <ul>
+      <li>Returned <code>future&lt;T>, valid() == true</code>.</li>
+      <li>Returned <code>future&lt;T>, is_ready() == true</code>.</li>
+    </ul>
+  </cxx-postconditions>
+</cxx-function>
+</cxx-section>
+
+<cxx-section id="futures.async">
+<h1>Function template <code>async</code></h1>
+<p>
+Change <cxx-ref in="cxx" to="futures.async"></cxx-ref> paragraph 1 as follows:
+</p>
+<p>
+The function template <code>async</code> provides a mechanism to launch a function
+potentially in a new thread  and provides the result of the function in a future
+object with which it shares a shared state.
+</p>
+<p>
+<pre>
+template &lt;class F, class... Args>
+future&lt;typename result_of&lt;typename decay&lt;F>::type(typename decay&lt;Args>::type...)>::type>
+async(F&amp;&amp; f, Args&amp;&amp;... args);
+
+template &lt;class F, class... Args>
+future&lt;typename result_of&lt;typename decay&lt;F>::type(typename decay&lt;Args>::type...)>::type>
+async(launch policy, F&amp;&amp; f, Args&amp;&amp;... args);
+
+<ins>
+template&lt;class F, class... Args>
+future&lt;typename result_of&lt;typename decay&lt;F>::type(typename decay&lt;Args>::type...)>::type>
+async(executor&amp; ex, F&amp;&amp; f, Args&amp;&amp;... args);
+</ins>
+</pre>
+</p>
+
+Change <cxx-ref in="cxx" to="futures.async"></cxx-ref> paragraph 3 as follows:
+
+<cxx-Effects>
+The first function behaves the same as a call to the second
+function with a policy argument of  <code>launch::async | launch::deferred</code> and the
+same arguments for <code>F</code> and <code>Args</code>. The second <ins>and third</ins> function<ins>s</ins> create<del>s</del> a
+shared state that is associated with the returned future object. The further
+behavior of the second function depends on the policy argument as follows (if
+more than one of these conditions applies, the  implementation may choose any of
+the corresponding policies):
+  <ul>
+    <li>if <code>policy &amp; launch::async</code> is non-zero &mdash; calls
+    <code>INVOKE (DECAY_COPY (std::forward&lt;F>(f))</code>, <code>DECAY_COPY (std::forward&lt;Args>(args))...)</code>
+    (20.8.2, 30.3.1.2) as if in a new thread of execution  represented by a thread object
+    with the calls to <code>DECAY_COPY ()</code> being evaluated in the thread that called
+    <code>async</code>. Any return value is stored as the result in the shared state. Any
+    exception  propagated from the execution of 
+    <code>INVOKE (DECAY_COPY (std::forward&lt;F>(f)), DECAY_COPY (std::forward&lt;Args>(args))...)</code>
+    is stored as the exceptional result in the shared state. The thread object is stored in the
+    shared state and affects the behavior of any asynchronous return objects  that
+    reference that state.</li>
+
+    <li>if <code>policy &amp; launch::deferred</code> is non-zero &mdash; Stores <code>DECAY_COPY(std::forward&lt;F>(f))</code>
+    and <code>DECAY_COPY  (std::forward&lt;Args>(args))...</code> in the
+    shared state. These copies of <code>f</code> and <code>args</code> constitute a deferred  function.
+    Invocation of the deferred function evaluates 
+    <code>INVOKE std::move(g), std::move(xyz))</code> where <code>g</code> is  the stored value of 
+    <code>DECAY_COPY (std::forward&lt;F>(f))</code> and <code>xyz</code> is the stored copy of 
+    <code>DECAY_COPY (std::forward&lt;Args>(args))...</code>. The shared state is not made ready until the
+    function has completed. The  first call to a non-timed waiting function (30.6.4)
+    on an asynchronous return object referring to this shared state shall invoke
+    the deferred function in the thread that called the waiting function. Once
+    evaluation of <code>INVOKE (std::move(g), std::move(xyz))</code> begins, the function is no
+    longer considered  deferred. <cxx-Note> If this policy is specified together with
+    other policies, such as when using a policy value  of 
+    <code>launch::async | launch::deferred</code>, implementations should defer invocation or the selection of
+    the policy when no more concurrency can be effectively exploited.
+    </cxx-Note>
+    </li>
+
+    <li>If no value is set in the launch policy, or a value is set that is 
+    neither specified in this International Standard or by the implementation,
+    the behaviour is undefined.</li>
+
+  </ul>
+</cxx-Effects>
+
+<ins>
+The further behavior of the third function is as follows:<br>
+<blockquote>
+  The <code>executor::add()</code> function is given a <code>function&lt;void()></code> which calls
+  <code>INVOKE (DECAY_COPY (std::forward&lt;F>(f)) DECAY_COPY
+  (std::forward&lt;Args>(args))...)</code>. The implementation of the executor  is decided
+  by the programmer.
+</blockquote>
 </ins>
 
-  </cxx-section>
+</cxx-section>
+
 </cxx-clause>

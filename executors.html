@@ -200,7 +200,7 @@ execution policies.
 <h1>Header <code>&lt;thread_pool></code> synopsis</h1>
 
 <pre>
-    class thread_pool;
+class thread_pool;
 </pre>
 
 <p>
@@ -209,12 +209,12 @@ threads in its constructor and that multiplexes closures onto them.
 </p>
 
 <pre>
-    class thread_pool : public scheduled_executor {
-       public:
-       explicit thread_pool(int num_threads);
-       ~thread_pool();
-       // [executor methods omitted]
-    };
+class thread_pool : public scheduled_executor {
+   public:
+   explicit thread_pool(int num_threads);
+   ~thread_pool();
+   // [executor methods omitted]
+};
 </pre>
 
 <cxx-function>
@@ -239,7 +239,7 @@ threads in its constructor and that multiplexes closures onto them.
 <h1>Header <code>&lt;serial_executor></code> synopsis</h1>
 
 <pre>
-    class serial_executor;
+class serial_executor;
 </pre>
 
 <p>
@@ -259,13 +259,13 @@ this is because serial_executor can batch <code>add()</code> calls to the underl
 executor. </cxx-notes> </p>
 
 <pre>
-    class serial_executor : public executor {
-    public
-        explicit serial_executor(executor&amp; underlying_executor);
-        virtual ~serial_executor();
-        executor&amp; underlying_executor();
-        // [executor methods omitted]
-    };
+class serial_executor : public executor {
+public
+    explicit serial_executor(executor&amp; underlying_executor);
+    virtual ~serial_executor();
+    executor&amp; underlying_executor();
+    // [executor methods omitted]
+};
 </pre>
 
 <cxx-function>
@@ -305,7 +305,7 @@ that <code>serial_executor</code> object, the behavior is undefined.
 <h1>Header <code>&lt;loop_executor></code> synopsis</h1>
 
 <pre>
-    class loop_executor;
+class loop_executor;
 </pre>
 
 <p>
@@ -318,16 +318,16 @@ concurrently with other member functions.
 </p>
 
 <pre>
-    class loop_executor : public executor {
-    public:
-        loop_executor();
-        virtual ~loop_executor();
-        void loop();
-        void run_queued_closures();
-        bool try_run_one_closure();
-        void make_loop_exit();
-        // [executor methods omitted]
-    };
+class loop_executor : public executor {
+public:
+    loop_executor();
+    virtual ~loop_executor();
+    void loop();
+    void run_queued_closures();
+    bool try_run_one_closure();
+    void make_loop_exit();
+    // [executor methods omitted]
+};
 </pre>
 
 <cxx-function>
@@ -363,10 +363,10 @@ subsequent closure-executing methods.</cxx-Effects>
 <cxx-note>
 this requirement disallows an implementation like
 <pre>
-        void run_queued_closures() {
-            add([](){make_loop_exit();});
-            loop();
-        }
+void run_queued_closures() {
+    add([](){make_loop_exit();});
+    loop();
+}
 </pre>
 
 
@@ -416,7 +416,7 @@ function.
 <h1>Header <code>&lt;inline_executor></code> synopsis</h1>
 
 <pre>
-    class inline_executor;
+class inline_executor;
 </pre>
 
 <p>
@@ -427,11 +427,11 @@ context.
 </p>
 
 <pre>
-    class inline_executor : public executor {
-    public
-        explicit inline_executor();
-        // [executor methods omitted]
-    };
+class inline_executor : public executor {
+public
+    explicit inline_executor();
+    // [executor methods omitted]
+};
 </pre>
 
 <cxx-function>
@@ -453,7 +453,7 @@ call by immediately executing the provided function in the caller's thread.
 <h1>Header <code>&lt;thread_executor></code> synopsis</h1>
 
 <pre>
-    class thread_executor;
+class thread_executor;
 </pre>
 
 <p>
@@ -462,12 +462,12 @@ on its own <code>std::thread</code> instance.
 </p>
 
 <pre>
-    class thread_executor : public executor {
-    public:
-        explicit thread_executor();
-        ~thread_executor();
-        // [executor methods omitted]
-    };
+class thread_executor : public executor {
+public:
+    explicit thread_executor();
+    ~thread_executor();
+    // [executor methods omitted]
+};
 </pre>
 
 <cxx-function>
