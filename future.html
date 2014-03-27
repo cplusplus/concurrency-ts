@@ -83,16 +83,24 @@ After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add 
       value or exception  stored).</li>
       <li>The continuation launches according to the specified launch policy or
       <code>executor</code>.</li>
-      <li>When the<code>executor</code>or launch policy is not provided the continuation inherits
-      the parent's launch policy or<code>executor</code>.</li>
+      <li>When the <code>executor </code>or launch policy is not provided the continuation inherits
+      the parent's launch policy or <code>executor</code>.</li>
       <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
       no associated launch  policy), the continuation behaves the same as the third
       overload with a policy argument of <code>launch::async | launch::deferred</code> and the
       same argument for <code>func</code>.</li>
-      <li>If the parent has a policy of <code>launch::deferred</code> and the continuation does
-      not have a specified  launch policy or scheduler, then the parent is filled by
-      immediately calling <code>wait()</code>, and the  policy of the antecedent is
-      <code>launch::deferred</code>.</li>
+      <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
+      calling <code>wait()</code> or <code>get()</code> on the resulting <code>future</code>.
+      <a id="futures.unique_future.example"></a>
+      <cxx-example>
+      <pre>
+auto f1 = async(launch::deferred, [] { return 1; });
+
+auto f2 = f1.then([](future<int> n) { return 2; });
+
+f2.wait(); // execution of f1 starts here, followed by f2
+      </pre> </cxx-example>
+      </li>
     </ul>
   </cxx-Effects>
   <cxx-Returns> An object of type <code>future&lt;decltype(func(*this))></code> that refers to the
@@ -104,8 +112,6 @@ After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add 
   </ul>
   </cxx-Postconditions>
 </cxx-function>
-
-<!-- TODO: revisit the behavior of deferred above -->
 
 <cxx-function>
   <cxx-signature>
@@ -232,10 +238,12 @@ In cases where <code>decltype(func(*this))</code> is <code>future&lt;R></code>, 
     <li>If the parent was created with <code>std::promise</code> (has no associated launch
     policy), the continuation behaves the same as the third function with a policy
     argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
-    <li>If the parent has a policy of <code>launch::deferred</code> and the continuation does not
-    have a specified  launch policy or scheduler, then the parent is filled by
-    immediately calling <code>wait</code>, and the  policy of the antecedent is
-    <code>launch::deferred</code>.</li>
+    <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
+    calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
+    <cxx-note>
+    This is similar to <code>future</code>. See example in <cxx-ref to="futures.unique_future"></cxx-ref>.
+    </cxx-note>
+    </li>
   </ul>
 </cxx-Effects>
 
