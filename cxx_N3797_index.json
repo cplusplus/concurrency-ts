@@ -1,4 +1,5 @@
 {
+    "intro.multithread": "1.10",
     "basic.stc.dynamic.deallocation": "3.7.4.2",
     "expr": "5",
     "expr.call": "5.2.2",

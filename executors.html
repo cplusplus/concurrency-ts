@@ -247,16 +247,19 @@ Class <code>serial_executor</code> is an adaptor that runs its closures by sched
 on another (not necessarily single-threaded) executor. It runs added closures
 inside a series of closures added to an underlying executor in such a way so
 that the closures execute serially. For any two closures <code>c1</code> and <code>c2</code> added to
-a <code>serial_executor</code> <code>e</code>, either the completion of <code>c1</code> happens before (1.10
-[intro.multithread]) the execution of <code>c2</code> begins, or vice versa. If <code>e.add(c1)</code>
-happens before <code>e.add(c2)</code>, then <code>c1</code> is executed before <code>c2</code>.</p>
+a <code>serial_executor</code> <code>e</code>, either the completion of <code>c1</code> happens before
+(as per <cxx-ref in="cxx" to="intro.multithread"></cxx-ref>) the execution of <code>c2</code> begins, or vice versa. 
+If <code>e.add(c1)</code> happens before <code>e.add(c2)</code>, then <code>c1</code> is 
+executed before <code>c2</code>.</p>
 
 <p>
 The number of <code>add()</code> calls on the underlying executor is unspecified, and if
 the underlying executor guarantees an ordering on its closures, that ordering
-won't necessarily extend to closures added through a <code>serial_executor</code>. <cxx-notes>
-this is because serial_executor can batch <code>add()</code> calls to the underlying
-executor. </cxx-notes> </p>
+won't necessarily extend to closures added through a <code>serial_executor</code>.
+
+<cxx-note>
+this is because <code>serial_executor</code> can batch <code>add()</code> calls to the underlying
+executor. </cxx-note>
 
 <pre>
 class serial_executor : public executor {
