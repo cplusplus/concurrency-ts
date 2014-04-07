@@ -1260,12 +1260,10 @@ happens before <code>e.add(c2)</code>, then <code>c1</code> is executed before <
 <p para_num="2" id="executors.classes.serial.synop.2">
 The number of <code>add()</code> calls on the underlying executor is unspecified, and if
 the underlying executor guarantees an ordering on its closures, that ordering
-won't necessarily extend to closures added through a <code>serial_executor</code>. <cxx-notes>
-    
-    </cxx-notes></p><dt>Notes:</dt><dd>
+won't necessarily extend to closures added through a <code>serial_executor</code>.
+<cxx-note><span class="nowrap">[ <em>Note:</em></span>
 this is because serial_executor can batch <code>add()</code> calls to the underlying
-executor. </dd>
-   <p></p>
+executor. <span class="nowrap">— <em>end note</em> ]</span></cxx-note></p>
 
 <pre>class serial_executor : public executor {
 public
