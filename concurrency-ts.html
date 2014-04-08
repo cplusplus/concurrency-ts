@@ -556,7 +556,7 @@ ul li:before {
         <tr><th>Editor:</th><td><cxx-editor>
     Artur Laksberg<br>
     Microsoft Corp.<br>
-    <cxx-email><a href="mailto:arturl@gmicrosoft.com">arturl@gmicrosoft.com</a></cxx-email>
+    <cxx-email><a href="mailto:arturl@microsoft.com">arturl@microsoft.com</a></cxx-email>
   </cxx-editor></td></tr>
       
     </tbody></table>
@@ -1253,19 +1253,24 @@ Class <code>serial_executor</code> is an adaptor that runs its closures by sched
 on another (not necessarily single-threaded) executor. It runs added closures
 inside a series of closures added to an underlying executor in such a way so
 that the closures execute serially. For any two closures <code>c1</code> and <code>c2</code> added to
-a <code>serial_executor</code> <code>e</code>, either the completion of <code>c1</code> happens before (1.10
-[intro.multithread]) the execution of <code>c2</code> begins, or vice versa. If <code>e.add(c1)</code>
-happens before <code>e.add(c2)</code>, then <code>c1</code> is executed before <code>c2</code>.</p>
+a <code>serial_executor</code> <code>e</code>, either the completion of <code>c1</code> happens before
+(as per <cxx-ref in="cxx" to="intro.multithread"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="intro.multithread">§1.10</span></cxx-ref>) the execution of <code>c2</code> begins, or vice versa. 
+If <code>e.add(c1)</code> happens before <code>e.add(c2)</code>, then <code>c1</code> is 
+executed before <code>c2</code>.</p>
 
 <p para_num="2" id="executors.classes.serial.synop.2">
 The number of <code>add()</code> calls on the underlying executor is unspecified, and if
 the underlying executor guarantees an ordering on its closures, that ordering
 won't necessarily extend to closures added through a <code>serial_executor</code>.
-<cxx-note><span class="nowrap">[ <em>Note:</em></span>
-this is because serial_executor can batch <code>add()</code> calls to the underlying
-executor. <span class="nowrap">— <em>end note</em> ]</span></cxx-note></p>
 
-<pre>class serial_executor : public executor {
+<cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    
+this is because <code>serial_executor</code> can batch <code>add()</code> calls to the underlying
+executor. 
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note>
+
+</p><pre>class serial_executor : public executor {
 public
     explicit serial_executor(executor&amp; underlying_executor);
     virtual ~serial_executor();
@@ -1810,16 +1815,28 @@ After <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid
       value or exception  stored).</li>
       <li>The continuation launches according to the specified launch policy or
       <code>executor</code>.</li>
-      <li>When the<code>executor</code>or launch policy is not provided the continuation inherits
-      the parent's launch policy or<code>executor</code>.</li>
+      <li>When the <code>executor </code>or launch policy is not provided the continuation inherits
+      the parent's launch policy or <code>executor</code>.</li>
       <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
       no associated launch  policy), the continuation behaves the same as the third
       overload with a policy argument of <code>launch::async | launch::deferred</code> and the
       same argument for <code>func</code>.</li>
-      <li>If the parent has a policy of <code>launch::deferred</code> and the continuation does
-      not have a specified  launch policy or scheduler, then the parent is filled by
-      immediately calling <code>wait()</code>, and the  policy of the antecedent is
-      <code>launch::deferred</code>.</li>
+      <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
+      calling <code>wait()</code> or <code>get()</code> on the resulting <code>future</code>.
+      <a id="futures.unique_future.example"></a>
+      <cxx-example>
+    
+    <span class="nowrap">[ <em>Example:</em></span>
+    
+      <pre>auto f1 = async(launch::deferred, [] { return 1; });
+
+auto f2 = f1.then([](future<int> n) { return 2; });
+
+f2.wait(); // execution of f1 starts here, followed by f2
+      </int></pre> 
+    <span class="nowrap">— <em>end example</em> ]</span>
+  </cxx-example>
+      </li>
     </ul>
   </dd>
   </cxx-effects>
@@ -1840,8 +1857,6 @@ After <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid
 
     </dl>
   </cxx-function>
-
-<!-- TODO: revisit the behavior of deferred above -->
 
 <cxx-function para_num="12" id="futures.unique_future.12">
     
@@ -2017,10 +2032,15 @@ In cases where <code>decltype(func(*this))</code> is <code>future&lt;R&gt;</code
     <li>If the parent was created with <code>std::promise</code> (has no associated launch
     policy), the continuation behaves the same as the third function with a policy
     argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
-    <li>If the parent has a policy of <code>launch::deferred</code> and the continuation does not
-    have a specified  launch policy or scheduler, then the parent is filled by
-    immediately calling <code>wait</code>, and the  policy of the antecedent is
-    <code>launch::deferred</code>.</li>
+    <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
+    calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
+    <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    
+    This is similar to <code>future</code>. See example in <cxx-ref in="" to="futures.unique_future"><cxx-get-element-by-id elemid="" elem="{{inElem}}"></cxx-get-element-by-id><cxx-get-element-by-id elemid="futures.unique_future" elem="{{toElem}}"></cxx-get-element-by-id><a title="futures.unique_future" href="#futures.unique_future">3.2</a></cxx-ref>.
+    
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note>
+    </li>
   </ul>
 </dd>
   </cxx-effects>
