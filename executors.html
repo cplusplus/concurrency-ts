@@ -46,7 +46,7 @@ several utility functions.</p>
       </tr>
       <tr>
         <td>&nbsp;&nbsp;[executors.classes.thread]</td>
-        <td><code>&lt;thread_executor></code></td>
+        <td><code>&lt;thread_per_task_executor></code></td>
       </tr>
     </table>
 
@@ -449,37 +449,37 @@ call by immediately executing the provided function in the caller's thread.
 </cxx-section>
 
 <cxx-section id="executors.classes.thread">
-<h1>Class <code>thread_executor</code></h1>
+<h1>Class <code>thread_per_task_executor</code></h1>
 
 </cxx-section>
 <cxx-section id="executors.classes.thread.syn">
-<h1>Header <code>&lt;thread_executor></code> synopsis</h1>
+<h1>Header <code>&lt;thread_per_task_executor></code> synopsis</h1>
 
 <pre>
-class thread_executor;
+class thread_per_task_executor;
 </pre>
 
 <p>
-Class <code>thread_executor</code> is a simple executor that executes each task (closure)
+Class <code>thread_per_task_executor</code> is a simple executor that executes each task (closure)
 on its own <code>std::thread</code> instance.
 </p>
 
 <pre>
-class thread_executor : public executor {
+class thread_per_task_executor : public executor {
 public:
-    explicit thread_executor();
-    ~thread_executor();
+    explicit thread_per_task_executor();
+    ~thread_per_task_executor();
     // [executor methods omitted]
 };
 </pre>
 
 <cxx-function>
-<cxx-signature>thread_executor::thread_executor()</cxx-signature>
+<cxx-signature>thread_per_task_executor::thread_per_task_executor()</cxx-signature>
 <cxx-effects>Creates an executor that runs each closure on a separate thread.</cxx-effects>
 </cxx-function>
 
 <cxx-function>
-<cxx-signature>thread_executor::~thread_executor()</cxx-signature>
+<cxx-signature>thread_per_task_executor::~thread_per_task_executor()</cxx-signature>
 <cxx-effects> Waits for all added closures (if any) to complete, then joins and
 destroys the threads.</cxx-effects>
 </cxx-function>
