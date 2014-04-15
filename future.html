@@ -27,16 +27,14 @@ bool is_ready() const;
 future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;
 
 template&lt;typename F>
-auto then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> then(F&amp;&amp; func);
 
 template&lt;typename F>
-auto then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
 
 template&lt;typename F>
-auto then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> then(launch policy, F&amp;&amp; func);
 
-template&lt;typename R2>
-<em>see below</em> unwrap();
 </pre>
 
 <p>
@@ -45,7 +43,7 @@ In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 
 <cxx-function>
   <cxx-signature>future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;</cxx-signature>
   <cxx-Effects>Constructs a <code>future</code> object by moving the instance referred to by
-  <code>rhs</code> and unwrapping the inner future (see <code>unwrap()</code>).</cxx-Effects>
+  <code>rhs</code> and unwrapping the inner future.</cxx-Effects>
   <cxx-postconditions>
     <!-- revisit: what happens when innner future is invalid? -->
     <ul>
@@ -62,21 +60,21 @@ After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add 
 <cxx-function>
   <cxx-signature>
   template&lt;typename F>
-  auto then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+  <em>see below</em> then(F&amp;&amp; func);
 
   template&lt;typename F>
-  auto then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+  <em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
 
   template&lt;typename F>
-  auto then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+  <em>see below</em> then(launch policy, F&amp;&amp; func);
   </cxx-signature>
+
   <cxx-Notes>  The three functions differ only by input parameters. The first only
   takes a callable object which accepts a <code>future</code> object as a parameter. The
   second function takes an <code>executor</code> as the first parameter and a callable object
   as the second parameter. The third function takes a launch policy as the first
-  parameter and a callable object as the second parameter.  In cases where
-  <code>decltype(func(*this))</code> is <code>future&lt;R></code>, the resulting type is <code>future&lt;R></code>
-  instead of  <code>future&lt;future&lt;R>></code>.</cxx-Notes>
+  parameter and a callable object as the second parameter.
+  </cxx-Notes>
   <cxx-Effects>
     <ul>
       <li>The continuation is called when the object's shared state is ready (has a
@@ -103,73 +101,46 @@ f2.wait(); // execution of f1 starts here, followed by f2
       </li>
     </ul>
   </cxx-Effects>
-  <cxx-Returns> An object of type <code>future&lt;decltype(func(*this))></code> that refers to the
-  shared state created by  the continuation.</cxx-Returns>
+
+  <cxx-Returns> 
+    The return type of <code>then</code> depends on the return type of the closure
+    <code>func</code> as defined below:
+
+    <ul>
+      <li>
+        When <code>result_of_t&lt;decay_t&lt;F>()></code>
+        is <code>future&lt;R></code>, the function returns <code>future&lt;R></code>.
+      </li>
+      <li>
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>()>></code>.
+    <cxx-Notes>
+        The first rule above is called the <em>implicit unwrapping</em>. Without this rule,
+        the return type of <code>then</code> taking a closure returning a 
+        <code>future&lt;R></code> would have been <code>future&lt;future&lt;R>></code>.
+        This rule avoids such nested <code>future</code> objects.
+        <cxx-example>
+          The type of <code>f2</code> below is 
+          <code>future&lt;int></code> and not <code>future&lt;future&lt;int>></code>:
+<pre>
+future&lt;int> f1 = g();
+future&lt;int> f2 = f1.then([](future&lt;int> f) {
+                    future&lt;int> f3 = h();
+                    return f3;
+                 });
+</pre>
+        </cxx-example>
+    </cxx-Notes>
+      </li>
+    </ul>
+
+  </cxx-Returns>
+
   <cxx-Postconditions>
   <ul>
   <li>The <code>future</code> object is moved to the parameter of the continuation function.</li>
   <li><code>valid() == false</code> on original <code>future</code> object immediately after it returns.</li>
   </ul>
   </cxx-Postconditions>
-</cxx-function>
-
-<cxx-function>
-  <cxx-signature>
-  template&lt;typename R2>
-  future&lt;R2> future&lt;R>::unwrap()</cxx-signature>
-
-  <cxx-Notes>
-    <ul>
-      <li><code>R</code> is a <code>future&lt;R2></code> or <code>shared_future&lt;R2></code>.</li>
-      <li>Removes the outer-most future and returns a proxy to the inner future.
-      The proxy is a  representation of the inner future and it holds the same value
-      (or exception) as the inner future.</li>
-    </ul>
-  </cxx-Notes>
-
-  <!-- TODO: specify what to do when the inner future is invalid -->
-
-  <cxx-Effects>
-    <ul>
-      <li><code>future&lt;R2> X = future&lt;future&lt;R2>>.unwrap()</code>, returns a 
-      <code>future&lt;R2></code> that
-      becomes ready when the shared state of the inner future is ready. When the
-      inner future is ready, its value (or exception) is moved to the shared
-      state of the returned future.</li>
-      <li><code>future&lt;R2> Y = future&lt;shared_future&lt;R2>>.unwrap()</code>, returns a <code>future&lt;R2></code>
-      that becomes ready when the shared state of the inner future is ready. When
-      the inner <code>shared_future</code> is ready, its value (or exception) is copied to the
-      shared state of the returned<code>future</code></li>
-      <li>If the outer future throws an exception, and <code>get()</code> is called on the
-      returned future, the returned future throws the same exception as the outer
-      future. This is the case because the inner future didn't exit.</li>
-    </ul>
-  </cxx-Effects>
-
-  <cxx-Returns>
-    A <code>future</code> of type <code>R2</code>. The result of the inner <code>future</code> is moved out
-    (<code>shared_future</code> is copied out) and stored in the shared state of the
-    returned future when it is ready or the result of the inner future throws
-    an exception.
-  </cxx-Returns>
-
-  <cxx-Postconditions>
-<ul>
-<li>The returned future has <code>valid() == true</code>, regardless of the
-    validity of the inner future.</li>
-</ul>
-  </cxx-Postconditions>
-
-  <cxx-Example>
-<pre>
-future&lt;int> work1(int value);
-int work(int value) {
-    future&lt;future&lt;int>> f1 = std::async([=] {return work1(value); });
-    future&lt;int> f2 = f1.unwrap();
-    return f2.get();
-}
-</pre>
-  </cxx-Example>
 </cxx-function>
 
 <cxx-function>
@@ -190,16 +161,13 @@ paragraph 3, add the following to the public functions:
 bool is_ready() const;
 
 template&lt;typename F>
-auto then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> then(F&amp;&amp; func);
 
 template&lt;typename F>
-auto then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
 
 template&lt;typename F>
-auto then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
-
-template&lt;typename R2>
-future&lt;R2> unwrap();
+<em>see below</em> then(launch policy, F&amp;&amp; func);
 </pre>
 
 <p>
@@ -209,13 +177,13 @@ After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add 
 <cxx-function>
 <cxx-signature>
 template&lt;typename F>
-auto shared_future::then(F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> shared_future::then(F&amp;&amp; func);
 
 template&lt;typename F>
-auto shared_future::then(executor &amp;ex, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> shared_future::then(executor &amp;ex, F&amp;&amp; func);
 
 template&lt;typename F>
-auto shared_future::then(launch policy, F&amp;&amp; func) -> future&lt;decltype(func(*this))>;
+<em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
 <cxx-Notes>The three functions differ only by input parameters. The first
@@ -223,9 +191,6 @@ only takes a callable object which  accepts a <code>shared_future</code> object 
 parameter. The second function takes an <code>executor</code> as the first parameter and a
 callable object as the second parameter. The third function takes a launch
 policy as the  first parameter and a callable object as the second parameter.
-
-In cases where <code>decltype(func(*this))</code> is <code>future&lt;R></code>, the resulting type is
-<code>future&lt;R></code>instead of <code>future&lt;future&lt;R>></code>.
 </cxx-Notes>
 
 <cxx-Effects>
@@ -247,8 +212,24 @@ In cases where <code>decltype(func(*this))</code> is <code>future&lt;R></code>, 
   </ul>
 </cxx-Effects>
 
-<cxx-Returns> An object of type <code>future&lt;decltype(func(*this))></code> that refers to
-the shared state created by the continuation.</cxx-Returns>
+  <cxx-Returns> 
+    The return type of <code>then</code> depends on the return type of the closure
+    <code>func</code> as defined below:
+
+    <ul>
+      <li>
+        When <code>result_of_t&lt;decay_t&lt;F>()></code>
+        is <code>future&lt;R></code>, the function returns <code>future&lt;R></code>.
+      </li>
+      <li>
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>()>></code>.
+        <cxx-notes>
+          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
+        </cxx-notes>
+      </li>
+    </ul>
+
+  </cxx-Returns>
 
 <cxx-postconditions>
   <ul>
@@ -261,45 +242,6 @@ the shared state created by the continuation.</cxx-Returns>
     </li>
   </ul>
 </cxx-postconditions>
-
-</cxx-function>
-
-<cxx-function>
-<cxx-signature>
-template&lt;typename R2>
-future&lt;R2> shared_future&lt;R>::unwrap();</cxx-signature>
-
-<cxx-Requires> <code>R</code> is a <code>future&lt;R2></code> or <code>shared_future&lt;R2></code></cxx-Requires>
-
-<cxx-Notes> Removes the outer-most <code>shared_future</code> and returns a proxy to the
-inner future. The proxy is a representation of the inner future and it holds
-the same value (or exception) as the inner future.</cxx-Notes>
-
-<cxx-Effects>
-  <ul>
-    <li><code>future&lt;R2> X = shared_future&lt;future&lt;R2>>.unwrap()</code>, returns a <code>future&lt;R2></code>
-    that becomes  ready when the shared state of the inner future is ready. When the
-    inner future is ready, its  value (or exception) is moved to the shared state of
-    the returned future.</li>
-
-    <li><code>future&lt;R2> Y = shared_future&lt;shared_future&lt;R2>>.unwrap()</code>, returns a
-    <code>future&lt;R2></code> that  becomes ready when the shared state of the inner future is
-    ready. When the inner <code>shared_future</code> is ready, its value (or exception) is
-    copied to the shared state of the returned future.</li>
-
-    <li>If the outer future throws an exception, and <code>get()</code> is called on the returned
-    future, the  returned future throws the same exception as the outer future. This
-    is the case because the  inner future didn't exit.</li>
-  </ul>
-</cxx-Effects>
-
-<cxx-Returns> A<code>future</code>of type <code>R2</code>. The result of the inner<code>future</code>is moved
-out (<code>shared_future</code> is copied out) and stored in the shared state of the
-returned<code>future</code>when it is ready or the result of the inner future throws an
-exception.</cxx-Returns>
-
-<cxx-Postconditions>The returned<code>future</code>has <code>valid() == true</code>, regardless of
-the validity of the inner<code>future</code>.</cxx-Postconditions>
 
 </cxx-function>
 
