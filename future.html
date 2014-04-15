@@ -18,9 +18,6 @@ To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"><
 functions:
 </p>
 
-<!-- decay the function, refer to std::async -->
-<!-- result_of_t<decay_t<F>(future)> -->
-
 <pre>
 bool is_ready() const;
 
@@ -470,7 +467,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 <cxx-function>
   <cxx-signature>
   template &lt;typename T>
-  future&lt;typename decay&lt;T>::type> make_ready_future(T&amp;&amp; value);
+  future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
 
   future&lt;void> make_ready_future();
   </cxx-signature>
@@ -508,16 +505,16 @@ object with which it shares a shared state.
 <p>
 <pre>
 template &lt;class F, class... Args>
-future&lt;typename result_of&lt;typename decay&lt;F>::type(typename decay&lt;Args>::type...)>::type>
+future&lt;result_of_t&lt;decay_t&lt;F>(decay_t&lt;Args>...)>>
 async(F&amp;&amp; f, Args&amp;&amp;... args);
 
 template &lt;class F, class... Args>
-future&lt;typename result_of&lt;typename decay&lt;F>::type(typename decay&lt;Args>::type...)>::type>
+future&lt;result_of_t&lt;decay_t&lt;F>(decay_t&lt;Args>...)>>
 async(launch policy, F&amp;&amp; f, Args&amp;&amp;... args);
 
 <ins>
 template&lt;class F, class... Args>
-future&lt;typename result_of&lt;typename decay&lt;F>::type(typename decay&lt;Args>::type...)>::type>
+future&lt;result_of_t&lt;decay_t&lt;F>(decay_t&lt;Args>...)>>
 async(executor&amp; ex, F&amp;&amp; f, Args&amp;&amp;... args);
 </ins>
 </pre>
