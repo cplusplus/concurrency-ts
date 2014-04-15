@@ -456,8 +456,6 @@ or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
 </cxx-function>
 </cxx-section>
 
-<!-- TODO: make make_ready_future below work with references -->
-
 <cxx-section id="futures.make_ready_future">
 <h1> Function template <code>make_ready_future</code></h1>
 <p>
@@ -472,21 +470,21 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
   future&lt;void> make_ready_future();
   </cxx-signature>
 
-  <cxx-Effects> The value that is passed in to the function is moved to the shared state of the returned future if it 
-  is an rvalue. Otherwise the value is copied to the shared state of the returned future.
+  <cxx-Effects> The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it 
+  is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.
   </cxx-Effects>
 
   <cxx-Returns>
     <ul>
-      <li><code>future&lt;T></code>, if function is given a value of type <code>T</code>.</li>
+      <li><code>future&lt;decay_t&lt;T>></code>, if function is given a value of type <code>T</code>.</li>
       <li><code>future&lt;void></code>, if the function is not given any inputs. </li>
     </ul>
   </cxx-Returns>
 
   <cxx-postconditions>
     <ul>
-      <li>Returned <code>future&lt;T>, valid() == true</code>.</li>
-      <li>Returned <code>future&lt;T>, is_ready() == true</code>.</li>
+      <li>Returned <code>future&lt;decay_t&lt;T>>, valid() == true</code>.</li>
+      <li>Returned <code>future&lt;decay_t&lt;T>>, is_ready() == true</code>.</li>
     </ul>
   </cxx-postconditions>
 </cxx-function>
