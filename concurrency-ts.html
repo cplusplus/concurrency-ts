@@ -657,11 +657,11 @@ Concurrency</h1>
         
       </li>
             
-              <li><span class="marker">2.6.9</span><a href="#executors.classes.thread">Class thread_executor</a>
+              <li><span class="marker">2.6.9</span><a href="#executors.classes.thread">Class thread_per_task_executor</a>
         
       </li>
             
-              <li><span class="marker">2.6.10</span><a href="#executors.classes.thread.syn">Header &lt;thread_executor&gt; synopsis</a>
+              <li><span class="marker">2.6.10</span><a href="#executors.classes.thread.syn">Header &lt;thread_per_task_executor&gt; synopsis</a>
         
       </li>
             
@@ -883,7 +883,7 @@ several utility functions.</p>
       </tr>
       <tr>
         <td>&nbsp;&nbsp;[executors.classes.thread]</td>
-        <td><code>&lt;thread_executor&gt;</code></td>
+        <td><code>&lt;thread_per_task_executor&gt;</code></td>
       </tr>
     </tbody>
   </table>
@@ -1621,7 +1621,7 @@ call by immediately executing the provided function in the caller's thread.
     
 
     <section>
-      <header><span class="section-number">2.6.9</span> <h1 data-bookmark-label="2.6.9 Class thread_executor">Class <code>thread_executor</code></h1> <span style="float:right"><a href="#executors.classes.thread">[executors.classes.thread]</a></span></header>
+      <header><span class="section-number">2.6.9</span> <h1 data-bookmark-label="2.6.9 Class thread_per_task_executor">Class <code>thread_per_task_executor</code></h1> <span style="float:right"><a href="#executors.classes.thread">[executors.classes.thread]</a></span></header>
       
 
 
@@ -1632,29 +1632,29 @@ call by immediately executing the provided function in the caller's thread.
     
 
     <section>
-      <header><span class="section-number">2.6.10</span> <h1 data-bookmark-label="2.6.10 Header &lt;thread_executor&gt; synopsis">Header <code>&lt;thread_executor&gt;</code> synopsis</h1> <span style="float:right"><a href="#executors.classes.thread.syn">[executors.classes.thread.syn]</a></span></header>
+      <header><span class="section-number">2.6.10</span> <h1 data-bookmark-label="2.6.10 Header &lt;thread_per_task_executor&gt; synopsis">Header <code>&lt;thread_per_task_executor&gt;</code> synopsis</h1> <span style="float:right"><a href="#executors.classes.thread.syn">[executors.classes.thread.syn]</a></span></header>
       
 
 
-<pre>class thread_executor;
+<pre>class thread_per_task_executor;
 </pre>
 
 <p para_num="1" id="executors.classes.thread.syn.1">
-Class <code>thread_executor</code> is a simple executor that executes each task (closure)
+Class <code>thread_per_task_executor</code> is a simple executor that executes each task (closure)
 on its own <code>std::thread</code> instance.
 </p>
 
-<pre>class thread_executor : public executor {
+<pre>class thread_per_task_executor : public executor {
 public:
-    explicit thread_executor();
-    ~thread_executor();
+    explicit thread_per_task_executor();
+    ~thread_per_task_executor();
     // [executor methods omitted]
 };
 </pre>
 
 <cxx-function para_num="2" id="executors.classes.thread.syn.2">
     
-    <pre><code><cxx-signature>thread_executor::thread_executor()</cxx-signature></code></pre>
+    <pre><code><cxx-signature>thread_per_task_executor::thread_per_task_executor()</cxx-signature></code></pre>
 
     <dl>
       
@@ -1669,7 +1669,7 @@ public:
 
 <cxx-function para_num="4" id="executors.classes.thread.syn.4">
     
-    <pre><code><cxx-signature>thread_executor::~thread_executor()</cxx-signature></code></pre>
+    <pre><code><cxx-signature>thread_per_task_executor::~thread_per_task_executor()</cxx-signature></code></pre>
 
     <dl>
       
@@ -1728,24 +1728,19 @@ To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"><
 functions:
 </p>
 
-<!-- decay the function, refer to std::async -->
-<!-- result_of_t<decay_t<F>(future)> -->
-
 <pre>bool is_ready() const;
 
 future(future&lt;future&lt;R&gt;&gt;&amp;&amp; rhs) noexcept;
 
 template&lt;typename F&gt;
-auto then(F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> then(F&amp;&amp; func);
 
 template&lt;typename F&gt;
-auto then(executor &amp;ex, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
 
 template&lt;typename F&gt;
-auto then(launch policy, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> then(launch policy, F&amp;&amp; func);
 
-template&lt;typename R2&gt;
-<em>see below</em> unwrap();
 </pre>
 
 <p para_num="2" id="futures.unique_future.2">
@@ -1761,7 +1756,7 @@ In <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="c
   <cxx-effects para_num="4" id="futures.unique_future.4">
     
     <dt>Effects:</dt><dd>Constructs a <code>future</code> object by moving the instance referred to by
-  <code>rhs</code> and unwrapping the inner future (see <code>unwrap()</code>).</dd>
+  <code>rhs</code> and unwrapping the inner future.</dd>
   </cxx-effects>
   <cxx-postconditions para_num="5" id="futures.unique_future.5">
     
@@ -1785,27 +1780,27 @@ After <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid
     
     <pre><code><cxx-signature>
   template&lt;typename F&gt;
-  auto then(F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+  <em>see below</em> then(F&amp;&amp; func);
 
   template&lt;typename F&gt;
-  auto then(executor &amp;ex, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+  <em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
 
   template&lt;typename F&gt;
-  auto then(launch policy, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+  <em>see below</em> then(launch policy, F&amp;&amp; func);
   </cxx-signature></code></pre>
 
     <dl>
       
   
+
   <cxx-notes para_num="8" id="futures.unique_future.8">
     
     <dt>Notes:</dt><dd>  The three functions differ only by input parameters. The first only
   takes a callable object which accepts a <code>future</code> object as a parameter. The
   second function takes an <code>executor</code> as the first parameter and a callable object
   as the second parameter. The third function takes a launch policy as the first
-  parameter and a callable object as the second parameter.  In cases where
-  <code>decltype(func(*this))</code> is <code>future&lt;R&gt;</code>, the resulting type is <code>future&lt;R&gt;</code>
-  instead of  <code>future&lt;future&lt;R&gt;&gt;</code>.</dd>
+  parameter and a callable object as the second parameter.
+  </dd>
   </cxx-notes>
   <cxx-effects para_num="9" id="futures.unique_future.9">
     
@@ -1840,11 +1835,50 @@ f2.wait(); // execution of f1 starts here, followed by f2
     </ul>
   </dd>
   </cxx-effects>
+
   <cxx-returns para_num="10" id="futures.unique_future.10">
     
-    <dt>Returns:</dt><dd> An object of type <code>future&lt;decltype(func(*this))&gt;</code> that refers to the
-  shared state created by  the continuation.</dd>
+    <dt>Returns:</dt><dd> 
+    The return type of <code>then</code> depends on the return type of the closure
+    <code>func</code> as defined below:
+
+    <ul>
+      <li>
+        When <code>result_of_t&lt;decay_t&lt;F&gt;()&gt;</code>
+        is <code>future&lt;R&gt;</code>, the function returns <code>future&lt;R&gt;</code>.
+      </li>
+      <li>
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F&gt;()&gt;&gt;</code>.
+    <cxx-notes>
+    
+    <dt>Notes:</dt><dd>
+        The first rule above is called the <em>implicit unwrapping</em>. Without this rule,
+        the return type of <code>then</code> taking a closure returning a 
+        <code>future&lt;R&gt;</code> would have been <code>future&lt;future&lt;R&gt;&gt;</code>.
+        This rule avoids such nested <code>future</code> objects.
+        <cxx-example>
+    
+    <span class="nowrap">[ <em>Example:</em></span>
+    
+          The type of <code>f2</code> below is 
+          <code>future&lt;int&gt;</code> and not <code>future&lt;future&lt;int&gt;&gt;</code>:
+<pre>future&lt;int&gt; f1 = g();
+future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
+                    future&lt;int&gt; f3 = h();
+                    return f3;
+                 });
+</pre>
+        
+    <span class="nowrap">— <em>end example</em> ]</span>
+  </cxx-example>
+    </dd>
+  </cxx-notes>
+      </li>
+    </ul>
+
+  </dd>
   </cxx-returns>
+
   <cxx-postconditions para_num="11" id="futures.unique_future.11">
     
     <dt>Postconditions:</dt><dd>
@@ -1860,94 +1894,12 @@ f2.wait(); // execution of f1 starts here, followed by f2
 
 <cxx-function para_num="12" id="futures.unique_future.12">
     
-    <pre><code><cxx-signature>
-  template&lt;typename R2&gt;
-  future&lt;R2&gt; future&lt;R&gt;::unwrap()</cxx-signature></code></pre>
-
-    <dl>
-      
-  
-
-  <cxx-notes para_num="13" id="futures.unique_future.13">
-    
-    <dt>Notes:</dt><dd>
-    <ul>
-      <li><code>R</code> is a <code>future&lt;R2&gt;</code> or <code>shared_future&lt;R2&gt;</code>.</li>
-      <li>Removes the outer-most future and returns a proxy to the inner future.
-      The proxy is a  representation of the inner future and it holds the same value
-      (or exception) as the inner future.</li>
-    </ul>
-  </dd>
-  </cxx-notes>
-
-  <!-- TODO: specify what to do when the inner future is invalid -->
-
-  <cxx-effects para_num="14" id="futures.unique_future.14">
-    
-    <dt>Effects:</dt><dd>
-    <ul>
-      <li><code>future&lt;R2&gt; X = future&lt;future&lt;R2&gt;&gt;.unwrap()</code>, returns a 
-      <code>future&lt;R2&gt;</code> that
-      becomes ready when the shared state of the inner future is ready. When the
-      inner future is ready, its value (or exception) is moved to the shared
-      state of the returned future.</li>
-      <li><code>future&lt;R2&gt; Y = future&lt;shared_future&lt;R2&gt;&gt;.unwrap()</code>, returns a <code>future&lt;R2&gt;</code>
-      that becomes ready when the shared state of the inner future is ready. When
-      the inner <code>shared_future</code> is ready, its value (or exception) is copied to the
-      shared state of the returned<code>future</code></li>
-      <li>If the outer future throws an exception, and <code>get()</code> is called on the
-      returned future, the returned future throws the same exception as the outer
-      future. This is the case because the inner future didn't exit.</li>
-    </ul>
-  </dd>
-  </cxx-effects>
-
-  <cxx-returns para_num="15" id="futures.unique_future.15">
-    
-    <dt>Returns:</dt><dd>
-    A <code>future</code> of type <code>R2</code>. The result of the inner <code>future</code> is moved out
-    (<code>shared_future</code> is copied out) and stored in the shared state of the
-    returned future when it is ready or the result of the inner future throws
-    an exception.
-  </dd>
-  </cxx-returns>
-
-  <cxx-postconditions para_num="16" id="futures.unique_future.16">
-    
-    <dt>Postconditions:</dt><dd>
-<ul>
-<li>The returned future has <code>valid() == true</code>, regardless of the
-    validity of the inner future.</li>
-</ul>
-  </dd>
-  </cxx-postconditions>
-
-  <cxx-example>
-    
-    <span class="nowrap">[ <em>Example:</em></span>
-    
-<pre>future&lt;int&gt; work1(int value);
-int work(int value) {
-    future&lt;future&lt;int&gt;&gt; f1 = std::async([=] {return work1(value); });
-    future&lt;int&gt; f2 = f1.unwrap();
-    return f2.get();
-}
-</pre>
-  
-    <span class="nowrap">— <em>end example</em> ]</span>
-  </cxx-example>
-
-    </dl>
-  </cxx-function>
-
-<cxx-function para_num="17" id="futures.unique_future.17">
-    
     <pre><code><cxx-signature>bool is_ready() const;</cxx-signature></code></pre>
 
     <dl>
       
   
-  <cxx-returns para_num="18" id="futures.unique_future.18">
+  <cxx-returns para_num="13" id="futures.unique_future.13">
     
     <dt>Returns:</dt><dd> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</dd>
   </cxx-returns>
@@ -1974,16 +1926,13 @@ paragraph 3, add the following to the public functions:
 <pre>bool is_ready() const;
 
 template&lt;typename F&gt;
-auto then(F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> then(F&amp;&amp; func);
 
 template&lt;typename F&gt;
-auto then(executor &amp;ex, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
 
 template&lt;typename F&gt;
-auto then(launch policy, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
-
-template&lt;typename R2&gt;
-future&lt;R2&gt; unwrap();
+<em>see below</em> then(launch policy, F&amp;&amp; func);
 </pre>
 
 <p para_num="2" id="futures.shared_future.2">
@@ -1994,13 +1943,13 @@ After <cxx-ref in="cxx" to="futures.shared_future"><cxx-get-element-by-id elemid
     
     <pre><code><cxx-signature>
 template&lt;typename F&gt;
-auto shared_future::then(F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> shared_future::then(F&amp;&amp; func);
 
 template&lt;typename F&gt;
-auto shared_future::then(executor &amp;ex, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> shared_future::then(executor &amp;ex, F&amp;&amp; func);
 
 template&lt;typename F&gt;
-auto shared_future::then(launch policy, F&amp;&amp; func) -&gt; future&lt;decltype(func(*this))&gt;;
+<em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
 </cxx-signature></code></pre>
 
     <dl>
@@ -2014,9 +1963,6 @@ only takes a callable object which  accepts a <code>shared_future</code> object 
 parameter. The second function takes an <code>executor</code> as the first parameter and a
 callable object as the second parameter. The third function takes a launch
 policy as the  first parameter and a callable object as the second parameter.
-
-In cases where <code>decltype(func(*this))</code> is <code>future&lt;R&gt;</code>, the resulting type is
-<code>future&lt;R&gt;</code>instead of <code>future&lt;future&lt;R&gt;&gt;</code>.
 </dd>
   </cxx-notes>
 
@@ -2045,10 +1991,29 @@ In cases where <code>decltype(func(*this))</code> is <code>future&lt;R&gt;</code
 </dd>
   </cxx-effects>
 
-<cxx-returns para_num="6" id="futures.shared_future.6">
+  <cxx-returns para_num="6" id="futures.shared_future.6">
     
-    <dt>Returns:</dt><dd> An object of type <code>future&lt;decltype(func(*this))&gt;</code> that refers to
-the shared state created by the continuation.</dd>
+    <dt>Returns:</dt><dd> 
+    The return type of <code>then</code> depends on the return type of the closure
+    <code>func</code> as defined below:
+
+    <ul>
+      <li>
+        When <code>result_of_t&lt;decay_t&lt;F&gt;()&gt;</code>
+        is <code>future&lt;R&gt;</code>, the function returns <code>future&lt;R&gt;</code>.
+      </li>
+      <li>
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F&gt;()&gt;&gt;</code>.
+        <cxx-notes>
+    
+    <dt>Notes:</dt><dd>
+          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref in="" to="futures.unique_future"><cxx-get-element-by-id elemid="" elem="{{inElem}}"></cxx-get-element-by-id><cxx-get-element-by-id elemid="futures.unique_future" elem="{{toElem}}"></cxx-get-element-by-id><a title="futures.unique_future" href="#futures.unique_future">3.2</a></cxx-ref>.
+        </dd>
+  </cxx-notes>
+      </li>
+    </ul>
+
+  </dd>
   </cxx-returns>
 
 <cxx-postconditions para_num="7" id="futures.shared_future.7">
@@ -2072,73 +2037,12 @@ the shared state created by the continuation.</dd>
 
 <cxx-function para_num="8" id="futures.shared_future.8">
     
-    <pre><code><cxx-signature>
-template&lt;typename R2&gt;
-future&lt;R2&gt; shared_future&lt;R&gt;::unwrap();</cxx-signature></code></pre>
-
-    <dl>
-      
-
-
-<cxx-requires para_num="9" id="futures.shared_future.9">
-    
-    <dt>Requires:</dt><dd> <code>R</code> is a <code>future&lt;R2&gt;</code> or <code>shared_future&lt;R2&gt;</code></dd>
-  </cxx-requires>
-
-<cxx-notes para_num="10" id="futures.shared_future.10">
-    
-    <dt>Notes:</dt><dd> Removes the outer-most <code>shared_future</code> and returns a proxy to the
-inner future. The proxy is a representation of the inner future and it holds
-the same value (or exception) as the inner future.</dd>
-  </cxx-notes>
-
-<cxx-effects para_num="11" id="futures.shared_future.11">
-    
-    <dt>Effects:</dt><dd>
-  <ul>
-    <li><code>future&lt;R2&gt; X = shared_future&lt;future&lt;R2&gt;&gt;.unwrap()</code>, returns a <code>future&lt;R2&gt;</code>
-    that becomes  ready when the shared state of the inner future is ready. When the
-    inner future is ready, its  value (or exception) is moved to the shared state of
-    the returned future.</li>
-
-    <li><code>future&lt;R2&gt; Y = shared_future&lt;shared_future&lt;R2&gt;&gt;.unwrap()</code>, returns a
-    <code>future&lt;R2&gt;</code> that  becomes ready when the shared state of the inner future is
-    ready. When the inner <code>shared_future</code> is ready, its value (or exception) is
-    copied to the shared state of the returned future.</li>
-
-    <li>If the outer future throws an exception, and <code>get()</code> is called on the returned
-    future, the  returned future throws the same exception as the outer future. This
-    is the case because the  inner future didn't exit.</li>
-  </ul>
-</dd>
-  </cxx-effects>
-
-<cxx-returns para_num="12" id="futures.shared_future.12">
-    
-    <dt>Returns:</dt><dd> A<code>future</code>of type <code>R2</code>. The result of the inner<code>future</code>is moved
-out (<code>shared_future</code> is copied out) and stored in the shared state of the
-returned<code>future</code>when it is ready or the result of the inner future throws an
-exception.</dd>
-  </cxx-returns>
-
-<cxx-postconditions para_num="13" id="futures.shared_future.13">
-    
-    <dt>Postconditions:</dt><dd>The returned<code>future</code>has <code>valid() == true</code>, regardless of
-the validity of the inner<code>future</code>.</dd>
-  </cxx-postconditions>
-
-
-    </dl>
-  </cxx-function>
-
-<cxx-function para_num="14" id="futures.shared_future.14">
-    
     <pre><code><cxx-signature>bool is_ready() const;</cxx-signature></code></pre>
 
     <dl>
       
 
-<cxx-returns para_num="15" id="futures.shared_future.15">
+<cxx-returns para_num="9" id="futures.shared_future.9">
     
     <dt>Returns:</dt><dd> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</dd>
   </cxx-returns>
@@ -2461,7 +2365,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
     
     <pre><code><cxx-signature>
   template &lt;typename T&gt;
-  future&lt;typename decay&lt;T&gt;::type&gt; make_ready_future(T&amp;&amp; value);
+  future&lt;decay_t&lt;T&gt;&gt; make_ready_future(T&amp;&amp; value);
 
   future&lt;void&gt; make_ready_future();
   </cxx-signature></code></pre>
@@ -2472,8 +2376,8 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 
   <cxx-effects para_num="3" id="futures.make_ready_future.3">
     
-    <dt>Effects:</dt><dd> The value that is passed in to the function is moved to the shared state of the returned future if it 
-  is an rvalue. Otherwise the value is copied to the shared state of the returned future.
+    <dt>Effects:</dt><dd> The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it 
+  is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.
   </dd>
   </cxx-effects>
 
@@ -2481,7 +2385,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
     
     <dt>Returns:</dt><dd>
     <ul>
-      <li><code>future&lt;T&gt;</code>, if function is given a value of type <code>T</code>.</li>
+      <li><code>future&lt;decay_t&lt;T&gt;&gt;</code>, if function is given a value of type <code>T</code>.</li>
       <li><code>future&lt;void&gt;</code>, if the function is not given any inputs. </li>
     </ul>
   </dd>
@@ -2491,8 +2395,8 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
     
     <dt>Postconditions:</dt><dd>
     <ul>
-      <li>Returned <code>future&lt;T&gt;, valid() == true</code>.</li>
-      <li>Returned <code>future&lt;T&gt;, is_ready() == true</code>.</li>
+      <li>Returned <code>future&lt;decay_t&lt;T&gt;&gt;, valid() == true</code>.</li>
+      <li>Returned <code>future&lt;decay_t&lt;T&gt;&gt;, is_ready() == true</code>.</li>
     </ul>
   </dd>
   </cxx-postconditions>
@@ -2520,16 +2424,16 @@ object with which it shares a shared state.
 </p>
 <p para_num="3" id="futures.async.3">
 </p><pre>template &lt;class F, class... Args&gt;
-future&lt;typename result_of&lt;typename decay&lt;F&gt;::type(typename decay&lt;Args&gt;::type...)&gt;::type&gt;
+future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
 async(F&amp;&amp; f, Args&amp;&amp;... args);
 
 template &lt;class F, class... Args&gt;
-future&lt;typename result_of&lt;typename decay&lt;F&gt;::type(typename decay&lt;Args&gt;::type...)&gt;::type&gt;
+future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
 async(launch policy, F&amp;&amp; f, Args&amp;&amp;... args);
 
 <ins>
 template&lt;class F, class... Args&gt;
-future&lt;typename result_of&lt;typename decay&lt;F&gt;::type(typename decay&lt;Args&gt;::type...)&gt;::type&gt;
+future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
 async(executor&amp; ex, F&amp;&amp; f, Args&amp;&amp;... args);
 </ins>
 </pre>
