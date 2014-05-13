@@ -342,7 +342,11 @@ cxx-toc ol ol ol ol {
 
 cxx-toc li li li li .marker {
 	width: 4.5em;
-}polymer-xhr {
+}cxx-get-element-by-id {
+	display: none;
+}core-xhr {
+	display: none;
+}cxx-foreign-index {
 	display: none;
 }cxx-titlepage {
 	display: block; min-height: 100%;
@@ -379,7 +383,7 @@ cxx-ednote aside {
 }cxx-note .nowrap {
 	white-space: nowrap;
 }cxx-footnote {
-	font-family: serif; white-space: normal; text-indent: initial;
+	font-family: serif; white-space: normal; text-indent: initial;textIndent: initial; 
 }
 
 @media screen {
@@ -422,17 +426,7 @@ cxx-example .nowrap {
 	font-style: normal;
 }</style>
   <meta charset="utf-8">
-  <style>[touch-action="none"]{ -ms-touch-action: none; touch-action: none; touch-action-delay: none; }
-body ^^ [touch-action="none"]{ -ms-touch-action: none; touch-action: none; touch-action-delay: none; }
-[touch-action="auto"]{ -ms-touch-action: auto; touch-action: auto; touch-action-delay: none; }
-body ^^ [touch-action="auto"]{ -ms-touch-action: auto; touch-action: auto; touch-action-delay: none; }
-[touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; touch-action-delay: none; }
-body ^^ [touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; touch-action-delay: none; }
-[touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; touch-action-delay: none; }
-body ^^ [touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; touch-action-delay: none; }
-[touch-action="pan-x pan-y"],[touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; touch-action-delay: none; }
-body ^^ [touch-action="pan-x pan-y"],body ^^ [touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; touch-action-delay: none; }
-</style>
+  
   <link rel="import" href="bower_components/cxx-html-doc-framework/framework.html">
 <style shim-shadowdom-css="">/* Copyright 2014 Google Inc. All rights reserved.
 
@@ -487,19 +481,19 @@ cxx-clause { page-break-before: always; }
     cxx-clause, cxx-toc { margin-top: 3em; }
 }
 
-cxx-clause   header { font-size: 150%; }
-cxx-toc   h1 { font-size: 150%; }
-cxx-clause cxx-section   header { font-size: 117%; }
-cxx-clause cxx-section cxx-section   header { font-size: 100%; }
+cxx-clause  header { font-size: 150%; }
+cxx-toc  h1 { font-size: 150%; }
+cxx-clause cxx-section  header { font-size: 117%; }
+cxx-clause cxx-section cxx-section  header { font-size: 100%; }
 
 [data-bookmark-label] { bookmark-label: attr(data-bookmark-label); }
 h1 { bookmark-level: 1; }
-cxx-toc   h1 { bookmark-level: 2; }
+cxx-toc  h1 { bookmark-level: 2; }
 cxx-clause h1 { bookmark-level: 2; }
 cxx-clause cxx-section h1 { bookmark-level: 3; }
 cxx-clause cxx-section cxx-section h1 { bookmark-level: 4; }
 
-*   .section-number { string-set: current-section "§ " content(); }
+*  .section-number { string-set: current-section "§ " content(); }
 
 p {margin-top: .5em; margin-bottom: .5em}
 p:first-child, ul, ol {margin-top: 0}
@@ -535,9 +529,9 @@ ul li:before {
    inside the CSSOM. */
 @media print {
     /* Generate page numbers in the table of contents. */
-    cxx-toc   a[href]::after { content: leader(" . ") target-counter(attr(href), page); }
+    cxx-toc  a[href]::after { content: leader(" . ") target-counter(attr(href), page); }
 
-    cxx-footnote   aside { float: footnote; footnote-policy: line; }
+    cxx-footnote  aside { float: footnote; footnote-policy: line; }
 }</style><title>C++ Extensions for Concurrency, Working Draft</title></head>
 <body>
 <cxx-titlepage stage="draft">
@@ -735,7 +729,7 @@ Concurrency</h1>
     
 
 <p para_num="1" id="general.scope.1">This technical specification describes a number of concurrency extensions to
-the C++ Standard Library (<cxx-ref in="" to="general.references"><cxx-get-element-by-id elemid="" elem="{{inElem}}"></cxx-get-element-by-id><cxx-get-element-by-id elemid="general.references" elem="{{toElem}}"></cxx-get-element-by-id><a title="general.references" href="#general.references">1.2</a></cxx-ref>). These
+the C++ Standard Library (<cxx-ref to="general.references"><a title="general.references" href="#general.references">1.2</a></cxx-ref>). These
 extensions are classes and functions that are likely to be used widely within a
 program and/or on the interface boundaries between libraries written by
 different organizations.</p>
@@ -773,10 +767,7 @@ to provide them.</p>
     Be sure not to introduce whitespace here, as it appears around the footnote.
   --><sup id="footnote-call-1"><a href="#footnote-body-1">1</a></sup><aside class="footnote" id="footnote-body-1"><span class="marker"><a href="#footnote-call-1">1</a>) </span>To be published. Section references are relative to <a href="http://open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf">N3797</a>.</aside></cxx-footnote>,
       <cite>Programming Languages — C++</cite>
-      <cxx-foreign-index id="cxx" src="cxx_N3797_index.json" name="C++14">
-    <polymer-ajax auto="" url="cxx_N3797_index.json" handleas="json" on-polymer-response="{{ attachIndex }}">
-    </polymer-ajax>
-  </cxx-foreign-index></li>
+      </li>
 
       <li><a href="http://www.ietf.org/rfc/rfc2781.txt">RFC 2781</a>, <cite>UTF-16, an encoding of ISO 10646</cite></li>
     </ul>
@@ -1254,7 +1245,7 @@ on another (not necessarily single-threaded) executor. It runs added closures
 inside a series of closures added to an underlying executor in such a way so
 that the closures execute serially. For any two closures <code>c1</code> and <code>c2</code> added to
 a <code>serial_executor</code> <code>e</code>, either the completion of <code>c1</code> happens before
-(as per <cxx-ref in="cxx" to="intro.multithread"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="intro.multithread">§1.10</span></cxx-ref>) the execution of <code>c2</code> begins, or vice versa. 
+(as per <cxx-ref in="cxx" to="intro.multithread">C++14 <span title="intro.multithread">§1.10</span></cxx-ref>) the execution of <code>c2</code> begins, or vice versa. 
 If <code>e.add(c1)</code> happens before <code>e.add(c2)</code>, then <code>c1</code> is 
 executed before <code>c2</code>.</p>
 
@@ -1724,7 +1715,7 @@ composition of asynchronous operations.
 
 
 <p para_num="1" id="futures.unique_future.1">
-To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> paragraph 3, add the following to the public
+To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future">C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> paragraph 3, add the following to the public
 functions:
 </p>
 
@@ -1744,7 +1735,7 @@ template&lt;typename F&gt;
 </pre>
 
 <p para_num="2" id="futures.unique_future.2">
-In <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> between paragraphs 8 and 9, add the following:
+In <cxx-ref in="cxx" to="futures.unique_future">C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> between paragraphs 8 and 9, add the following:
 </p>
 <cxx-function para_num="3" id="futures.unique_future.3">
     
@@ -1774,7 +1765,7 @@ In <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="c
   </cxx-function>
 
 <p para_num="6" id="futures.unique_future.6">
-After <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> paragraph 26, add the following:
+After <cxx-ref in="cxx" to="futures.unique_future">C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> paragraph 26, add the following:
 </p>
 <cxx-function para_num="7" id="futures.unique_future.7">
     
@@ -1919,7 +1910,7 @@ future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
       
 
 <p para_num="1" id="futures.shared_future.1">
-To the class declaration found in <cxx-ref in="cxx" to="futures.shared_future"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures.shared_future">§30.6.7</span></cxx-ref>
+To the class declaration found in <cxx-ref in="cxx" to="futures.shared_future">C++14 <span title="futures.shared_future">§30.6.7</span></cxx-ref>
 paragraph 3, add the following to the public functions:
 </p>
 
@@ -1936,7 +1927,7 @@ template&lt;typename F&gt;
 </pre>
 
 <p para_num="2" id="futures.shared_future.2">
-After <cxx-ref in="cxx" to="futures.shared_future"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures.shared_future">§30.6.7</span></cxx-ref> paragraph 28, add the following:
+After <cxx-ref in="cxx" to="futures.shared_future">C++14 <span title="futures.shared_future">§30.6.7</span></cxx-ref> paragraph 28, add the following:
 </p>
 
 <cxx-function para_num="3" id="futures.shared_future.3">
@@ -1982,7 +1973,7 @@ policy as the  first parameter and a callable object as the second parameter.
     calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
     <cxx-note><span class="nowrap">[ <em>Note:</em></span>
     
-    This is similar to <code>future</code>. See example in <cxx-ref in="" to="futures.unique_future"><cxx-get-element-by-id elemid="" elem="{{inElem}}"></cxx-get-element-by-id><cxx-get-element-by-id elemid="futures.unique_future" elem="{{toElem}}"></cxx-get-element-by-id><a title="futures.unique_future" href="#futures.unique_future">3.2</a></cxx-ref>.
+    This is similar to <code>future</code>. See example in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">3.2</a></cxx-ref>.
     
     <span class="nowrap">— <em>end note</em> ]</span>
   </cxx-note>
@@ -2007,7 +1998,7 @@ policy as the  first parameter and a callable object as the second parameter.
         <cxx-notes>
     
     <dt>Notes:</dt><dd>
-          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref in="" to="futures.unique_future"><cxx-get-element-by-id elemid="" elem="{{inElem}}"></cxx-get-element-by-id><cxx-get-element-by-id elemid="futures.unique_future" elem="{{toElem}}"></cxx-get-element-by-id><a title="futures.unique_future" href="#futures.unique_future">3.2</a></cxx-ref>.
+          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">3.2</a></cxx-ref>.
         </dd>
   </cxx-notes>
       </li>
@@ -2062,7 +2053,7 @@ policy as the  first parameter and a callable object as the second parameter.
       
 
 <p para_num="1" id="futures.when_all.1">
-A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
+A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.when_all.2">
@@ -2165,7 +2156,7 @@ template &lt;typename... T&gt;
       
 
 <p para_num="1" id="futures.when_any.1">
-A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
+A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.when_any.2">
@@ -2268,7 +2259,7 @@ template &lt;typename... T&gt;
       
 
 <p para_num="1" id="futures.when_any_swapped.1">
-A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
+A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.when_any_swapped.2">
@@ -2348,8 +2339,6 @@ or <code>shared_future&lt;R&gt;</code>. All <code>R</code> types  must be the sa
     </section>
   </cxx-section>
 
-<!-- TODO: make make_ready_future below work with references -->
-
 <cxx-section id="futures.make_ready_future">
     
 
@@ -2358,7 +2347,7 @@ or <code>shared_future&lt;R&gt;</code>. All <code>R</code> types  must be the sa
       
 
 <p para_num="1" id="futures.make_ready_future.1">
-A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
+A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.make_ready_future.2">
@@ -2415,7 +2404,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
       
 
 <p para_num="1" id="futures.async.1">
-Change <cxx-ref in="cxx" to="futures.async"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures.async">§30.6.8</span></cxx-ref> paragraph 1 as follows:
+Change <cxx-ref in="cxx" to="futures.async">C++14 <span title="futures.async">§30.6.8</span></cxx-ref> paragraph 1 as follows:
 </p>
 <p para_num="2" id="futures.async.2">
 The function template <code>async</code> provides a mechanism to launch a function
@@ -2439,7 +2428,7 @@ async(executor&amp; ex, F&amp;&amp; f, Args&amp;&amp;... args);
 </pre>
 <p para_num="4" id="futures.async.4"></p>
 
-Change <cxx-ref in="cxx" to="futures.async"><cxx-get-element-by-id elemid="cxx" elem="{{inElem}}"></cxx-get-element-by-id>C++14 <span title="futures.async">§30.6.8</span></cxx-ref> paragraph 3 as follows:
+Change <cxx-ref in="cxx" to="futures.async">C++14 <span title="futures.async">§30.6.8</span></cxx-ref> paragraph 3 as follows:
 
 <cxx-effects para_num="5" id="futures.async.5">
     
