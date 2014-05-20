@@ -397,8 +397,8 @@ template &lt;typename... T>
 </cxx-function>
 </cxx-section>
 
-<cxx-section id="futures.when_any_swapped">
-<h1> Function template <code>when_any_swapped</code></h1>
+<cxx-section id="futures.when_any_back">
+<h1> Function template <code>when_any_back</code></h1>
 <p>
 A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
 </p>
@@ -406,7 +406,7 @@ A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 <cxx-function>
 <cxx-signature>
 template &lt;class InputIterator>
-<em>see below</em> when_any_swapped(InputIterator first, InputIterator last);
+<em>see below</em> when_any_back(InputIterator first, InputIterator last);
 </cxx-signature>
 
 <cxx-Requires> <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
@@ -415,8 +415,8 @@ or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
 
 <cxx-Notes>
   <ul>
-    <li>The function <code>when_any_swapped</code> takes a pair of <code>InputIterators</code>.</li>
-    <li>Calling <code>when_any_swapped</code> where <code>InputIterator</code> first equals
+    <li>The function <code>when_any_back</code> takes a pair of <code>InputIterators</code>.</li>
+    <li>Calling <code>when_any_back</code> where <code>InputIterator</code> first equals
     last, returns a <code>future</code> with an empty vector that is immediately ready.</li>
   </ul>
 </cxx-Notes>
@@ -432,7 +432,7 @@ or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
     collection, so that the ready <code>future</code> or <code>shared_future</code> may be identified in
     constant time. Only one <code>future</code> or <code>shared_future</code> is thus  moved.</li>
 
-    <li>The <code>future</code> returned by <code>when_any_swapped</code> will not throw an exception, but
+    <li>The <code>future</code> returned by <code>when_any_back</code> will not throw an exception, but
     the futures held in  the output collection may.</li>
   </ul>
 </cxx-Effects>
