@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<!-- saved from url=(0100)file://C:\Users\arturl\AppData\Local\Microsoft\Windows\INetCache\Content.Outlook\B0T20QOI\N3907.html -->
+<!DOCTYPE html PUBLIC "" ""><HTML><HEAD><META content="IE=11.0000" 
+http-equiv="X-UA-Compatible">
+<TITLE>Concurrency TS Editor's Report, February 2014</TITLE>
+<META http-equiv="Content-Type" content="text/html; charset=windows-1252"><LINK 
+href="editors_report_files/css.css" rel="stylesheet" type="text/css"><LINK href="editors_report_files/css(1).css" 
+rel="stylesheet" type="text/css"><LINK href="editors_report_files/css(2).css" 
+rel="stylesheet" type="text/css">
+<STYLE>.content {
+  font-family: Droid Serif;
+  max-width: 600px;
+}
+.papers {
+  list-style: none;
+}
+.paper {
+  margin-bottom: 4px;
+}
+.paperdetail {
+  font-family: Roboto Slab;
+  font-size: small;
+  color: #444;
+  background-color: #ccc;
+  font-style: italic;
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 2px;
+}
+.issues {
+  list-style: none;
+}
+.issue {
+  margin-bottom: 4px;
+}
+.issuedetail {
+  font-family: Roboto Slab;
+  font-size: small;
+  color: #444;
+  background-color: #ccc;
+  font-style: italic;
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 2px;
+}
+.stat {
+  font-family: Archivo Black;
+  font-size: 64px;
+  color: #228;
+}
+.docheader {
+  float: right;
+  margin-right: 20px;
+}</STYLE>
+
+<META name="GENERATOR" content="MSHTML 11.00.9600.17107"></HEAD>
+<BODY>
+<PRE class="docheader">Document number N3971
+Date             2014-05-20
+Project          Programming Language C++
+Reference        ISO/IEC IS 14882:2011(E)
+Reply to         Artur Laksberg
+                 Microsoft Corp.
+                 arturl@microsoft.com</PRE>
+<DIV class="content">
+<H1>Concurrency TS Editor's Report, May 2014</H1>
+<H3>Overview</H3>
+<P>
+  N3970 is the Concurrency TS Draft. It is based on D3904 with the following
+  changes as per <a href="http://wiki.edg.com/twiki/bin/view/Wg21issaquah/ConcurrencyTS?twiki_redirect_cache=82c5c4868d1df2944390a5572bf925d5">LEWG feedback</a>:
+
+  <ul>
+    <li>The <code>then</code> method now implements auto-unwrapping, obviating the need for <code>unwrap</code>.</li>
+    <li>The type <code>thread_executor</code> renamed to <code>thread_per_task_executor</code>.</li>
+    <li>Fixed an issue where <code>is_ready</code> was incorrectly spelled as <code>ready</code> in some parts of the document.</li>
+    <li>The method <code>when_any_swapped</code> has been renamed to <code>when_any_back</code>.</li>
+  </ul>
+</p>
+<p>
+The new document also incorporates feedback from Agust&iacute;n K-ballo Berg&eacute; to correctly handle reference decay, as well as numerous typos.
+</p>
+Additionally, the document has been fully reformatted and many formatting and editorial 
+issues fixed.
+
+</P></DIV></BODY></HTML>
