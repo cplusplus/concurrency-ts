@@ -124,7 +124,7 @@ object, the behavior is undefined. <cxx-note> one possible behavior is deadlock.
 </cxx-function>
 
 <cxx-function>
-<cxx-signature>void executor::add(std::function<void> closure);</cxx-signature>
+<cxx-signature>void executor::add(std::function&lt;void> closure);</cxx-signature>
 <cxx-Effects> The specified function object shall be scheduled for execution by the
 executor at some point in the future. May throw exceptions if add cannot
 complete (due to shutdown or other conditions).</cxx-Effects>
