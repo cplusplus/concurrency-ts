@@ -273,7 +273,6 @@ public
 
 <cxx-function>
 <cxx-signature>serial_executor::serial_executor(executor&amp; underlying_executor)</cxx-signature>
-<cxx-Requires> <code>underlying_executor</code> shall not be null.</cxx-Requires>
 <cxx-Effects> Creates a <code>serial_executor</code> that executes closures in FIFO order by
 passing them to <code>underlying_executor</code>.
 </cxx-Effects>
