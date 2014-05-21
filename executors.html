@@ -62,8 +62,16 @@ non-member functions that operate at the level of those abstract base classes. <
 <h1>Header <code>&lt;executor></code> synopsis</h1>
 
 <pre>
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+
     class executor;
     class scheduled_executor;
+
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
 </pre>
 </cxx-section>
 
@@ -202,7 +210,15 @@ execution policies.
 <h1>Header <code>&lt;thread_pool></code> synopsis</h1>
 
 <pre>
-class thread_pool;
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+
+  class thread_pool;
+
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
 </pre>
 
 <p>
@@ -241,7 +257,15 @@ class thread_pool : public scheduled_executor {
 <h1>Header <code>&lt;serial_executor></code> synopsis</h1>
 
 <pre>
-class serial_executor;
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+
+  class serial_executor;
+
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
 </pre>
 
 <p>
@@ -309,7 +333,15 @@ that <code>serial_executor</code> object, the behavior is undefined.
 <h1>Header <code>&lt;loop_executor></code> synopsis</h1>
 
 <pre>
-class loop_executor;
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+
+  class loop_executor;
+
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
 </pre>
 
 <p>
@@ -420,7 +452,15 @@ function.
 <h1>Header <code>&lt;inline_executor></code> synopsis</h1>
 
 <pre>
-class inline_executor;
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+
+  class inline_executor;
+
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
 </pre>
 
 <p>
@@ -457,7 +497,15 @@ call by immediately executing the provided function in the caller's thread.
 <h1>Header <code>&lt;thread_per_task_executor></code> synopsis</h1>
 
 <pre>
-class thread_per_task_executor;
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+
+  class thread_per_task_executor;
+
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
 </pre>
 
 <p>
