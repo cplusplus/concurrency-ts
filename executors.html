@@ -134,6 +134,8 @@ is that closures may use thread-duration variables, but in general such use is
 risky. In general executors don't make guarantees about which thread an
 individual closure executes in. </cxx-notes></cxx-Synchronization>
 <cxx-Requires> The invoked closure should not throw an exception.</cxx-Requires>
+<cxx-Throws>An implementation may throw exceptions if <code>add</code> cannot complete 
+(due to shutdown or other conditions)</cxx-Throws>
 </cxx-function>
 
 <cxx-function>
