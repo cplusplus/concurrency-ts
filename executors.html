@@ -118,9 +118,9 @@ have been added to the executor will execute, only that if a closure executes it
 will be initiated before the destructor executes. In some concrete subclasses
 the destructor may wait for task completion and in others the destructor may
 discard uninitiated tasks.</cxx-Note></cxx-Synchronization>
-<cxx-notes> If an executor is destroyed inside a closure running on that executor
-object, the behavior is undefined. <cxx-note> one possible behavior is deadlock.
-</cxx-note></cxx-notes>
+<cxx-remarks> The behavior is undefined if the executor is destroyed during the 
+execution of a closure running on that executor object.
+<cxx-note> One possible behavior is deadlock.</cxx-note></cxx-remarks>
 </cxx-function>
 
 <cxx-function>
@@ -286,11 +286,11 @@ passing them to <code>underlying_executor</code>.
 <cxx-Effects> Finishes running any currently executing closure, then destroys all remaining
 closures and returns.
 </cxx-Effects>
-<p>
+<cxx-remarks>
 If a <code>serial_executor</code> is destroyed inside a closure running on
 that <code>serial_executor</code> object, the behavior is undefined. 
 <cxx-note> one possible behavior is deadlock. </cxx-note>
-</p>
+</cxx-remarks>
 </cxx-function>
 
 <cxx-function>
