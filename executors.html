@@ -172,7 +172,7 @@ time in the future.
     public:
         virtual void add_at(const chrono::system_clock::time_point&amp; abs_time,
                             function&ltvoid()> closure) = 0;
-        virtual void add_after(const chrono::system_clock::duration&amp; rel_time,
+        virtual void add_after(const chrono::steady_clock::duration&amp; rel_time,
                                function&ltvoid()> closure) = 0;
     };
 </pre>
@@ -187,7 +187,7 @@ destruction of that thread's thread-duration variables.</cxx-Synchronization>
 </cxx-function>
 
 <cxx-function>
-<cxx-signature>void add_after(const chrono::system_clock::duration&amp; rel_time, function&lt;void()> closure);</cxx-signature>
+<cxx-signature>void add_after(const chrono::steady_clock::duration&amp; rel_time, function&lt;void()> closure);</cxx-signature>
 <cxx-Effects> The specified function object shall be scheduled for execution by the
 executor at some point in the future no sooner than time <code>rel_time</code> from now.</cxx-Effects>
 <cxx-Synchronization> completion of closure on a particular thread happens before
