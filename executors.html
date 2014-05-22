@@ -312,10 +312,11 @@ passing them to <code>underlying_executor</code>.
 <cxx-Effects> Finishes running any currently executing closure, then destroys all remaining
 closures and returns.
 </cxx-Effects>
-<cxx-remarks>
+<p>
 If a <code>serial_executor</code> is destroyed inside a closure running on
 that <code>serial_executor</code> object, the behavior is undefined. 
-<cxx-note> one possible behavior is deadlock. </cxx-note>
+<cxx-note> one possible behavior is deadlock.
+</p>
 </cxx-remarks>
 </cxx-function>
 
