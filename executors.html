@@ -289,15 +289,6 @@ a <code>serial_executor</code> <code>e</code>, either the completion of <code>c1
 If <code>e.add(c1)</code> happens before <code>e.add(c2)</code>, then <code>c1</code> is 
 executed before <code>c2</code>.</p>
 
-<p>
-The number of <code>add()</code> calls on the underlying executor is unspecified, and if
-the underlying executor guarantees an ordering on its closures, that ordering
-won't necessarily extend to closures added through a <code>serial_executor</code>.
-
-<cxx-note>
-this is because <code>serial_executor</code> can batch <code>add()</code> calls to the underlying
-executor. </cxx-note>
-
 <pre>
 class serial_executor : public executor {
 public
