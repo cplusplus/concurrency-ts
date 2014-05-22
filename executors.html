@@ -240,7 +240,16 @@ class thread_pool : public scheduled_executor {
 <cxx-function>
 <cxx-signature>thread_pool::thread_pool(int num_threads)</cxx-signature>
 <cxx-Effects> Creates an executor that runs closures on <code>num_threads</code> threads.</cxx-Effects>
-<cxx-Throws> <code>system_error</code> if the threads can't be created and started.</code></cxx-Throws>
+<cxx-Throws><code>system_error</code> if the threads can't be created and started.</code></cxx-Throws>
+<cxx-error-conditions>
+<ul>
+<li>
+<code>resource_unavailable_try_again</code> &mdash; the system lacked
+the necessary resources to create another thread, or the system-imposed limit on
+the number of threads in a process would be exceeded.
+</li>
+</ul>
+</cxx-error-conditions>
 </cxx-function>
 
 <cxx-function>
