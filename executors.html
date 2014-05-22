@@ -137,10 +137,12 @@ execution of a closure running on that executor object.
 executor at some point in the future. May throw exceptions if add cannot
 complete (due to shutdown or other conditions).</cxx-Effects>
 <cxx-Synchronization> completion of closure on a particular thread happens before
-destruction of that thread's thread-duration variables. <cxx-notes> The consequence
-is that closures may use thread-duration variables, but in general such use is
-risky. In general executors don't make guarantees about which thread an
-individual closure executes in. </cxx-notes></cxx-Synchronization>
+destruction of that thread's thread-duration variables.
+  <cxx-note> The consequence is that closures may use thread-duration variables, 
+  even though in general executors don't make guarantees about which thread an
+  individual closure executes in.
+  </cxx-note>
+</cxx-Synchronization>
 <cxx-Requires> The invoked closure should not throw an exception.</cxx-Requires>
 <cxx-Throws>An implementation may throw exceptions if <code>add</code> cannot complete 
 (due to shutdown or other conditions)</cxx-Throws>
