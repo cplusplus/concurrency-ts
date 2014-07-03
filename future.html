@@ -16,9 +16,8 @@ composition of asynchronous operations.
 <p>
 To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 3, add the following to the public
 functions:
-</p>
-
-<pre>
+<cxx-function>
+<cxx-signature>
 bool is_ready() const;
 
 future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;
@@ -26,13 +25,13 @@ future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;
 template&lt;typename F>
 <em>see below</em> then(F&amp;&amp; func);
 
-template&lt;typename F>
-<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
+<del>template&lt;typename F>
+<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);</del>
 
 template&lt;typename F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
-
-</pre>
+</cxx-signature>
+</cxx-function>
 
 <p>
 In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 and 9, add the following:
@@ -53,32 +52,31 @@ In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 
 
 <p>
 After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add the following:
-</p>
 <cxx-function>
-  <cxx-signature>
-  template&lt;typename F>
-  <em>see below</em> then(F&amp;&amp; func);
+<cxx-signature>
+template&lt;typename F>
+<em>see below</em> then(F&amp;&amp; func);
 
-  template&lt;typename F>
-  <em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
+<del>template&lt;typename F>
+<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);</del>
 
-  template&lt;typename F>
-  <em>see below</em> then(launch policy, F&amp;&amp; func);
-  </cxx-signature>
+template&lt;typename F>
+<em>see below</em> then(launch policy, F&amp;&amp; func);
+</cxx-signature>
 
   <cxx-Notes>  The three functions differ only by input parameters. The first only
-  takes a callable object which accepts a <code>future</code> object as a parameter. The
+  takes a callable object which accepts a <code>future</code> object as a parameter. <del>The
   second function takes an <code>executor</code> as the first parameter and a callable object
-  as the second parameter. The third function takes a launch policy as the first
+  as the second parameter.</del> The <del>third</del><ins>second</ins> function takes a launch policy as the first
   parameter and a callable object as the second parameter.
   </cxx-Notes>
   <cxx-Effects>
     <ul>
       <li>The <i>continuation</i> <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
-      <li>The continuation launches according to the specified launch policy or
-      <code>executor</code>.</li>
-      <li>When the <code>executor</code> or launch policy is not provided the continuation inherits
-      the parent's launch policy or <code>executor</code>.</li>
+      <li>The continuation launches according to the specified launch policy<del> or
+      <code>executor</code></del>.</li>
+      <li>When the <del><code>executor</code> or</del> launch policy is not provided the continuation inherits
+      the parent's launch policy <del>or <code>executor</code></del>.</li>
       <li>
       Any value returned from the continuation is stored as the result in the
       shared state of the resulting <code>future</code>. Any exception propagated from the execution of 
@@ -164,8 +162,8 @@ bool is_ready() const;
 template&lt;typename F>
 <em>see below</em> then(F&amp;&amp; func);
 
-template&lt;typename F>
-<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);
+<del>template&lt;typename F>
+<em>see below</em> then(executor &amp;ex, F&amp;&amp; func);</del>
 
 template&lt;typename F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
@@ -180,8 +178,8 @@ After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add 
 template&lt;typename F>
 <em>see below</em> shared_future::then(F&amp;&amp; func);
 
-template&lt;typename F>
-<em>see below</em> shared_future::then(executor &amp;ex, F&amp;&amp; func);
+<del>template&lt;typename F>
+<em>see below</em> shared_future::then(executor &amp;ex, F&amp;&amp; func);</del>
 
 template&lt;typename F>
 <em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
@@ -189,17 +187,17 @@ template&lt;typename F>
 
 <cxx-Notes>The three functions differ only by input parameters. The first
 only takes a callable object which  accepts a <code>shared_future</code> object as a
-parameter. The second function takes an <code>executor</code> as the first parameter and a
-callable object as the second parameter. The third function takes a launch
+parameter. <del>The second function takes an <code>executor</code> as the first parameter and a
+callable object as the second parameter.</del> The <del>third</del><ins>second</ins> function takes a launch
 policy as the  first parameter and a callable object as the second parameter.
 </cxx-Notes>
 
 <cxx-Effects>
   <ul>
     <li>The <i>continuation</i> <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
-    <li>The continuation launches according to the specified policy or executor.</li>
+    <li>The continuation launches according to the specified policy<del> or executor</del>.</li>
     <li>When the scheduler or launch policy is not provided the continuation
-    inherits the parent's launch policy or executor.</li>
+    inherits the parent's launch policy<del> or executor</del>.</li>
     <li>
     Any value returned from the continuation is stored as the result in the
     shared state of the resulting <code>future</code>. Any exception propagated from the execution of 
@@ -498,6 +496,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 </cxx-function>
 </cxx-section>
 
+<del>
 <cxx-section id="futures.async">
 <h1>Function template <code>async</code></h1>
 <p>
@@ -518,11 +517,11 @@ template &lt;class F, class... Args>
 future&lt;result_of_t&lt;decay_t&lt;F>(decay_t&lt;Args>...)>>
 async(launch policy, F&amp;&amp; f, Args&amp;&amp;... args);
 
-<ins>
+<del>
 template&lt;class F, class... Args>
 future&lt;result_of_t&lt;decay_t&lt;F>(decay_t&lt;Args>...)>>
 async(executor&amp; ex, F&amp;&amp; f, Args&amp;&amp;... args);
-</ins>
+</del>
 </pre>
 </p>
 
@@ -578,10 +577,11 @@ The further behavior of the third function is as follows:<br>
 <blockquote>
   The <code>executor::add()</code> function is given a <code>function&lt;void()></code> which calls
   <code>INVOKE (DECAY_COPY (std::forward&lt;F>(f)) DECAY_COPY
-  (std::forward&lt;Args>(args))...)</code>. The implementation of the executor  is decided
+  (std::forward&lt;Args>(args))...)</code>. The implementation of the executor is decided
   by the programmer.
 </blockquote>
 </ins>
+</del>
 
 </cxx-section>
 

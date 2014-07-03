@@ -55,46 +55,33 @@ rel="stylesheet" type="text/css">
 
 <META name="GENERATOR" content="MSHTML 11.00.9600.17107"></HEAD>
 <BODY>
-<PRE class="docheader">Document number N3971
-Date             2014-05-22
+<PRE class="docheader">Document number N4108
+Date             2014-07-02
 Project          Programming Language C++
 Reference        ISO/IEC IS 14882:2011(E)
 Reply to         Artur Laksberg
                  Microsoft Corp.
                  arturl@microsoft.com</PRE>
 <DIV class="content">
-<H1>Concurrency TS Editor's Report, May 2014</H1>
+<H1>Concurrency TS Editor's Report, July 2014</H1>
 <H3>Overview</H3>
-<P>
-  N3970 is the Concurrency TS Draft. It is based on D3904 with the following
-  changes as per <a href="http://wiki.edg.com/twiki/bin/view/Wg21issaquah/ConcurrencyTS?twiki_redirect_cache=82c5c4868d1df2944390a5572bf925d5">LEWG feedback</a>:
-
-  <ul>
-    <li>The <code>then</code> method now implements auto-unwrapping, obviating the need for <code>unwrap</code>.</li>
-    <li>The type <code>thread_executor</code> renamed to <code>thread_per_task_executor</code>.</li>
-    <li>Fixed an issue where <code>is_ready</code> was incorrectly spelled as <code>ready</code> in some parts of the document.</li>
-    <li>The method <code>when_any_swapped</code> has been renamed to <code>when_any_back</code>.</li>
-  </ul>
+<p>
+  N4107 is the new Working Paper of the Concurrency TS. It is based on N3970 with
+  Chapter 2 (Executors and Schedulers) removed, as per the Committee ballot at Rapperswil. 
 </p>
 <p>
-The new document also incorporates feedback from the following individuals:
-<ul>
-  <li>
-  Agust&iacute;n K-ballo Berg&eacute; pointed out several instances where reference 
-  decay was handled incorrectly, as well as numerous typos.</li>
-  <li>
-  Vicente J. Botet Escriba found that it is underspecified how an exception thrown
-  from a continuation is propagated into the returned future, and also pointed 
-  out a number of inaccuracies in the document, most of which have been fixed.</li>
-  <li>Detlef Vollmann suggested using <code>chrono::steady_clock</code> instead of
-    <code>chrono::system_clock</code> in the <code>add_after method</code>. </li>
-</ul>
+  As part of this change, the new <code>then</code> overloads taking the executor
+  parameter are no longer applicable. Also, because the new <code>async</code>
+  overload taking an executor is no longer being proposed, the section about
+  the function template <code>async</code> at the end of the document has been
+  removed. 
+  As a visual aid to the reader, these changes have been highlighted in color.
 </p>
-Additionally, the document has been fully reformatted using the html-doc-framework
-and many formatting and editorial issues were fixed.
+<p>
+  The document has no other changes compared to N3970.
 </p>
 <p>
 The full history of changes can be traced at 
 <a href="https://github.com/cplusplus/concurrency_ts">https://github.com/cplusplus/concurrency_ts</a>.
-
+</p>
 </P></DIV></BODY></HTML>
