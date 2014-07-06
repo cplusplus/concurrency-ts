@@ -1,6 +1,7 @@
 <!DOCTYPE html>
+<!-- Sources at https://github.com/cplusplus/fundamentals-ts -->
 <html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style>template {display: none !important;} /* injected by platform.js */</style><style>body {transition: opacity ease-in 0.2s; } 
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><!--[if lte IE 8]><script>document.createElement("nav");document.createElement("section");document.createElement("time");document.createElement("CXX-TITLEPAGE");document.createElement("CXX-DOCNUM");document.createElement("CXX-REVISES");document.createElement("CXX-EDITOR");document.createElement("CXX-EMAIL");document.createElement("CXX-TOC");document.createElement("CXX-CLAUSE");document.createElement("CXX-SECTION");document.createElement("CXX-REF");document.createElement("CXX-FOOTNOTE");document.createElement("CXX-FOREIGN-INDEX");document.createElement("CXX-NOTE");document.createElement("CXX-FUNCTION");document.createElement("CXX-SIGNATURE");document.createElement("CXX-EFFECTS");document.createElement("CXX-POSTCONDITIONS");document.createElement("CXX-NOTES");document.createElement("CXX-EXAMPLE");document.createElement("CXX-RETURNS");document.createElement("CXX-REQUIRES");document.createElement("CXX-PUBLISH-BUTTON");</script><![endif]--><style>template {display: none !important;} /* injected by platform.js */</style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; } 
 </style><style shim-shadowdom-css="">style { display: none !important; }
 cxx-function {
@@ -425,8 +426,8 @@ cxx-example .nowrap {
 	font-style: normal;
 }</style>
   <meta charset="utf-8">
-  <script src="N4107_files/platform.js"></script>
-  <link rel="import" href="file:///C:/git_projects/concurrency_ts/bower_components/cxx-html-doc-framework/framework.html">
+  
+  <link rel="import" href="bower_components/cxx-html-doc-framework/framework.html">
 <style shim-shadowdom-css="">/* Copyright 2014 Google Inc. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -536,25 +537,25 @@ ul li:before {
 <cxx-titlepage stage="draft">
     
     <table>
-      <template if="{{docnum}}"></template>
-        <tr><th>Document Number:</th><td><cxx-docnum>N4107</cxx-docnum></td></tr>
       
-      <template if="{{pubdate}}"></template>
+        <tbody><tr><th>Document Number:</th><td><cxx-docnum>N4107</cxx-docnum></td></tr>
+      
+      
         <tr><th>Date:</th><td><time pubdate="">2014-07-02</time></td></tr>
       
-      <template if="{{revises}}"></template>
+      
         <tr><th>Revises:</th><td><cxx-revises><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n3970.html">N3970</a></cxx-revises></td></tr>
       
-      <template if="{{editor}}"></template>
+      
         <tr><th>Editor:</th><td><cxx-editor>
     Artur Laksberg<br>
     Microsoft Corp.<br>
     <cxx-email><a href="mailto:arturl@microsoft.com">arturl@microsoft.com</a></cxx-email>
   </cxx-editor></td></tr>
       
-    </table>
+    </tbody></table>
     <h1>Working Draft, Technical Specification for C++ Extensions for Concurrency</h1>
-    <template if="{{stage == 'draft'}}"></template>
+    
       <p class="warning"><strong>Note: this is an early draft. It’s known to be
       incomplet and incorrekt, and it has lots of b<span style="margin-left: -1.2pt; margin-right: 1pt">a</span>d<span style="width:1.5em"> </span>for<span style="margin-left:-3pt; margin-right:0.6pt">mat</span>ti<span style="position:relative; top:-0.15ex">n</span>g.</strong></p>
     
@@ -564,60 +565,60 @@ ul li:before {
     
     <nav>
       <h1>Contents</h1>
-      <template bind="" id="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+      
+        
           <ol>
-            <template repeat="{{sections}}"></template>
-              <li><span class="marker">1</span><a href="#general">General</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+            
+              <li><span class="marker">1</span><a href="#general">General</a>
+        
           <ol>
-            <template repeat="{{sections}}"></template>
-              <li><span class="marker">1.1</span><a href="#general.scope">Scope</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+            
+              <li><span class="marker">1.1</span><a href="#general.scope">Scope</a>
+        
       </li>
             
-              <li><span class="marker">1.2</span><a href="#general.references">Normative references</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">1.2</span><a href="#general.references">Normative references</a>
+        
       </li>
             
-              <li><span class="marker">1.3</span><a href="#general.namespaces">Namespaces, headers, and modifications to standard classes</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">1.3</span><a href="#general.namespaces">Namespaces, headers, and modifications to standard classes</a>
+        
       </li>
             
           </ol>
         
       </li>
             
-              <li><span class="marker">2</span><a href="#future"> Improvements to std::future&lt;T&gt; and Related APIs</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">2</span><a href="#future"> Improvements to std::future&lt;T&gt; and Related APIs</a>
+        
           <ol>
-            <template repeat="{{sections}}"></template>
-              <li><span class="marker">2.1</span><a href="#futures.general">General</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+            
+              <li><span class="marker">2.1</span><a href="#futures.general">General</a>
+        
       </li>
             
-              <li><span class="marker">2.2</span><a href="#futures.unique_future"> Changes to class template future</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">2.2</span><a href="#futures.unique_future"> Changes to class template future</a>
+        
       </li>
             
-              <li><span class="marker">2.3</span><a href="#futures.shared_future">Changes to class template shared_future</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">2.3</span><a href="#futures.shared_future">Changes to class template shared_future</a>
+        
       </li>
             
-              <li><span class="marker">2.4</span><a href="#futures.when_all"> Function template when_all</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">2.4</span><a href="#futures.when_all"> Function template when_all</a>
+        
       </li>
             
-              <li><span class="marker">2.5</span><a href="#futures.when_any"> Function template when_any</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">2.5</span><a href="#futures.when_any"> Function template when_any</a>
+        
       </li>
             
-              <li><span class="marker">2.6</span><a href="#futures.when_any_back"> Function template when_any_back</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">2.6</span><a href="#futures.when_any_back"> Function template when_any_back</a>
+        
       </li>
             
-              <li><span class="marker">2.7</span><a href="#futures.make_ready_future"> Function template make_ready_future</a><template bind="" ref="hierarchy"></template>
-        <template if="{{sections.length &gt; 0}}"></template>
+              <li><span class="marker">2.7</span><a href="#futures.make_ready_future"> Function template make_ready_future</a>
+        
       </li>
             
           </ol>
@@ -646,7 +647,7 @@ ul li:before {
     
 
 <p para_num="1" id="general.scope.1">This technical specification describes a number of concurrency extensions to
-the C++ Standard Library (<cxx-ref to="general.references"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><cxx-get-element-by-id elemid="{{to}}" elem="{{toElem}}"></cxx-get-element-by-id><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template><template if="{{!in}}"></template><a title="general.references" href="#general.references"><template if="{{toElem.sec_num}}"></template>1.2<template if="{{toElem.table_num}}"></template><template if="{{toElem.figure_num}}"></template></a></cxx-ref>). These
+the C++ Standard Library (<cxx-ref to="general.references"><a title="general.references" href="#general.references">1.2</a></cxx-ref>). These
 extensions are classes and functions that are likely to be used widely within a
 program and/or on the interface boundaries between libraries written by
 different organizations.</p>
@@ -684,11 +685,7 @@ to provide them.</p>
     Be sure not to introduce whitespace here, as it appears around the footnote.
   --><sup id="footnote-call-1"><a href="#footnote-body-1">1</a></sup><aside class="footnote" id="footnote-body-1"><span class="marker"><a href="#footnote-call-1">1</a>) </span>To be published. Section references are relative to <a href="http://open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf">N3797</a>.</aside></cxx-footnote>,
       <cite>Programming Languages — C++</cite>
-      <cxx-foreign-index id="cxx" src="cxx_N3797_index.json" name="C++14">
-    
-    <core-ajax auto="" url="{{src}}" handleas="json" on-core-response="{{ attachIndex }}">
-    </core-ajax>
-  </cxx-foreign-index></li>
+      </li>
 
       <li><a href="http://www.ietf.org/rfc/rfc2781.txt">RFC 2781</a>, <cite>UTF-16, an encoding of ISO 10646</cite></li>
     </ul>
@@ -734,7 +731,7 @@ Standard Library are assumed to be qualified with <code>std::</code>.
 <cxx-clause id="future">
     
 
-    <section>
+    </cxx-clause></p><section>
       <header><span class="section-number">2</span> <h1 data-bookmark-label="2  Improvements to std::future&lt;T&gt; and Related APIs"> Improvements to <code>std::future&lt;T&gt;</code> and Related APIs</h1> <span style="float:right"><a href="#future">[future]</a></span></header>
       
 
@@ -764,11 +761,11 @@ composition of asynchronous operations.
 
 
 <p para_num="1" id="futures.unique_future.1">
-To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures.unique_future">§30.6.6</span><template if="{{!in}}"></template></cxx-ref> paragraph 3, add the following to the public
+To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future">C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> paragraph 3, add the following to the public
 functions:
 <cxx-function>
     
-    <pre><code><cxx-signature>
+    </cxx-function></p><pre><code><cxx-signature>
 bool is_ready() const;
 
 future(future&lt;future&lt;R&gt;&gt;&amp;&amp; rhs) noexcept;
@@ -788,10 +785,10 @@ template&lt;typename F&gt;
 
 
     </dl>
-  </cxx-function>
+  
 
-</p><p para_num="2" id="futures.unique_future.2">
-In <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures.unique_future">§30.6.6</span><template if="{{!in}}"></template></cxx-ref> between paragraphs 8 and 9, add the following:
+<p></p><p para_num="2" id="futures.unique_future.2">
+In <cxx-ref in="cxx" to="futures.unique_future">C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> between paragraphs 8 and 9, add the following:
 </p>
 <cxx-function para_num="3" id="futures.unique_future.3">
     
@@ -821,10 +818,10 @@ In <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="{
   </cxx-function>
 
 <p para_num="6" id="futures.unique_future.6">
-After <cxx-ref in="cxx" to="futures.unique_future"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures.unique_future">§30.6.6</span><template if="{{!in}}"></template></cxx-ref> paragraph 26, add the following:
+After <cxx-ref in="cxx" to="futures.unique_future">C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref> paragraph 26, add the following:
 <cxx-function>
     
-    <pre><code><cxx-signature>
+    </cxx-function></p><pre><code><cxx-signature>
 template&lt;typename F&gt;
 <em>see below</em> then(F&amp;&amp; func);
 
@@ -841,7 +838,7 @@ template&lt;typename F&gt;
 
   <cxx-notes>
     
-    <dt>Notes:</dt><dd>  The three functions differ only by input parameters. The first only
+    <dt>Notes:</dt><dd>  The <del>three</del><ins>two</ins> functions differ only by input parameters. The first only
   takes a callable object which accepts a <code>future</code> object as a parameter. <del>The
   second function takes an <code>executor</code> as the first parameter and a callable object
   as the second parameter.</del> The <del>third</del><ins>second</ins> function takes a launch policy as the first
@@ -854,7 +851,7 @@ template&lt;typename F&gt;
     </dd>
   </cxx-effects>
     </dl>
-  </cxx-function></p><ul>
+  <p></p><ul>
       <li>The <i>continuation</i> <code>INVOKE(DECAY_COPY (std::forward&lt;F&gt;(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
       <li>The continuation launches according to the specified launch policy<del> or
       <code>executor</code></del>.</li>
@@ -866,7 +863,7 @@ template&lt;typename F&gt;
       the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
       </li>
       <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
-      no associated launch  policy), the continuation behaves the same as the third
+      no associated launch  policy), the continuation behaves the same as the <del>third</del><ins>second</ins>
       overload with a policy argument of <code>launch::async | launch::deferred</code> and the
       same argument for <code>func</code>.</li>
       <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
@@ -969,7 +966,7 @@ future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
       
 
 <p para_num="1" id="futures.shared_future.1">
-To the class declaration found in <cxx-ref in="cxx" to="futures.shared_future"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures.shared_future">§30.6.7</span><template if="{{!in}}"></template></cxx-ref>
+To the class declaration found in <cxx-ref in="cxx" to="futures.shared_future">C++14 <span title="futures.shared_future">§30.6.7</span></cxx-ref>
 paragraph 3, add the following to the public functions:
 </p>
 
@@ -986,7 +983,7 @@ template&lt;typename F&gt;
 </pre>
 
 <p para_num="2" id="futures.shared_future.2">
-After <cxx-ref in="cxx" to="futures.shared_future"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures.shared_future">§30.6.7</span><template if="{{!in}}"></template></cxx-ref> paragraph 28, add the following:
+After <cxx-ref in="cxx" to="futures.shared_future">C++14 <span title="futures.shared_future">§30.6.7</span></cxx-ref> paragraph 28, add the following:
 </p>
 
 <cxx-function para_num="3" id="futures.shared_future.3">
@@ -1008,7 +1005,7 @@ template&lt;typename F&gt;
 
 <cxx-notes para_num="4" id="futures.shared_future.4">
     
-    <dt>Notes:</dt><dd>The three functions differ only by input parameters. The first
+    <dt>Notes:</dt><dd>The <del>three</del><ins>two</ins> functions differ only by input parameters. The first
 only takes a callable object which  accepts a <code>shared_future</code> object as a
 parameter. <del>The second function takes an <code>executor</code> as the first parameter and a
 callable object as the second parameter.</del> The <del>third</del><ins>second</ins> function takes a launch
@@ -1022,7 +1019,7 @@ policy as the  first parameter and a callable object as the second parameter.
   <ul>
     <li>The <i>continuation</i> <code>INVOKE(DECAY_COPY (std::forward&lt;F&gt;(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
     <li>The continuation launches according to the specified policy<del> or executor</del>.</li>
-    <li>When the scheduler or launch policy is not provided the continuation
+    <li>When the <del>scheduler or </del>launch policy is not provided the continuation
     inherits the parent's launch policy<del> or executor</del>.</li>
     <li>
     Any value returned from the continuation is stored as the result in the
@@ -1030,13 +1027,13 @@ policy as the  first parameter and a callable object as the second parameter.
     the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
     </li>
     <li>If the parent was created with <code>std::promise</code> (has no associated launch
-    policy), the continuation behaves the same as the third function with a policy
+    policy), the continuation behaves the same as the <del>third</del><ins>second</ins> function with a policy
     argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
     <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
     calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
     <cxx-note><span class="nowrap">[ <em>Note:</em></span>
     
-    This is similar to <code>future</code>. See example in <cxx-ref to="futures.unique_future"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><cxx-get-element-by-id elemid="{{to}}" elem="{{toElem}}"></cxx-get-element-by-id><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template><template if="{{!in}}"></template><a title="futures.unique_future" href="#futures.unique_future"><template if="{{toElem.sec_num}}"></template>2.2<template if="{{toElem.table_num}}"></template><template if="{{toElem.figure_num}}"></template></a></cxx-ref>.
+    This is similar to <code>future</code>. See example in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.2</a></cxx-ref>.
     
     <span class="nowrap">— <em>end note</em> ]</span>
   </cxx-note>
@@ -1061,7 +1058,7 @@ policy as the  first parameter and a callable object as the second parameter.
         <cxx-notes>
     
     <dt>Notes:</dt><dd>
-          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><cxx-get-element-by-id elemid="{{to}}" elem="{{toElem}}"></cxx-get-element-by-id><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template><template if="{{!in}}"></template><a title="futures.unique_future" href="#futures.unique_future"><template if="{{toElem.sec_num}}"></template>2.2<template if="{{toElem.table_num}}"></template><template if="{{toElem.figure_num}}"></template></a></cxx-ref>.
+          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.2</a></cxx-ref>.
         </dd>
   </cxx-notes>
       </li>
@@ -1116,7 +1113,7 @@ policy as the  first parameter and a callable object as the second parameter.
       
 
 <p para_num="1" id="futures.when_all.1">
-A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures">§30.6</span><template if="{{!in}}"></template></cxx-ref>. Below is the content of that section.
+A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.when_all.2">
@@ -1219,7 +1216,7 @@ template &lt;typename... T&gt;
       
 
 <p para_num="1" id="futures.when_any.1">
-A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures">§30.6</span><template if="{{!in}}"></template></cxx-ref>. Below is the content of that section.
+A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.when_any.2">
@@ -1322,7 +1319,7 @@ template &lt;typename... T&gt;
       
 
 <p para_num="1" id="futures.when_any_back.1">
-A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures">§30.6</span><template if="{{!in}}"></template></cxx-ref>. Below is the content of that section.
+A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.when_any_back.2">
@@ -1410,7 +1407,7 @@ or <code>shared_future&lt;R&gt;</code>. All <code>R</code> types  must be the sa
       
 
 <p para_num="1" id="futures.make_ready_future.1">
-A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures">§30.6</span><template if="{{!in}}"></template></cxx-ref>. Below is the content of that section.
+A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
 </p>
 
 <cxx-function para_num="2" id="futures.make_ready_future.2">
@@ -1468,7 +1465,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
       
 
 <p para_num="1" id="futures.async.1">
-Change <cxx-ref in="cxx" to="futures.async"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures.async">§30.6.8</span><template if="{{!in}}"></template></cxx-ref> paragraph 1 as follows:
+Change <cxx-ref in="cxx" to="futures.async">C++14 <span title="futures.async">§30.6.8</span></cxx-ref> paragraph 1 as follows:
 </p>
 <p para_num="2" id="futures.async.2">
 The function template <code>async</code> provides a mechanism to launch a function
@@ -1492,7 +1489,7 @@ async(executor&amp; ex, F&amp;&amp; f, Args&amp;&amp;... args);
 </pre>
 <p para_num="4" id="futures.async.4"></p>
 
-Change <cxx-ref in="cxx" to="futures.async"><cxx-get-element-by-id elemid="{{in}}" elem="{{inElem}}"></cxx-get-element-by-id><template if="{{!in}}"></template><template id="target_num"></template><template if="{{insynopsis}}"></template><template if="{{!insynopsis}}"></template><template bind="" ref="target_num"></template><template if="{{inElem.index}}"></template>C++14 <span title="futures.async">§30.6.8</span><template if="{{!in}}"></template></cxx-ref> paragraph 3 as follows:
+Change <cxx-ref in="cxx" to="futures.async">C++14 <span title="futures.async">§30.6.8</span></cxx-ref> paragraph 3 as follows:
 
 <cxx-effects para_num="5" id="futures.async.5">
     
@@ -1562,16 +1559,13 @@ The further behavior of the third function is as follows:<br>
 
 
     </section>
-  </cxx-clause>
+  
 
 
-<cxx-publish-button source="https://github.com/cplusplus/fundamentals-ts">
-    
-    <button on-click="{{ publish }}">Publish to new window</button>
-  </cxx-publish-button>
 
 
-</p>
+
+<p></p>
     </section>
   </cxx-section>
     </section>
