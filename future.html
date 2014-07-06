@@ -64,7 +64,7 @@ template&lt;typename F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
-  <cxx-Notes>  The three functions differ only by input parameters. The first only
+  <cxx-Notes>  The <del>three</del><ins>two</ins> functions differ only by input parameters. The first only
   takes a callable object which accepts a <code>future</code> object as a parameter. <del>The
   second function takes an <code>executor</code> as the first parameter and a callable object
   as the second parameter.</del> The <del>third</del><ins>second</ins> function takes a launch policy as the first
@@ -83,7 +83,7 @@ template&lt;typename F>
       the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
       </li>
       <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
-      no associated launch  policy), the continuation behaves the same as the third
+      no associated launch  policy), the continuation behaves the same as the <del>third</del><ins>second</ins>
       overload with a policy argument of <code>launch::async | launch::deferred</code> and the
       same argument for <code>func</code>.</li>
       <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
@@ -185,7 +185,7 @@ template&lt;typename F>
 <em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
-<cxx-Notes>The three functions differ only by input parameters. The first
+<cxx-Notes>The <del>three</del><ins>two</ins> functions differ only by input parameters. The first
 only takes a callable object which  accepts a <code>shared_future</code> object as a
 parameter. <del>The second function takes an <code>executor</code> as the first parameter and a
 callable object as the second parameter.</del> The <del>third</del><ins>second</ins> function takes a launch
@@ -196,7 +196,7 @@ policy as the  first parameter and a callable object as the second parameter.
   <ul>
     <li>The <i>continuation</i> <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
     <li>The continuation launches according to the specified policy<del> or executor</del>.</li>
-    <li>When the scheduler or launch policy is not provided the continuation
+    <li>When the <del>scheduler or </del>launch policy is not provided the continuation
     inherits the parent's launch policy<del> or executor</del>.</li>
     <li>
     Any value returned from the continuation is stored as the result in the
@@ -204,7 +204,7 @@ policy as the  first parameter and a callable object as the second parameter.
     the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
     </li>
     <li>If the parent was created with <code>std::promise</code> (has no associated launch
-    policy), the continuation behaves the same as the third function with a policy
+    policy), the continuation behaves the same as the <del>third</del><ins>second</ins> function with a policy
     argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
     <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
     calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
