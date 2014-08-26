@@ -86,7 +86,7 @@ template&lt;typename F>
       <pre>
 auto f1 = async(launch::deferred, [] { return 1; });
 
-auto f2 = f1.then([](future&lt;int> n) { return 2; });
+auto f2 = f1.then([](future<ins>&lt;int></ins> n) { return 2; });
 
 f2.wait(); // execution of f1 starts here, followed by f2
       </pre> </cxx-example>
@@ -130,7 +130,18 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
   <cxx-Postconditions>
   <ul>
   <li>The <code>future</code> object is moved to the parameter of the continuation function.</li>
-  <li><code>valid() == false</code> on original <code>future</code> object immediately after it returns.</li>
+  <li><code>valid() == false</code> on the original <code>future</code><ins>;
+    <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code></ins><del> object immediately after it returns.</del>
+    <cxx-Notes>
+      <ins>
+      In case of implicit unwrapping, the validity of the <code>future</code> returned from
+      <code>then</code> cannot be established until after the completion of the 
+      functor passed into <code>then</code>. In such case, the resulting <code>future</code>
+      becomes ready with an exception of type <code>std::future_error</code>, 
+      with an error code of <code>std::future_errc::broken_promise</code>.
+      </ins>
+    </cxx-Notes>
+  </li>
   </ul>
   </cxx-Postconditions>
 </cxx-function>
@@ -228,6 +239,18 @@ policy as the  first parameter and a callable object as the second parameter.
     </li>
     <li>
     <code>valid() == true</code> on the original <code>shared_future</code> object.
+    <ins><code>valid() == true</code> on the <code>shared_future</code> returned from <code>then.</code></ins>
+
+    <cxx-Notes>
+      <ins>
+      In case of implicit unwrapping, the validity of the <code>shared_future</code> returned from
+      <code>then</code> cannot be established until after the completion of the 
+      functor passed into <code>then</code>. In such case, the resulting <code>shared_future</code>
+      becomes ready with an exception of type <code>std::future_error</code>, 
+      with an error code of <code>std::future_errc::broken_promise</code>.
+      </ins>
+    </cxx-Notes>
+
     </li>
   </ul>
 </cxx-postconditions>
