@@ -49,6 +49,7 @@ In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 
 
 <p>
 After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add the following:
+</p>
 <cxx-function>
 <cxx-signature>
 template&lt;typename F>
@@ -58,9 +59,9 @@ template&lt;typename F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
-  <cxx-Notes>  The <ins>two</ins> functions differ only by input parameters. The first only
+  <cxx-Notes>  The two functions differ only by input parameters. The first only
   takes a callable object which accepts a <code>future</code> object as a parameter. The 
-  <ins>second</ins> function takes a launch policy as the first
+  second function takes a launch policy as the first
   parameter and a callable object as the second parameter.
   </cxx-Notes>
   <cxx-Effects>
@@ -75,7 +76,7 @@ template&lt;typename F>
       the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
       </li>
       <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
-      no associated launch  policy), the continuation behaves the same as the <ins>second</ins>
+      no associated launch  policy), the continuation behaves the same as the second
       overload with a policy argument of <code>launch::async | launch::deferred</code> and the
       same argument for <code>func</code>.</li>
       <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
@@ -85,7 +86,7 @@ template&lt;typename F>
       <pre>
 auto f1 = async(launch::deferred, [] { return 1; });
 
-auto f2 = f1.then([](future<int> n) { return 2; });
+auto f2 = f1.then([](future&lt;int> n) { return 2; });
 
 f2.wait(); // execution of f1 starts here, followed by f2
       </pre> </cxx-example>
@@ -171,9 +172,9 @@ template&lt;typename F>
 <em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
-<cxx-Notes>The <ins>two</ins> functions differ only by input parameters. The first
+<cxx-Notes>The two functions differ only by input parameters. The first
 only takes a callable object which  accepts a <code>shared_future</code> object as a
-parameter. The <ins>second</ins> function takes a launch
+parameter. The second function takes a launch
 policy as the  first parameter and a callable object as the second parameter.
 </cxx-Notes>
 
@@ -189,7 +190,7 @@ policy as the  first parameter and a callable object as the second parameter.
     the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
     </li>
     <li>If the parent was created with <code>std::promise</code> (has no associated launch
-    policy), the continuation behaves the same as the <ins>second</ins> function with a policy
+    policy), the continuation behaves the same as the second function with a policy
     argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
     <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
     calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
