@@ -243,9 +243,9 @@ policy as the  first parameter and a callable object as the second parameter.
 
     <cxx-Notes>
       <ins>
-      In case of implicit unwrapping, the validity of the <code>shared_future</code> returned from
+      In case of implicit unwrapping, the validity of the <code>future</code> returned from
       <code>then</code> cannot be established until after the completion of the 
-      functor passed into <code>then</code>. In such case, the resulting <code>shared_future</code>
+      functor passed into <code>then</code>. In such case, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>, 
       with an error code of <code>std::future_errc::broken_promise</code>.
       </ins>
