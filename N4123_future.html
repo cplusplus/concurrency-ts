@@ -272,7 +272,7 @@ A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 
 <cxx-function>
 <cxx-signature>
-template <class InputIterator>
+template <ins>&lt;class InputIterator></ins>
 <em>see below</em> when_all(InputIterator first, InputIterator last);
 
 template &lt;typename... T>
@@ -292,7 +292,7 @@ template &lt;typename... T>
     equals last,  returns a future with an empty vector that is immediately
     ready.</li>
 
-    <li>Calling the second signature of <code>when_any</code> with no arguments returns a
+    <li>Calling the second signature of <code><ins>when_all</ins><del>when_any</del></code> with no arguments returns a
     <code>future&lt;tuple&lt;>></code> that is  immediately ready.</li>
     </ul>
 </cxx-Notes>
@@ -332,7 +332,7 @@ template &lt;typename... T>
 <cxx-Postconditions>
   <ul>
     <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All output <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+    <li>All <ins>input</ins><del>output</del> <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
   </ul>
 </cxx-Postconditions>
 </cxx-function>
