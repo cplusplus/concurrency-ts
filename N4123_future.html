@@ -299,9 +299,32 @@ template &lt;typename... T>
 
 <cxx-Effects>
   <ul>
-    <li>Each <code>future</code> and <code>shared_future</code> is waited upon and then copied into the
-    collection of the  output (returned) future, maintaining the order of the
-    futures in the input collection.</li>
+    <li>
+    <del>
+      Each <code>future</code> and <code>shared_future</code> is waited upon and then copied into the
+      collection of the  output (returned) future, maintaining the order of the
+      futures in the input collection.
+    </del>
+    </li>
+
+    <li><ins>
+    If any of the futures supplied to a call to <code>when_all</code> refer to deferred tasks 
+    that have not started execution, those tasks are executed before the call 
+    to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
+    <code>when_all</code> returns immediately.
+    </ins></li>
+
+    <li><ins>
+    The call to <code>when_all</code> does not wait for non-deferred tasks, or deferred tasks
+    that have already started executing elsewhere, to complete before returning.
+    </ins></li>
+
+    <li><ins>
+    Once all the futures supplied to the call to <code>when_all</code> are ready, the futures
+    are moved into the associated state of the future returned from the call to 
+    <code>when_all</code>, preserving the order of the futures supplied to <code>when_all</code>. 
+    That future is then ready.
+    </ins></li>
 
     <li>The future returned by <code>when_all</code> will not throw an exception, but the
     futures held in the output collection may.</li>
@@ -372,9 +395,29 @@ template &lt;typename... T>
 
 <cxx-Effects>
 <ul>
-  <li>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
+  <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
   all the futures are  copied into the collection of the output (returned) future,
-  maintaining the order of the futures  in the input collection.</li>
+  maintaining the order of the futures  in the input collection.</del></li>
+
+  <li><ins>
+  Each of the futures supplied to <code>when_any</code> is checked in the order supplied. 
+  If a given future is ready, then no further futures are checked, and the call 
+  to <code>when_any</code> returns immediately. If a given future refers to a deferred task 
+  that has not yet started execution, then no further futures are checked, 
+  that task is executed, and the call to <code>when_any</code> then returns immediately.
+  </ins></li>
+
+  <li><ins>
+  The call to <code>when_any</code> does not wait for non-deferred tasks, or deferred tasks 
+  that have already started executing elsewhere, to complete before returning.
+  </ins></li>
+
+  <li><ins>
+  Once at least one of the futures supplied to the call to <code>when_any</code> are ready, 
+  the futures are moved into the associated state of the future returned from 
+  the call to <code>when_any</code>, preserving the order of the futures supplied to 
+  <code>when_any</code>. That future is then ready.
+  </ins></li>
 
   <li>The <code>future</code> returned by <code>when_any</code> will not throw an exception, but the
   futures held in the  output collection may.</li>
