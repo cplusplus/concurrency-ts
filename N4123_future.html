@@ -413,9 +413,9 @@ template &lt;typename... T>
   </ins></li>
 
   <li><ins>
-  Once at least one of the <code>future</code> supplied to the call to <code>when_any</code> are ready, 
+  Once at least one of the <code>future</code>s supplied to the call to <code>when_any</code> are ready, 
   the <code>future</code> are moved into the associated state of the <code>future</code> returned from 
-  the call to <code>when_any</code>, preserving the order of the <code>future</code> supplied to 
+  the call to <code>when_any</code>, preserving the order of the <code>future</code>s supplied to 
   <code>when_any</code>. That <code>future</code> is then ready.
   </ins></li>
 
@@ -486,7 +486,7 @@ or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
     <code>future</code>.</del></li>
 
     <li><ins>
-    If any of the <code>future</code> supplied to a call to <code>when_all</code> refer to deferred tasks 
+    If any of the <code>future</code>s supplied to a call to <code>when_all</code> refer to deferred tasks 
     that have not started execution, those tasks are executed before the call 
     to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
     <code>when_all</code> returns immediately.
@@ -498,9 +498,9 @@ or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
     </ins></li>
 
     <li><ins>
-    Once all the <code>future</code> supplied to the call to <code>when_all</code> are ready, the <code>future</code>
+    Once all the <code>future</code>s supplied to the call to <code>when_all</code> are ready, the <code>future</code>
     are moved into the associated state of the <code>future</code> returned from the call to 
-    <code>when_all</code><ins>.</ins><del>, preserving the order of the <code>future</code> supplied to <code>when_all</code>.</del>
+    <code>when_all</code><ins>.</ins><del>, preserving the order of the <code>future</code>s supplied to <code>when_all</code>.</del>
     <ins>The last <code>future</code> in the associated state of the returned <code>future</code> is guaranteed to be in the
       ready state; the order of the other <code>future</code>s is unspecified.</ins>
     <del>That</del><ins>The returned</ins> <code>future</code> is then ready.
