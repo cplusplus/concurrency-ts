@@ -36,7 +36,7 @@ In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 
 <cxx-function>
   <cxx-signature>future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;</cxx-signature>
   <cxx-Effects>Constructs a <code>future</code> object by moving the instance referred to by
-  <code>rhs</code> and unwrapping the inner future.</cxx-Effects>
+  <code>rhs</code> and unwrapping the inner <code>future</code>.</cxx-Effects>
   <cxx-postconditions>
     <!-- revisit: what happens when innner future is invalid? -->
     <ul>
@@ -289,7 +289,7 @@ template &lt;typename... T>
     <code>shared_future&lt;R1></code> objects, where <code>R0</code>  and <code>R1</code> need not be the same type.</li>
 
     <li>Calling the first signature of <code>when_all</code> where <code>InputIterator</code> first
-    equals last,  returns a future with an empty vector that is immediately
+    equals last,  returns a <code>future</code> with an empty vector that is immediately
     ready.</li>
 
     <li>Calling the second signature of <code><ins>when_all</ins><del>when_any</del></code> with no arguments returns a
@@ -302,13 +302,13 @@ template &lt;typename... T>
     <li>
     <del>
       Each <code>future</code> and <code>shared_future</code> is waited upon and then copied into the
-      collection of the  output (returned) future, maintaining the order of the
-      futures in the input collection.
+      collection of the  output (returned) <code>future</code>, maintaining the order of the
+      <code>future</code>s in the input collection.
     </del>
     </li>
 
     <li><ins>
-    If any of the futures supplied to a call to <code>when_all</code> refer to deferred tasks 
+    If any of the <code>future</code>s supplied to a call to <code>when_all</code> refer to deferred tasks 
     that have not started execution, those tasks are executed before the call 
     to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
     <code>when_all</code> returns immediately.
@@ -320,14 +320,14 @@ template &lt;typename... T>
     </ins></li>
 
     <li><ins>
-    Once all the futures supplied to the call to <code>when_all</code> are ready, the futures
-    are moved into the associated state of the future returned from the call to 
-    <code>when_all</code>, preserving the order of the futures supplied to <code>when_all</code>. 
-    That future is then ready.
+    Once all the <code>future</code>s supplied to the call to <code>when_all</code> are ready, the <code>future</code>s
+    are moved into the associated state of the <code>future</code> returned from the call to 
+    <code>when_all</code>, preserving the order of the <code>future</code>s supplied to <code>when_all</code>. 
+    That <code>future</code> is then ready.
     </ins></li>
 
-    <li>The future returned by <code>when_all</code> will not throw an exception, but the
-    futures held in the output collection may.</li>
+    <li>The <code>future</code> returned by <code>when_all</code> will not throw an exception, but the
+    <code>future</code> held in the output collection may.</li>
   </ul>
 </cxx-Effects>
 
@@ -337,11 +337,11 @@ template &lt;typename... T>
 
     <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
     and the iterator pair  yields <code>future&lt;R></code>. <code>R</code> may be <code>void</code>. The order of the
-    futures in the output vector will be the same  as given by the input iterator.</li>
+    <code>future</code> in the output vector will be the same  as given by the input iterator.</li>
 
     <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
     compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
-    <code>void</code>. The order of the futures in the output  vector will be the same as given
+    <code>void</code>. The order of the <code>future</code> in the output  vector will be the same as given
     by the input iterator.</li>
 
     <li><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code> if inputs are fixed in
@@ -384,26 +384,26 @@ template &lt;typename... T>
   <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R></code> and
   <code>shared_future&lt;R></code> objects, where <code>R</code> need  not be the same type.</li>
 
-  <li>Calling the first signature of <code>when_any</code> where <code>InputIterator</code> first
-  equals last, returns a future with an empty vector that is immediately
+  <li>Calling the first signature of <code>when_any</code> where <code>InputIterator</code> <code>first</code>
+  equals <code>last</code>, returns a <code>future</code> with an empty vector that is immediately
   ready.</li>
 
   <li>Calling the second signature of <code>when_any</code> with no arguments returns a
-  <code>future&lt;tuple&lt;>></code> that is  immediately ready.</li>
+  <code>future&lt;tuple&lt;>></code> that is immediately ready.</li>
 </ul>
 </cxx-Notes>
 
 <cxx-Effects>
 <ul>
   <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
-  all the futures are  copied into the collection of the output (returned) future,
-  maintaining the order of the futures  in the input collection.</del></li>
+  all the <code>future</code>s are  copied into the collection of the output (returned) <code>future</code>,
+  maintaining the order of the <code>future</code>s in the input collection.</del></li>
 
   <li><ins>
-  Each of the futures supplied to <code>when_any</code> is checked in the order supplied. 
-  If a given future is ready, then no further futures are checked, and the call 
-  to <code>when_any</code> returns immediately. If a given future refers to a deferred task 
-  that has not yet started execution, then no further futures are checked, 
+  Each of the <code>future</code>s supplied to <code>when_any</code> is checked in the order supplied. 
+  If a given <code>future</code> is ready, then no further <code>future</code>s are checked, and the call 
+  to <code>when_any</code> returns immediately. If a given <code>future</code> refers to a deferred task 
+  that has not yet started execution, then no further <code>future</code>s are checked, 
   that task is executed, and the call to <code>when_any</code> then returns immediately.
   </ins></li>
 
@@ -413,14 +413,14 @@ template &lt;typename... T>
   </ins></li>
 
   <li><ins>
-  Once at least one of the futures supplied to the call to <code>when_any</code> are ready, 
-  the futures are moved into the associated state of the future returned from 
-  the call to <code>when_any</code>, preserving the order of the futures supplied to 
-  <code>when_any</code>. That future is then ready.
+  Once at least one of the <code>future</code> supplied to the call to <code>when_any</code> are ready, 
+  the <code>future</code> are moved into the associated state of the <code>future</code> returned from 
+  the call to <code>when_any</code>, preserving the order of the <code>future</code> supplied to 
+  <code>when_any</code>. That <code>future</code> is then ready.
   </ins></li>
 
   <li>The <code>future</code> returned by <code>when_any</code> will not throw an exception, but the
-  futures held in the  output collection may.</li>
+  <code>future</code> held in the  output collection may.</li>
 </ul>
 </cxx-Effects>
 
@@ -430,12 +430,12 @@ template &lt;typename... T>
 
   <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
   time and the  iterator pair yields <code>future&lt;R></code>. <code>R</code> may be void. The order of
-  the futures in the output vector will  be the same as given by the input
+  the <code>future</code> in the output vector will  be the same as given by the input
   iterator.</li>
 
   <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
   compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
-  <code>void</code>. The order of the futures in the output  vector will be the same as given
+  <code>void</code>. The order of the <code>future</code> in the output  vector will be the same as given
   by the input iterator.</li>
 
   <li><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code> if inputs are fixed in
@@ -474,24 +474,45 @@ or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
 <cxx-Notes>
   <ul>
     <li>The function <code>when_any_back</code> takes a pair of <code>InputIterators</code>.</li>
-    <li>Calling <code>when_any_back</code> where <code>InputIterator</code> first equals
-    last, returns a <code>future</code> with an empty vector that is immediately ready.</li>
+    <li>Calling <code>when_any_back</code> where <code>InputIterator</code> <code>first</code> equals
+    <code>last</code>, returns a <code>future</code> with an empty vector that is immediately ready.</li>
   </ul>
 </cxx-Notes>
 
 <cxx-Effects>
   <ul>
-    <li>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
-    all the futures are  copied into the collection of the output (returned)
-    <code>future</code>.</li>
+    <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
+    all the <code>future</code> are  copied into the collection of the output (returned)
+    <code>future</code>.</del></li>
 
-    <li>After the copy, the <code>future</code> or <code>shared_future</code> that was first detected as
+    <li><ins>
+    If any of the <code>future</code> supplied to a call to <code>when_all</code> refer to deferred tasks 
+    that have not started execution, those tasks are executed before the call 
+    to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
+    <code>when_all</code> returns immediately.
+    </ins></li>
+
+    <li><ins>
+    The call to <code>when_all</code> does not wait for non-deferred tasks, or deferred tasks
+    that have already started executing elsewhere, to complete before returning.
+    </ins></li>
+
+    <li><ins>
+    Once all the <code>future</code> supplied to the call to <code>when_all</code> are ready, the <code>future</code>
+    are moved into the associated state of the <code>future</code> returned from the call to 
+    <code>when_all</code><ins>.</ins><del>, preserving the order of the <code>future</code> supplied to <code>when_all</code>.</del>
+    <ins>The last <code>future</code> in the associated state of the returned <code>future</code> is guaranteed to be in the
+      ready state; the order of the other <code>future</code>s is unspecified.</ins>
+    <del>That</del><ins>The returned</ins> <code>future</code> is then ready.
+    </ins></li>
+
+    <li><del>After the copy, the <code>future</code> or <code>shared_future</code> that was first detected as
     being ready swaps its  position with that of the last element of the result
     collection, so that the ready <code>future</code> or <code>shared_future</code> may be identified in
-    constant time. Only one <code>future</code> or <code>shared_future</code> is thus  moved.</li>
+    constant time. Only one <code>future</code> or <code>shared_future</code> is thus  moved.</del></li>
 
     <li>The <code>future</code> returned by <code>when_any_back</code> will not throw an exception, but
-    the futures held in  the output collection may.</li>
+    the <code>future</code> held in  the output collection may.</li>
   </ul>
 </cxx-Effects>
 
