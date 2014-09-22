@@ -50,6 +50,13 @@ In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 
 <p>
 After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add the following:
 </p>
+<p>
+<ins>
+The member function template <code>then</code> provides a mechanism for attaching
+a <i>continuation</i> to a <code>future</code> object, that will be executed
+as specified below.
+</ins>
+</p>
 <cxx-function>
 <cxx-signature>
 template&lt;typename F>
@@ -59,15 +66,19 @@ template&lt;typename F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
-  <cxx-Notes>  The two functions differ only by input parameters. The first only
+  <cxx-Notes> The two functions differ only by input parameters. The first only
   takes a callable object which accepts a <code>future</code> object as a parameter. The 
   second function takes a launch policy as the first
   parameter and a callable object as the second parameter.
   </cxx-Notes>
   <cxx-Effects>
+    <ins>
+    Both functions create a shared state that is associated with the returned 
+    <code>future</code> object. The further behavior of the functions is as follows.
+    </ins>
     <ul>
-      <li>The <i>continuation</i> <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
-      <li>The continuation launches according to the specified launch policy.</li>
+      <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
+      <li>The continuation launches according to the specified launch policy<ins>, if it is provided</ins>.</li>
       <li>When the launch policy is not provided the continuation inherits
       the parent's launch policy.</li>
       <li>
@@ -173,7 +184,13 @@ template&lt;typename F>
 <p>
 After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add the following:
 </p>
-
+<p>
+<ins>
+The member function template <code>then</code> provides a mechanism for attaching
+a <i>continuation</i> to a <code>shared_future</code> object, that will be executed
+as specified below.
+</ins>
+</p>
 <cxx-function>
 <cxx-signature>
 template&lt;typename F>
@@ -190,9 +207,13 @@ policy as the  first parameter and a callable object as the second parameter.
 </cxx-Notes>
 
 <cxx-Effects>
+  <ins>
+  Both functions create a shared state that is associated with the returned 
+  <code>future</code> object. The further behavior of the functions is as follows.
+  </ins>
   <ul>
-    <li>The <i>continuation</i> <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
-    <li>The continuation launches according to the specified policy.</li>
+    <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
+    <li>The continuation launches according to the specified policy<ins>, if it is provided</ins>.</li>
     <li>When the launch policy is not provided the continuation
     inherits the parent's launch policy.</li>
     <li>
