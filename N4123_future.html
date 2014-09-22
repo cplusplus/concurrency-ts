@@ -100,11 +100,11 @@ f2.wait(); // execution of f1 starts here, followed by f2
 
     <ul>
       <li>
-        When <code>result_of_t&lt;decay_t&lt;F>()></code>
-        is <code>future&lt;R></code>, the function returns <code>future&lt;R></code>.
+        When <code>result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)></code>
+        is <code>future&lt;R<ins>2</ins>></code>, the function returns <code>future&lt;R<ins>2</ins>></code>.
       </li>
       <li>
-        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>()>></code>.
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)>></code>.
     <cxx-Notes>
         The first rule above is called the <em>implicit unwrapping</em>. Without this rule,
         the return type of <code>then</code> taking a closure returning a 
@@ -218,11 +218,11 @@ policy as the  first parameter and a callable object as the second parameter.
 
     <ul>
       <li>
-        When <code>result_of_t&lt;decay_t&lt;F>()></code>
-        is <code>future&lt;R></code>, the function returns <code>future&lt;R></code>.
+        When <code>result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)></code>
+        is <code>future&lt;R<ins>2</ins>></code>, the function returns <code>future&lt;R<ins>2</ins>></code>.
       </li>
       <li>
-        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>()>></code>.
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)>></code>.
         <cxx-notes>
           This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
         </cxx-notes>
