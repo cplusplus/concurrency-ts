@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<!-- Sources at https://github.com/cplusplus/fundamentals-ts -->
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><!--[if lte IE 8]><script>document.createElement("nav");document.createElement("section");document.createElement("time");document.createElement("CXX-TOC");document.createElement("CXX-CLAUSE");document.createElement("CXX-SECTION");document.createElement("CXX-REF");document.createElement("CXX-FUNCTION");document.createElement("CXX-SIGNATURE");document.createElement("CXX-EFFECTS");document.createElement("CXX-POSTCONDITIONS");document.createElement("CXX-NOTES");document.createElement("CXX-EXAMPLE");document.createElement("CXX-RETURNS");document.createElement("CXX-REMARKS");document.createElement("CXX-NOTE");document.createElement("CXX-REQUIRES");document.createElement("CXX-PUBLISH-BUTTON");</script><![endif]--><style>template {display: none !important;} /* injected by platform.js */</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; } 
+</style><style shim-shadowdom-css="">style { display: none !important; }
+cxx-function {
+	display: block;
+}
+
+cxx-function:not(:last-child) {
+	margin-bottom: 3ex;
+}
+
+cxx-function > dl {
+	margin: 0px 0px 0px 2em;
+}
+
+cxx-function > pre {
+	margin: 0px;
+}cxx-signature {
+	padding-left: 2em; display: block; text-indent: -2em;
+}
+
+cxx-signature.formatted {
+	text-indent: 0px;
+}cxx-attribute {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-attribute dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-attribute dd {
+	margin-left: 0em;
+}
+
+cxx-attribute dd > ul, cxx-attribute dd > ol {
+	clear: left;
+}cxx-requires {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-requires dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-requires dd {
+	margin-left: 0em;
+}
+
+cxx-requires dd > ul, cxx-requires dd > ol {
+	clear: left;
+}cxx-preconditions {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-preconditions dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-preconditions dd {
+	margin-left: 0em;
+}
+
+cxx-preconditions dd > ul, cxx-preconditions dd > ol {
+	clear: left;
+}cxx-effects {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-effects dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-effects dd {
+	margin-left: 0em;
+}
+
+cxx-effects dd > ul, cxx-effects dd > ol {
+	clear: left;
+}cxx-synchronization {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-synchronization dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-synchronization dd {
+	margin-left: 0em;
+}
+
+cxx-synchronization dd > ul, cxx-synchronization dd > ol {
+	clear: left;
+}cxx-postconditions {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-postconditions dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-postconditions dd {
+	margin-left: 0em;
+}
+
+cxx-postconditions dd > ul, cxx-postconditions dd > ol {
+	clear: left;
+}cxx-returns {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-returns dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-returns dd {
+	margin-left: 0em;
+}
+
+cxx-returns dd > ul, cxx-returns dd > ol {
+	clear: left;
+}cxx-throws {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-throws dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-throws dd {
+	margin-left: 0em;
+}
+
+cxx-throws dd > ul, cxx-throws dd > ol {
+	clear: left;
+}cxx-complexity {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-complexity dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-complexity dd {
+	margin-left: 0em;
+}
+
+cxx-complexity dd > ul, cxx-complexity dd > ol {
+	clear: left;
+}cxx-exception-safety {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-exception-safety dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-exception-safety dd {
+	margin-left: 0em;
+}
+
+cxx-exception-safety dd > ul, cxx-exception-safety dd > ol {
+	clear: left;
+}cxx-remarks {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-remarks dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-remarks dd {
+	margin-left: 0em;
+}
+
+cxx-remarks dd > ul, cxx-remarks dd > ol {
+	clear: left;
+}cxx-error-conditions {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-error-conditions dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-error-conditions dd {
+	margin-left: 0em;
+}
+
+cxx-error-conditions dd > ul, cxx-error-conditions dd > ol {
+	clear: left;
+}cxx-notes {
+	display: block; margin-top: 0.5em; margin-bottom: 0.5em;
+}
+
+cxx-notes dt {
+	float: left; font-style: italic; font-weight: normal; padding-right: 1ex;
+}
+
+cxx-notes dd {
+	margin-left: 0em;
+}
+
+cxx-notes dd > ul, cxx-notes dd > ol {
+	clear: left;
+}cxx-section {
+	display: block;
+}
+
+cxx-section:target {
+	background-color: inherit;
+}
+
+cxx-section:target > section > h1 {
+	background-color: rgb(255, 238, 221);
+}
+
+cxx-section header > h1 {
+	display: inline; font-size: 100%;
+}
+
+cxx-section header {
+	font-weight: bold; margin-top: 20px; margin-bottom: 20px;
+}
+
+cxx-section header:after {
+	clear: both; display: block; content: " "; height: 0px;
+}cxx-clause {
+	display: block;
+}
+
+cxx-clause:target {
+	background-color: inherit;
+}
+
+cxx-clause:target > section > h1 {
+	background-color: rgb(255, 238, 221);
+}
+
+cxx-clause header > h1 {
+	display: inline; font-size: 100%;
+}
+
+cxx-clause header {
+	font-weight: bold; margin-top: 20px; margin-bottom: 20px;
+}
+
+cxx-clause header:after {
+	clear: both; display: block; content: " "; height: 0px;
+}[is=cxx-table] {
+	margin-left: auto; margin-right: auto; border-collapse: collapse; border: thin solid black;
+}
+
+[is=cxx-table] caption {
+	white-space: nowrap;
+}
+
+[is=cxx-table] caption caption {
+	display: inline;
+}
+
+[is=cxx-table] th, [is=cxx-table] td {
+	border-style: solid none; border-color: black; border-width: thin; padding: 0px 0.25em;
+}
+
+[is=cxx-table].column-rules th, [is=cxx-table].column-rules td {
+	border-left-style: solid; border-right-style: solid;
+}
+
+[is=cxx-table] th {
+	border-bottom: medium double;
+}
+
+[is=cxx-table].center td {
+	text-align: center;
+}
+
+[is=cxx-table].list td {
+	border: medium none;
+}cxx-figure {
+	margin-left: auto; margin-right: auto;
+}
+
+cxx-figure figcaption {
+	white-space: nowrap; text-align: center;
+}
+
+cxx-figure figcaption figcaption {
+	display: inline;
+}[is=cxx-definition-section] dt {
+	font-weight: bold;
+}
+
+[is=cxx-definition-section] dd {
+	margin-left: 0px;
+}cxx-toc {
+	display: block;
+}
+
+cxx-toc nav > ol {
+	font-weight: bold;
+}
+
+cxx-toc ol {
+	font-weight: normal; padding-left: 0px; margin-left: 0px;
+}
+
+cxx-toc li {
+	list-style-type: none;
+}
+
+cxx-toc .marker {
+	display: inline-block;
+}
+
+cxx-toc li .marker {
+	width: 2em; text-align: left;
+}
+
+cxx-toc ol ol {
+	margin-left: 2em;
+}
+
+cxx-toc li li .marker {
+	width: 3em;
+}
+
+cxx-toc ol ol ol {
+	margin-left: 3em;
+}
+
+cxx-toc li li li .marker {
+	width: 3.5em;
+}
+
+cxx-toc ol ol ol ol {
+	margin-left: 3.5em;
+}
+
+cxx-toc li li li li .marker {
+	width: 4.5em;
+}cxx-get-element-by-id {
+	display: none;
+}core-xhr {
+	display: none;
+}cxx-foreign-index {
+	display: none;
+}cxx-titlepage {
+	display: block; min-height: 100%;
+}
+
+cxx-titlepage  {
+	position: relative;
+}
+
+cxx-titlepage table {
+	position: absolute; right: 0px; top: 0px;
+}
+
+cxx-titlepage h1 {
+	position: absolute; top: 40%;
+}
+
+cxx-titlepage p.warning {
+	position: absolute; bottom: 5%;
+}
+
+cxx-titlepage h1 {
+	text-align: center;
+}
+
+cxx-titlepage th {
+	text-align: left; vertical-align: top;
+}cxx-ednote {
+	display: block;
+}
+
+cxx-ednote aside {
+	float: right; max-width: 40%; margin: 1ex; border: 1px dashed rgb(136, 136, 136); padding: 1ex; background-color: rgb(238, 238, 238);
+}cxx-note .nowrap {
+	white-space: nowrap;
+}cxx-footnote {
+	font-family: serif; white-space: normal; text-indent: initial;textIndent: initial; 
+}
+
+@media screen {
+cxx-footnote aside {
+	float: right; max-width: 30%; margin-left: 1em;
+}
+
+
+}
+
+@media print {
+cxx-footnote sup, cxx-footnote .marker {
+	display: none;
+}
+
+aside {  }
+
+
+}cxx-example {
+	display: block;
+}
+
+cxx-example.inline {
+	display: inline;
+}
+
+cxx-example .nowrap {
+	white-space: nowrap;
+}cxx-publish-button {
+	display: block;
+}cxx-codeblock {
+	display: block;
+}bnf-grammar {
+	display: block; font-style: italic; margin-left: 0.35in;
+}bnf-rule {
+	display: block; margin-left: 0.6in;
+}bnf-alt {
+	display: block; margin-left: 1.2in;
+}bnf-terminal {
+	font-style: normal;
+}</style>
+  <meta charset="utf-8">
+  
+  <link rel="import" href="bower_components/cxx-html-doc-framework/framework.html">
+<style shim-shadowdom-css="">/* Copyright 2014 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+@page {
+    margin: 10%;
+    @top-left { content: "© ISO/IEC"; font-size: 10pt; }
+    @top-right { content: string(docnum); font-weight: bold; font-size: 10pt; }
+    @bottom-left { content: string(current-section, last); font-size: 10pt; }
+    @bottom-right { content: counter(page); font-size: 10pt; }
+}
+cxx-titlepage { page: title; page-break-after: always; }
+@page title {
+    @top-left { content: "© ISO 2014 — All rights reserved"; }
+    @top-right { content: normal; }
+    @bottom-left { content: normal; }
+    @bottom-right { content: normal; }
+}
+
+@media screen {
+    body { max-width: 7in;
+           /* Make room for paragraph numbers. */
+           margin-left: 2em }
+}
+
+@media print {
+    html { font-size: 10pt; }
+    *   pre, *   code { font-size: 8pt; }
+    /* Note that only Prince generates clickable links. */
+    *   a[href] { text-decoration:none; }
+}
+
+/* Needed to make the <cxx-titlepage>'s vertical spacing work. */
+html, body {height: 100%}
+
+cxx-docnum { string-set: docnum content(); }
+
+cxx-clause { page-break-before: always; }
+@media screen {
+    cxx-clause, cxx-toc { margin-top: 3em; }
+}
+
+cxx-clause  header { font-size: 150%; }
+cxx-toc  h1 { font-size: 150%; }
+cxx-clause cxx-section  header { font-size: 117%; }
+cxx-clause cxx-section cxx-section  header { font-size: 100%; }
+
+[data-bookmark-label] { bookmark-label: attr(data-bookmark-label); }
+h1 { bookmark-level: 1; }
+cxx-toc  h1 { bookmark-level: 2; }
+cxx-clause h1 { bookmark-level: 2; }
+cxx-clause cxx-section h1 { bookmark-level: 3; }
+cxx-clause cxx-section cxx-section h1 { bookmark-level: 4; }
+
+*  .section-number { string-set: current-section "§ " content(); }
+
+p {margin-top: .5em; margin-bottom: .5em}
+p:first-child, ul, ol {margin-top: 0}
+
+[para_num]::before { content: attr(para_num); float: left;
+                     font-size: 70%; margin-left: -2.5em; width: 1.5em; text-align: right; }
+
+del {text-decoration: line-through; background-color: red; color: #8B0040;}
+ins {text-decoration: underline; background-color: yellow; color: #005100;}
+
+pre {
+    margin-left: 1em;
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+pre > code { display: inline-block; }
+
+
+/* Use an em-dash for the list bullet. */
+ul {
+    list-style: none;
+    /* Relative positioning on the 'ul' lets the absolutely-positioned
+       marker align relative to it.*/
+    position: relative;
+}
+ul li:before {
+    content: "\2014";
+    position: absolute; left: 10px;
+}
+
+/* This is here rather than inside elements/toc.html because browsers
+   don't understand leader() or target-counter(), so they drop them
+   inside the CSSOM. */
+@media print {
+    /* Generate page numbers in the table of contents. */
+    cxx-toc  a[href]::after { content: leader(" . ") target-counter(attr(href), page); }
+
+    cxx-footnote  aside { float: footnote; footnote-policy: line; }
+}</style></head>
+<body>
+
+
+
+
+
+
+<pre class="mydocheader">Document number:  N4123
+Date:             2014-08-18
+Project:          Programming Language C++
+Reference:        ISO/IEC IS 14882:2011(E)
+Reply to:         Artur Laksberg
+                  Microsoft Corp.
+                  arturl@microsoft.com
+</pre>
+<br><br><br><br><br><br>
+
+<h1>Improvements to the Concurrency Technical Specification</h1>
+
+<cxx-toc>
+    
+    <nav>
+      <h1>Contents</h1>
+      
+        
+          <ol>
+            
+              <li><span class="marker">1</span><a href="#introduction">Introduction</a>
+        
+          <ol>
+            
+              <li><span class="marker">1.1</span><a href="#motivation">Motivation and Goals</a>
+        
+      </li>
+            
+              <li><span class="marker">1.2</span><a href="#how-to-read">How To Read This Document</a>
+        
+      </li>
+            
+          </ol>
+        
+      </li>
+            
+              <li><span class="marker">2</span><a href="#future"> Improvements to std::future&lt;T&gt; and Related APIs</a>
+        
+          <ol>
+            
+              <li><span class="marker">2.1</span><a href="#futures.general">General</a>
+        
+      </li>
+            
+              <li><span class="marker">2.2</span><a href="#futures.unique_future"> Changes to class template future</a>
+        
+      </li>
+            
+              <li><span class="marker">2.3</span><a href="#futures.shared_future">Changes to class template shared_future</a>
+        
+      </li>
+            
+              <li><span class="marker">2.4</span><a href="#futures.when_all"> Function template when_all</a>
+        
+      </li>
+            
+              <li><span class="marker">2.5</span><a href="#futures.when_any"> Function template when_any</a>
+        
+      </li>
+            
+              <li><span class="marker">2.6</span><a href="#futures.when_any_back"> Function template when_any_back</a>
+        
+      </li>
+            
+              <li><span class="marker">2.7</span><a href="#futures.make_ready_future"> Function template make_ready_future</a>
+        
+      </li>
+            
+          </ol>
+        
+      </li>
+            
+          </ol>
+        
+      
+    </nav>
+  </cxx-toc>
+
+<cxx-clause id="introduction">
+    
+
+    <section>
+      <header><span class="section-number">1</span> <h1 data-bookmark-label="1 Introduction">Introduction</h1> <span style="float:right"><a href="#introduction">[introduction]</a></span></header>
+      
+  
+<cxx-section id="motivation">
+    
+
+    <section>
+      <header><span class="section-number">1.1</span> <h1 data-bookmark-label="1.1 Motivation and Goals">Motivation and Goals</h1> <span style="float:right"><a href="#motivation">[motivation]</a></span></header>
+      
+  
+<p para_num="1" id="motivation.1">
+This document proposes improvements to <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4107.html">N4107</a>,
+the current Working Draft of the Concurrency TS.
+</p>
+<p para_num="2" id="motivation.2">
+The document is motivated by <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4032.html">N4032</a>
+and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4048.pdf">N4048</a>,
+which were presented to SG1 at the Rapperswil meeting. This document collects the parts of these papers that
+received positive feedback from SG1 and presents them as a combined set of proposed changes to
+the Concurrency TS.
+</p>
+<p para_num="3" id="motivation.3">
+In addition, the paper also addresses some of the issues discovered and reported
+to the editor by various individuals, primarily Vicente J. Botet Escriba and Anthony Williams.
+</p>
+<p para_num="4" id="motivation.4">
+The author seeks feedback from SG1 on this document. If directed by SG1, all or
+some the changes proposed in this document will be incorporated into the next 
+Working Paper of the Concurrency TS.
+</p>
+
+
+    </section>
+  </cxx-section>
+<cxx-section id="how-to-read">
+    
+
+    <section>
+      <header><span class="section-number">1.2</span> <h1 data-bookmark-label="1.2 How To Read This Document">How To Read This Document</h1> <span style="float:right"><a href="#how-to-read">[how-to-read]</a></span></header>
+      
+  
+
+    </section>
+  </cxx-section>
+<p>
+The proposed changes are presented as "diffs" to N4107 marked as <ins>insertions</ins> and
+<del>deletions</del>.
+</p>
+
+    </section>
+  </cxx-clause>
+
+<cxx-clause id="future">
+    
+
+    <section>
+      <header><span class="section-number">2</span> <h1 data-bookmark-label="2  Improvements to std::future&lt;T&gt; and Related APIs"> Improvements to <code>std::future&lt;T&gt;</code> and Related APIs</h1> <span style="float:right"><a href="#future">[future]</a></span></header>
+      
+
+
+<cxx-section id="futures.general">
+    
+
+    <section>
+      <header><span class="section-number">2.1</span> <h1 data-bookmark-label="2.1 General">General</h1> <span style="float:right"><a href="#futures.general">[futures.general]</a></span></header>
+      
+
+<p para_num="1" id="futures.general.1">
+The extensions proposed here are an evolution of the functionality of
+<code>std::future</code> and <code>std::shared_future</code>. The extensions enable wait free
+composition of asynchronous operations.
+</p>
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="futures.unique_future">
+    
+
+    <section>
+      <header><span class="section-number">2.2</span> <h1 data-bookmark-label="2.2  Changes to class template future"> Changes to class template <code>future</code></h1> <span style="float:right"><a href="#futures.unique_future">[futures.unique_future]</a></span></header>
+      
+
+
+<p para_num="1" id="futures.unique_future.1">
+To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 3, add the following to the public
+functions:
+<cxx-function>
+    
+    </cxx-function></p><pre><code><cxx-signature>
+bool is_ready() const;
+
+future(future&lt;future&lt;R&gt;&gt;&amp;&amp; rhs) noexcept;
+
+template&lt;typename F&gt;
+<em>see below</em> then(F&amp;&amp; func);
+
+template&lt;typename F&gt;
+<em>see below</em> then(launch policy, F&amp;&amp; func);
+</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+    </dl>
+  
+
+<p></p><p para_num="2" id="futures.unique_future.2">
+In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 and 9, add the following:
+</p>
+<cxx-function para_num="3" id="futures.unique_future.3">
+    
+    <pre><code><cxx-signature>future(future&lt;future&lt;R&gt;&gt;&amp;&amp; rhs) noexcept;</cxx-signature></code></pre>
+
+    <dl>
+      
+  
+  <cxx-effects para_num="4" id="futures.unique_future.4">
+    
+    <dt>Effects:</dt><dd>Constructs a <code>future</code> object by moving the instance referred to by
+  <code>rhs</code> and unwrapping the inner <code>future</code>.</dd>
+  </cxx-effects>
+  <cxx-postconditions para_num="5" id="futures.unique_future.5">
+    
+    <dt>Postconditions:</dt><dd>
+    <!-- revisit: what happens when innner future is invalid? -->
+    <ul>
+      <li><code>valid()</code> returns the same value as <code>rhs.valid()</code> prior to the 
+    constructor invocation.</li>
+      <li><code>rhs.valid() == false</code>.</li>
+    </ul>
+  </dd>
+  </cxx-postconditions>
+
+    </dl>
+  </cxx-function>
+
+<p para_num="6" id="futures.unique_future.6">
+After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add the following:
+</p>
+<p para_num="7" id="futures.unique_future.7">
+<ins>
+The member function template <code>then</code> provides a mechanism for attaching
+a <i>continuation</i> to a <code>future</code> object, that will be executed
+as specified below.
+</ins>
+</p>
+<cxx-function para_num="8" id="futures.unique_future.8">
+    
+    <pre><code><cxx-signature>
+template&lt;typename F&gt;
+<em>see below</em> then(F&amp;&amp; func);
+
+template&lt;typename F&gt;
+<em>see below</em> then(launch policy, F&amp;&amp; func);
+</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+  <cxx-notes para_num="9" id="futures.unique_future.9">
+    
+    <dt>Notes:</dt><dd> The two functions differ only by input parameters. The first only
+  takes a callable object which accepts a <code>future</code> object as a parameter. The 
+  second function takes a launch policy as the first
+  parameter and a callable object as the second parameter.
+  </dd>
+  </cxx-notes>
+  <cxx-effects para_num="10" id="futures.unique_future.10">
+    
+    <dt>Effects:</dt><dd>
+    <ins>
+    Both functions create a shared state that is associated with the returned 
+    <code>future</code> object. The further behavior of the functions is as follows.
+    </ins>
+    <ul>
+      <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F&gt;(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
+      <li>The continuation launches according to the specified launch policy<ins>, if it is provided</ins>.</li>
+      <li>When the launch policy is not provided the continuation inherits
+      the parent's launch policy.</li>
+      <li>
+      Any value returned from the continuation is stored as the result in the
+      shared state of the resulting <code>future</code>. Any exception propagated from the execution of 
+      the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
+      </li>
+      <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
+      no associated launch  policy), the continuation behaves the same as the second
+      overload with a policy argument of <code>launch::async | launch::deferred</code> and the
+      same argument for <code>func</code>.</li>
+      <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
+      calling <code>wait()</code> or <code>get()</code> on the resulting <code>future</code>.
+      <a id="futures.unique_future.example"></a>
+      <cxx-example>
+    
+    <span class="nowrap">[ <em>Example:</em></span>
+    
+      <pre>auto f1 = async(launch::deferred, [] { return 1; });
+
+auto f2 = f1.then([](future<ins>&lt;int&gt;</ins> n) { return 2; });
+
+f2.wait(); // execution of f1 starts here, followed by f2
+      </pre> 
+    <span class="nowrap">— <em>end example</em> ]</span>
+  </cxx-example>
+      </li>
+    </ul>
+  </dd>
+  </cxx-effects>
+
+  <cxx-returns para_num="11" id="futures.unique_future.11">
+    
+    <dt>Returns:</dt><dd> 
+    The return type of <code>then</code> depends on the return type of the closure
+    <code>func</code> as defined below:
+
+    <ul>
+      <li>
+        When <code>result_of_t&lt;decay_t&lt;F&gt;(<ins>future&lt;R&gt;</ins>)&gt;</code>
+        is <code>future&lt;R<ins>2</ins>&gt;</code>, the function returns <code>future&lt;R<ins>2</ins>&gt;</code>.
+      </li>
+      <li>
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F&gt;(<ins>future&lt;R&gt;</ins>)&gt;&gt;</code>.
+    <cxx-notes>
+    
+    <dt>Notes:</dt><dd>
+        The first rule above is called the <em>implicit unwrapping</em>. Without this rule,
+        the return type of <code>then</code> taking a closure returning a 
+        <code>future&lt;R&gt;</code> would have been <code>future&lt;future&lt;R&gt;&gt;</code>.
+        This rule avoids such nested <code>future</code> objects.
+        <cxx-example>
+    
+    <span class="nowrap">[ <em>Example:</em></span>
+    
+          The type of <code>f2</code> below is 
+          <code>future&lt;int&gt;</code> and not <code>future&lt;future&lt;int&gt;&gt;</code>:
+<pre>future&lt;int&gt; f1 = g();
+future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
+                    future&lt;int&gt; f3 = h();
+                    return f3;
+                 });
+</pre>
+        
+    <span class="nowrap">— <em>end example</em> ]</span>
+  </cxx-example>
+    </dd>
+  </cxx-notes>
+      </li>
+    </ul>
+
+  </dd>
+  </cxx-returns>
+
+  <cxx-postconditions para_num="12" id="futures.unique_future.12">
+    
+    <dt>Postconditions:</dt><dd>
+  <ul>
+  <li><del>The <code>future</code> object is moved to the parameter of the continuation function.</del></li>
+  <li><code>valid() == false</code> on the original <code>future</code><ins>;
+    <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code></ins><del> object immediately after it returns.</del>
+    <cxx-notes>
+    
+    <dt>Notes:</dt><dd>
+      <ins>
+      In case of implicit unwrapping, the validity of the <code>future</code> returned from
+      <code>then</code> cannot be established until after the completion of the 
+      functor passed into <code>then</code>. In such case, the resulting <code>future</code>
+      becomes ready with an exception of type <code>std::future_error</code>, 
+      with an error code of <code>std::future_errc::broken_promise</code>.
+      </ins>
+    </dd>
+  </cxx-notes>
+  </li>
+  </ul>
+  </dd>
+  </cxx-postconditions>
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="13" id="futures.unique_future.13">
+    
+    <pre><code><cxx-signature>bool is_ready() const;</cxx-signature></code></pre>
+
+    <dl>
+      
+  
+  <cxx-returns para_num="14" id="futures.unique_future.14">
+    
+    <dt>Returns:</dt><dd> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</dd>
+  </cxx-returns>
+  <cxx-remarks para_num="15" id="futures.unique_future.15">
+    
+    <dt>Remarks:</dt><dd><ins>The function returns <code>false</code> if the shared state has been invalidated
+  by <code>get()</code>, <code>wait()</code>, <code>wait_for()</code> or <code>wait_until()</code>.</ins></dd>
+  </cxx-remarks>
+  <cxx-example>
+    
+    <span class="nowrap">[ <em>Example:</em></span>
+    
+  <ins>
+  <pre><ins>
+void g(futue<int> f)
+{
+    if (f.is_ready()) {
+        f.get();
+        assert(!f.is_ready());
+    }
+}
+</int></ins></pre>
+  </ins>
+    <span class="nowrap">— <em>end example</em> ]</span>
+  </cxx-example>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="futures.shared_future">
+    
+
+    <section>
+      <header><span class="section-number">2.3</span> <h1 data-bookmark-label="2.3 Changes to class template shared_future">Changes to class template <code>shared_future</code></h1> <span style="float:right"><a href="#futures.shared_future">[futures.shared_future]</a></span></header>
+      
+
+<p para_num="1" id="futures.shared_future.1">
+To the class declaration found in <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref>
+paragraph 3, add the following to the public functions:
+</p>
+
+<pre>bool is_ready() const;
+
+template&lt;typename F&gt;
+<em>see below</em> then(F&amp;&amp; func);
+
+template&lt;typename F&gt;
+<em>see below</em> then(launch policy, F&amp;&amp; func);
+</pre>
+
+<p para_num="2" id="futures.shared_future.2">
+After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add the following:
+</p>
+<p para_num="3" id="futures.shared_future.3">
+<ins>
+The member function template <code>then</code> provides a mechanism for attaching
+a <i>continuation</i> to a <code>shared_future</code> object, that will be executed
+as specified below.
+</ins>
+</p>
+<cxx-function para_num="4" id="futures.shared_future.4">
+    
+    <pre><code><cxx-signature>
+template&lt;typename F&gt;
+<em>see below</em> shared_future::then(F&amp;&amp; func);
+
+template&lt;typename F&gt;
+<em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
+</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-notes para_num="5" id="futures.shared_future.5">
+    
+    <dt>Notes:</dt><dd>The two functions differ only by input parameters. The first
+only takes a callable object which  accepts a <code>shared_future</code> object as a
+parameter. The second function takes a launch
+policy as the  first parameter and a callable object as the second parameter.
+</dd>
+  </cxx-notes>
+
+<cxx-effects para_num="6" id="futures.shared_future.6">
+    
+    <dt>Effects:</dt><dd>
+  <ins>
+  Both functions create a shared state that is associated with the returned 
+  <code>future</code> object. The further behavior of the functions is as follows.
+  </ins>
+  <ul>
+    <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F&gt;(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
+    <li>The continuation launches according to the specified policy<ins>, if it is provided</ins>.</li>
+    <li>When the launch policy is not provided the continuation
+    inherits the parent's launch policy.</li>
+    <li>
+    Any value returned from the continuation is stored as the result in the
+    shared state of the resulting <code>future</code>. Any exception propagated from the execution of 
+    the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
+    </li>
+    <li>If the parent was created with <code>std::promise</code> (has no associated launch
+    policy), the continuation behaves the same as the second function with a policy
+    argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
+    <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
+    calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
+    <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    
+    This is similar to <code>future</code>. See example in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.2</a></cxx-ref>.
+    
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note>
+    </li>
+  </ul>
+</dd>
+  </cxx-effects>
+
+  <cxx-returns para_num="7" id="futures.shared_future.7">
+    
+    <dt>Returns:</dt><dd> 
+    The return type of <code>then</code> depends on the return type of the closure
+    <code>func</code> as defined below:
+
+    <ul>
+      <li>
+        When <code>result_of_t&lt;decay_t&lt;F&gt;(<ins>future&lt;R&gt;</ins>)&gt;</code>
+        is <code>future&lt;R<ins>2</ins>&gt;</code>, the function returns <code>future&lt;R<ins>2</ins>&gt;</code>.
+      </li>
+      <li>
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F&gt;(<ins>future&lt;R&gt;</ins>)&gt;&gt;</code>.
+        <cxx-notes>
+    
+    <dt>Notes:</dt><dd>
+          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.2</a></cxx-ref>.
+        </dd>
+  </cxx-notes>
+      </li>
+    </ul>
+
+  </dd>
+  </cxx-returns>
+
+<cxx-postconditions para_num="8" id="futures.shared_future.8">
+    
+    <dt>Postconditions:</dt><dd>
+  <ul>
+    <li><del>
+    The <code>shared_future</code> passed to the continuation function is
+    a copy of the original <code>shared_future</code>.</del>
+    </li>
+    <li>
+    <code>valid() == true</code> on the original <code>shared_future</code> object.
+    <ins><code>valid() == true</code> on the <code>shared_future</code> returned from <code>then.</code></ins>
+
+    <cxx-notes>
+    
+    <dt>Notes:</dt><dd>
+      <ins>
+      In case of implicit unwrapping, the validity of the <code>future</code> returned from
+      <code>then</code> cannot be established until after the completion of the 
+      functor passed into <code>then</code>. In such case, the resulting <code>future</code>
+      becomes ready with an exception of type <code>std::future_error</code>, 
+      with an error code of <code>std::future_errc::broken_promise</code>.
+      </ins>
+    </dd>
+  </cxx-notes>
+
+    </li>
+  </ul>
+</dd>
+  </cxx-postconditions>
+
+
+    </dl>
+  </cxx-function>
+
+<cxx-function para_num="9" id="futures.shared_future.9">
+    
+    <pre><code><cxx-signature>bool is_ready() const;</cxx-signature></code></pre>
+
+    <dl>
+      
+
+<cxx-returns para_num="10" id="futures.shared_future.10">
+    
+    <dt>Returns:</dt><dd> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</dd>
+  </cxx-returns>
+<cxx-remarks para_num="11" id="futures.shared_future.11">
+    
+    <dt>Remarks:</dt><dd><ins>If the function has returned <code>true</code>, all subsequent invocations
+on the same <code>shared_future</code> object will also return <code>true</code>.</ins></dd>
+  </cxx-remarks>
+
+    </dl>
+  </cxx-function>
+
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="futures.when_all">
+    
+
+    <section>
+      <header><span class="section-number">2.4</span> <h1 data-bookmark-label="2.4  Function template when_all"> Function template <code>when_all</code></h1> <span style="float:right"><a href="#futures.when_all">[futures.when_all]</a></span></header>
+      
+
+<p para_num="1" id="futures.when_all.1">
+A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function para_num="2" id="futures.when_all.2">
+    
+    <pre><code><cxx-signature>
+template <ins>&lt;class InputIterator&gt;</ins>
+<em>see below</em> when_all(InputIterator first, InputIterator last);
+
+template &lt;typename... T&gt;
+<em>see below</em> when_all(T&amp;&amp;... futures);
+</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-requires para_num="3" id="futures.when_all.3">
+    
+    <dt>Requires:</dt><dd> <code>T</code> is of type <code>future&lt;R&gt;</code> or 
+<code>shared_future&lt;R&gt;</code>.</dd>
+  </cxx-requires>
+
+<cxx-notes para_num="4" id="futures.when_all.4">
+    
+    <dt>Notes:</dt><dd>
+  <ul>
+    <li>There are two variations of <code>when_all</code>. The first version takes a pair of
+    <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R0&gt;</code> and
+    <code>shared_future&lt;R1&gt;</code> objects, where <code>R0</code>  and <code>R1</code> need not be the same type.</li>
+
+    <li>Calling the first signature of <code>when_all</code> where <code>InputIterator</code> first
+    equals last,  returns a <code>future</code> with an empty vector that is immediately
+    ready.</li>
+
+    <li>Calling the second signature of <code><ins>when_all</ins><del>when_any</del></code> with no arguments returns a
+    <code>future&lt;tuple&lt;&gt;&gt;</code> that is  immediately ready.</li>
+    </ul>
+</dd>
+  </cxx-notes>
+
+<cxx-effects para_num="5" id="futures.when_all.5">
+    
+    <dt>Effects:</dt><dd>
+  <ul>
+    <li>
+    <del>
+      Each <code>future</code> and <code>shared_future</code> is waited upon and then copied into the
+      collection of the  output (returned) <code>future</code>, maintaining the order of the
+      <code>future</code>s in the input collection.
+    </del>
+    </li>
+
+    <li><ins>
+    If any of the <code>future</code>s supplied to a call to <code>when_all</code> refer to deferred tasks 
+    that have not started execution, those tasks are executed before the call 
+    to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
+    <code>when_all</code> returns immediately.
+    </ins></li>
+
+    <li><ins>
+    The call to <code>when_all</code> does not wait for non-deferred tasks, or deferred tasks
+    that have already started executing elsewhere, to complete before returning.
+    </ins></li>
+
+    <li><ins>
+    Once all the <code>future</code>s supplied to the call to <code>when_all</code> are ready, the <code>future</code>s
+    are moved into the associated state of the <code>future</code> returned from the call to 
+    <code>when_all</code>, preserving the order of the <code>future</code>s supplied to <code>when_all</code>. 
+    That <code>future</code> is then ready.
+    </ins></li>
+
+    <li>The <code>future</code> returned by <code>when_all</code> will not throw an exception, but the
+    <code>future</code> held in the output collection may.</li>
+  </ul>
+</dd>
+  </cxx-effects>
+
+<cxx-returns para_num="6" id="futures.when_all.6">
+    
+    <dt>Returns:</dt><dd>
+  <ul>
+    <li><code>future&lt;tuple&lt;&gt;&gt;</code> if <code>when_all</code> is called with zero arguments.</li>
+
+    <li><code>future&lt;vector&lt;future&lt;R&gt;&gt;&gt;</code> if the input cardinality is unknown at compile
+    and the iterator pair  yields <code>future&lt;R&gt;</code>. <code>R</code> may be <code>void</code>. The order of the
+    <code>future</code> in the output vector will be the same  as given by the input iterator.</li>
+
+    <li><code>future&lt;vector&lt;shared_future&lt;R&gt;&gt;&gt;</code> if the input cardinality is unknown at
+    compile time and  the iterator pair yields <code>shared_future&lt;R&gt;</code>. <code>R</code> may be
+    <code>void</code>. The order of the <code>future</code> in the output  vector will be the same as given
+    by the input iterator.</li>
+
+    <li><code>future&lt;tuple&lt;future&lt;R0&gt;, future&lt;R1&gt;, future&lt;R2&gt;...&gt;&gt;</code> if inputs are fixed in
+    number. The  inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code>
+    objects. The type of the  element at each position of the tuple corresponds to
+    the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
+    may be <code>void</code>.</li>
+  </ul>
+</dd>
+  </cxx-returns>
+
+<cxx-postconditions para_num="7" id="futures.when_all.7">
+    
+    <dt>Postconditions:</dt><dd>
+  <ul>
+    <li>All input <code>future&lt;T&gt;</code>s <code>valid() == false</code>.</li>
+    <li>All <ins>input</ins><del>output</del> <code>shared_future&lt;T&gt;</code> <code>valid() == true</code>.</li>
+  </ul>
+</dd>
+  </cxx-postconditions>
+
+    </dl>
+  </cxx-function>
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="futures.when_any">
+    
+
+    <section>
+      <header><span class="section-number">2.5</span> <h1 data-bookmark-label="2.5  Function template when_any"> Function template <code>when_any</code></h1> <span style="float:right"><a href="#futures.when_any">[futures.when_any]</a></span></header>
+      
+
+<p para_num="1" id="futures.when_any.1">
+A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function para_num="2" id="futures.when_any.2">
+    
+    <pre><code><cxx-signature>
+template &lt;class InputIterator&gt;
+<em>see below</em> when_any(InputIterator first, InputIterator last);
+
+template &lt;typename... T&gt;
+<em>see below</em> when_any(T&amp;&amp;... futures);
+</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-requires para_num="3" id="futures.when_any.3">
+    
+    <dt>Requires:</dt><dd> <code>T</code> is of type <code>future&lt;R&gt;</code> or <code>shared_future&lt;R&gt;</code>.</dd>
+  </cxx-requires>
+
+<cxx-notes para_num="4" id="futures.when_any.4">
+    
+    <dt>Notes:</dt><dd>
+<ul>
+  <li>There are two variations of <code>when_any</code>. The first version takes a pair of
+  <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R&gt;</code> and
+  <code>shared_future&lt;R&gt;</code> objects, where <code>R</code> need  not be the same type.</li>
+
+  <li>Calling the first signature of <code>when_any</code> where <code>InputIterator</code> <code>first</code>
+  equals <code>last</code>, returns a <code>future</code> with an empty vector that is immediately
+  ready.</li>
+
+  <li>Calling the second signature of <code>when_any</code> with no arguments returns a
+  <code>future&lt;tuple&lt;&gt;&gt;</code> that is immediately ready.</li>
+</ul>
+</dd>
+  </cxx-notes>
+
+<cxx-effects para_num="5" id="futures.when_any.5">
+    
+    <dt>Effects:</dt><dd>
+<ul>
+  <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
+  all the <code>future</code>s are  copied into the collection of the output (returned) <code>future</code>,
+  maintaining the order of the <code>future</code>s in the input collection.</del></li>
+
+  <li><ins>
+  Each of the <code>future</code>s supplied to <code>when_any</code> is checked in the order supplied. 
+  If a given <code>future</code> is ready, then no further <code>future</code>s are checked, and the call 
+  to <code>when_any</code> returns immediately. If a given <code>future</code> refers to a deferred task 
+  that has not yet started execution, then no further <code>future</code>s are checked, 
+  that task is executed, and the call to <code>when_any</code> then returns immediately.
+  </ins></li>
+
+  <li><ins>
+  The call to <code>when_any</code> does not wait for non-deferred tasks, or deferred tasks 
+  that have already started executing elsewhere, to complete before returning.
+  </ins></li>
+
+  <li><ins>
+  Once at least one of the <code>future</code>s supplied to the call to <code>when_any</code> are ready, 
+  the <code>future</code> are moved into the associated state of the <code>future</code> returned from 
+  the call to <code>when_any</code>, preserving the order of the <code>future</code>s supplied to 
+  <code>when_any</code>. That <code>future</code> is then ready.
+  </ins></li>
+
+  <li>The <code>future</code> returned by <code>when_any</code> will not throw an exception, but the
+  <code>future</code> held in the  output collection may.</li>
+</ul>
+</dd>
+  </cxx-effects>
+
+<cxx-returns para_num="6" id="futures.when_any.6">
+    
+    <dt>Returns:</dt><dd>
+<ul>
+  <li><code>future&lt;tuple&lt;&gt;&gt;</code> if <code>when_any</code> is called with zero arguments. </li>
+
+  <li><code>future&lt;vector&lt;future&lt;R&gt;&gt;&gt;</code> if the input cardinality is unknown at compile
+  time and the  iterator pair yields <code>future&lt;R&gt;</code>. <code>R</code> may be void. The order of
+  the <code>future</code> in the output vector will  be the same as given by the input
+  iterator.</li>
+
+  <li><code>future&lt;vector&lt;shared_future&lt;R&gt;&gt;&gt;</code> if the input cardinality is unknown at
+  compile time and  the iterator pair yields <code>shared_future&lt;R&gt;</code>. <code>R</code> may be
+  <code>void</code>. The order of the <code>future</code> in the output  vector will be the same as given
+  by the input iterator.</li>
+
+  <li><code>future&lt;tuple&lt;future&lt;R0&gt;, future&lt;R1&gt;, future&lt;R2&gt;...&gt;&gt;</code> if inputs are fixed in
+  number. The  inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code>
+  objects. The type of the  element at each position of the tuple corresponds to
+  the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
+  maybe <code>void</code>.</li>
+</ul>
+</dd>
+  </cxx-returns>
+
+<cxx-postconditions para_num="7" id="futures.when_any.7">
+    
+    <dt>Postconditions:</dt><dd>
+<ul>
+  <li>All input <code>future&lt;T&gt;</code>s <code>valid() == false</code>.</li>
+  <li>All input <code>shared_future&lt;T&gt; valid() == true</code>.</li>
+</ul>
+</dd>
+  </cxx-postconditions>
+
+    </dl>
+  </cxx-function>
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="futures.when_any_back">
+    
+
+    <section>
+      <header><span class="section-number">2.6</span> <h1 data-bookmark-label="2.6  Function template when_any_back"> Function template <code>when_any_back</code></h1> <span style="float:right"><a href="#futures.when_any_back">[futures.when_any_back]</a></span></header>
+      
+
+<p para_num="1" id="futures.when_any_back.1">
+A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function para_num="2" id="futures.when_any_back.2">
+    
+    <pre><code><cxx-signature>
+template &lt;class InputIterator&gt;
+<em>see below</em> when_any_back(InputIterator first, InputIterator last);
+</cxx-signature></code></pre>
+
+    <dl>
+      
+
+
+<cxx-requires para_num="3" id="futures.when_any_back.3">
+    
+    <dt>Requires:</dt><dd> <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R&gt;</code>
+or <code>shared_future&lt;R&gt;</code>. All <code>R</code> types  must be the same.
+</dd>
+  </cxx-requires>
+
+<cxx-notes para_num="4" id="futures.when_any_back.4">
+    
+    <dt>Notes:</dt><dd>
+  <ul>
+    <li>The function <code>when_any_back</code> takes a pair of <code>InputIterators</code>.</li>
+    <li>Calling <code>when_any_back</code> where <code>InputIterator</code> <code>first</code> equals
+    <code>last</code>, returns a <code>future</code> with an empty vector that is immediately ready.</li>
+  </ul>
+</dd>
+  </cxx-notes>
+
+<cxx-effects para_num="5" id="futures.when_any_back.5">
+    
+    <dt>Effects:</dt><dd>
+  <ul>
+    <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
+    all the <code>future</code> are  copied into the collection of the output (returned)
+    <code>future</code>.</del></li>
+
+    <li><ins>
+    If any of the <code>future</code>s supplied to a call to <code>when_all</code> refer to deferred tasks 
+    that have not started execution, those tasks are executed before the call 
+    to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
+    <code>when_all</code> returns immediately.
+    </ins></li>
+
+    <li><ins>
+    The call to <code>when_all</code> does not wait for non-deferred tasks, or deferred tasks
+    that have already started executing elsewhere, to complete before returning.
+    </ins></li>
+
+    <li><ins>
+    Once all the <code>future</code>s supplied to the call to <code>when_all</code> are ready, the <code>future</code>
+    are moved into the associated state of the <code>future</code> returned from the call to 
+    <code>when_all</code><ins>.</ins><del>, preserving the order of the <code>future</code>s supplied to <code>when_all</code>.</del>
+    <ins>The last <code>future</code> in the associated state of the returned <code>future</code> is guaranteed to be in the
+      ready state; the order of the other <code>future</code>s is unspecified.</ins>
+    <del>That</del><ins>The returned</ins> <code>future</code> is then ready.
+    </ins></li>
+
+    <li><del>After the copy, the <code>future</code> or <code>shared_future</code> that was first detected as
+    being ready swaps its  position with that of the last element of the result
+    collection, so that the ready <code>future</code> or <code>shared_future</code> may be identified in
+    constant time. Only one <code>future</code> or <code>shared_future</code> is thus  moved.</del></li>
+
+    <li>The <code>future</code> returned by <code>when_any_back</code> will not throw an exception, but
+    the <code>future</code> held in  the output collection may.</li>
+  </ul>
+</dd>
+  </cxx-effects>
+
+<cxx-returns para_num="6" id="futures.when_any_back.6">
+    
+    <dt>Returns:</dt><dd>
+  <ul>
+    <li><code>future&lt;vector&lt;future&lt;R&gt;&gt;&gt;</code> if the input cardinality is unknown at compile
+    time and the  iterator pair yields <code>future&lt;R&gt;</code>. <code>R</code> may be <code>void</code>.</li>
+    <li><code>future&lt;vector&lt;shared_future&lt;R&gt;&gt;&gt;</code> if the input cardinality is unknown at
+    compile time and  the iterator pair yields <code>shared_future&lt;R&gt;</code>. <code>R</code> may be
+    <code>void</code>.</li>
+  </ul>
+</dd>
+  </cxx-returns>
+
+<cxx-postconditions para_num="7" id="futures.when_any_back.7">
+    
+    <dt>Postconditions:</dt><dd>
+  <ul>
+    <li>All input <code>future&lt;T&gt;</code>s <code>valid() == false</code>.</li>
+    <li>All input <code>shared_future<t> valid() == true</t></code>.</li>
+  </ul>
+</dd>
+  </cxx-postconditions>
+
+    </dl>
+  </cxx-function>
+
+    </section>
+  </cxx-section>
+
+<cxx-section id="futures.make_ready_future">
+    
+
+    <section>
+      <header><span class="section-number">2.7</span> <h1 data-bookmark-label="2.7  Function template make_ready_future"> Function template <code>make_ready_future</code></h1> <span style="float:right"><a href="#futures.make_ready_future">[futures.make_ready_future]</a></span></header>
+      
+
+<p para_num="1" id="futures.make_ready_future.1">
+A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+</p>
+
+<cxx-function para_num="2" id="futures.make_ready_future.2">
+    
+    <pre><code><cxx-signature>
+  template &lt;typename T&gt;
+  future&lt;decay_t&lt;T&gt;&gt; make_ready_future(T&amp;&amp; value);
+
+  future&lt;void&gt; make_ready_future();
+  </cxx-signature></code></pre>
+
+    <dl>
+      
+  
+
+  <cxx-effects para_num="3" id="futures.make_ready_future.3">
+    
+    <dt>Effects:</dt><dd> The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it 
+  is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.
+  </dd>
+  </cxx-effects>
+
+  <cxx-returns para_num="4" id="futures.make_ready_future.4">
+    
+    <dt>Returns:</dt><dd>
+    <ul>
+      <li><code>future&lt;decay_t&lt;T&gt;&gt;</code>, if function is given a value of type <code>T</code>.</li>
+      <li><code>future&lt;void&gt;</code>, if the function is not given any inputs. </li>
+    </ul>
+  </dd>
+  </cxx-returns>
+
+  <cxx-postconditions para_num="5" id="futures.make_ready_future.5">
+    
+    <dt>Postconditions:</dt><dd>
+    <ul>
+      <li>Returned <code>future&lt;decay_t&lt;T&gt;&gt;, valid() == true</code>.</li>
+      <li>Returned <code>future&lt;decay_t&lt;T&gt;&gt;, is_ready() == true</code>.</li>
+    </ul>
+  </dd>
+  </cxx-postconditions>
+
+    </dl>
+  </cxx-function>
+
+    </section>
+  </cxx-section>
+
+
+
+
+    </section>
+  </cxx-clause>
+
+
+
+
+
+</body></html>
