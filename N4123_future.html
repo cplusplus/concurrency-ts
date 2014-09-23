@@ -140,7 +140,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 
   <cxx-Postconditions>
   <ul>
-  <li>The <code>future</code> object is moved to the parameter of the continuation function.</li>
+  <li><del>The <code>future</code> object is moved to the parameter of the continuation function.</del></li>
   <li><code>valid() == false</code> on the original <code>future</code><ins>;
     <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code></ins><del> object immediately after it returns.</del>
     <cxx-Notes>
@@ -268,9 +268,9 @@ policy as the  first parameter and a callable object as the second parameter.
 
 <cxx-postconditions>
   <ul>
-    <li>
+    <li><del>
     The <code>shared_future</code> passed to the continuation function is
-    a copy of the original <code>shared_future</code>.
+    a copy of the original <code>shared_future</code>.</del>
     </li>
     <li>
     <code>valid() == true</code> on the original <code>shared_future</code> object.
