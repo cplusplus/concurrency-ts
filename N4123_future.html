@@ -368,7 +368,8 @@ template &lt;typename... T>
     </li>
 
     <li><ins>
-    If any of the <code>future</code>s supplied to a call to <code>when_all</code> refer to deferred tasks 
+    If any of the <code>future</code>s or <code>shared_future</code>s supplied 
+    to a call to <code>when_all</code> refer to deferred tasks 
     that have not started execution, those tasks are executed before the call 
     to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
     <code>when_all</code> returns immediately.
@@ -380,9 +381,11 @@ template &lt;typename... T>
     </ins></li>
 
     <li><ins>
-    Once all the <code>future</code>s supplied to the call to <code>when_all</code> are ready, the <code>future</code>s
-    are moved into the associated state of the <code>future</code> returned from the call to 
-    <code>when_all</code>, preserving the order of the <code>future</code>s supplied to <code>when_all</code>. 
+    Once all the <code>future</code>s and <code>shared_future</code>s supplied
+    to the call to <code>when_all</code> are ready, the <code>future</code>s
+    are moved, and the <code>shared_future</code>s are copied, into the associated
+    state of the <code>future</code> returned from the call to <code>when_all</code>,
+    preserving the order of the <code>future</code>s supplied to <code>when_all</code>.
     That <code>future</code> is then ready.
     </ins></li>
 
@@ -474,14 +477,16 @@ template &lt;typename... T>
 <cxx-Effects>
 <ul>
   <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
-  all the <code>future</code>s are  copied into the collection of the output (returned) <code>future</code>,
+  all the <code>future</code>s are copied into the collection of the output (returned) <code>future</code>,
   maintaining the order of the <code>future</code>s in the input collection.</del></li>
 
   <li><ins>
-  Each of the <code>future</code>s supplied to <code>when_any</code> is checked in the order supplied. 
-  If a given <code>future</code> is ready, then no further <code>future</code>s are checked, and the call 
-  to <code>when_any</code> returns immediately. If a given <code>future</code> refers to a deferred task 
-  that has not yet started execution, then no further <code>future</code>s are checked, 
+  Each of the <code>future</code>s and <code>shared_future</code>s supplied to 
+  <code>when_any</code> is checked in the order supplied. 
+  If any of the given <code>future</code>s or <code>shared_future</code>s are ready, then the call 
+  to <code>when_any</code> returns immediately. If a given <code>future</code> or 
+  <code>shared_future</code> refers to a deferred task that has not yet started execution, 
+  then no further <code>future</code>s or <code>shared_future</code>s are checked, 
   that task is executed, and the call to <code>when_any</code> then returns immediately.
   </ins></li>
 
@@ -491,10 +496,12 @@ template &lt;typename... T>
   </ins></li>
 
   <li><ins>
-  Once at least one of the <code>future</code>s supplied to the call to <code>when_any</code> are ready, 
-  the <code>future</code> are moved into the associated state of the <code>future</code> returned from 
-  the call to <code>when_any</code>, preserving the order of the <code>future</code>s supplied to 
-  <code>when_any</code>. That <code>future</code> is then ready.
+  Once at least one of the <code>future</code>s or <code>shared_future</code>s 
+  supplied to the call to <code>when_any</code> are ready, the <code>future</code>s 
+  are moved, and the <code>shared_future</code>s are copied into the associated 
+  state of the <code>future</code> returned from the call to <code>when_any</code>,
+  preserving the order of the parameters supplied to <code>when_any</code>. 
+  That <code>future</code> is then ready.
   </ins></li>
 
   <li>The <code>future</code> returned by <code>when_any</code> will not throw an exception, but the
