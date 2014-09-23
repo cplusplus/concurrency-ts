@@ -316,8 +316,25 @@ template &lt;typename... T>
 <em>see below</em> when_all(T&amp;&amp;... futures);
 </cxx-signature>
 
-<cxx-Requires> <code>T</code> is of type <code>future&lt;R></code> or 
-<code>shared_future&lt;R></code>.</cxx-Requires>
+<cxx-requires>
+  <ul>
+    <li>
+      <ins>
+      For the first overload, <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
+      If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
+      in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
+      </ins>
+    </li>
+    <li>
+      <ins>For the second overload, </ins><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.
+      <ins>
+      The effect of calling <code>when_all</code> on a <code>future</code> or a
+      <code>shared_future</code> object for which <code>valid() == false</code> is undefined.
+      </ins>
+    </li>
+  </ul>
+</cxx-requires>
 
 <cxx-Notes>
   <ul>
@@ -413,7 +430,25 @@ template &lt;typename... T>
 <em>see below</em> when_any(T&amp;&amp;... futures);
 </cxx-signature>
 
-<cxx-Requires> <code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.</cxx-Requires>
+<cxx-requires>
+  <ul>
+    <li>
+      <ins>
+      For the first overload, <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
+      If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
+      in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
+      </ins>
+    </li>
+    <li>
+      <ins>For the second overload, </ins><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.
+      <ins>
+      The effect of calling <code>when_any</code> on a <code>future</code> or a
+      <code>shared_future</code> object for which <code>valid() == false</code> is undefined.
+      </ins>
+    </li>
+  </ul>
+</cxx-requires>
 
 <cxx-Notes>
 <ul>
@@ -504,9 +539,14 @@ template &lt;class InputIterator>
 <em>see below</em> when_any_back(InputIterator first, InputIterator last);
 </cxx-signature>
 
-<cxx-Requires> <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
-or <code>shared_future&lt;R></code>. All <code>R</code> types  must be the same.
-</cxx-Requires>
+<cxx-requires>
+  <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
+  or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
+  <ins>
+    If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
+    in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
+  </ins>
+</cxx-requires>
 
 <cxx-Notes>
   <ul>
