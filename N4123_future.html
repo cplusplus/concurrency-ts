@@ -116,7 +116,8 @@ f2.wait(); // execution of f1 starts here, followed by f2
       </li>
       <li>
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)>></code>.
-    <cxx-Notes>
+        <p>
+    <cxx-Note>
         The first rule above is called the <em>implicit unwrapping</em>. Without this rule,
         the return type of <code>then</code> taking a closure returning a 
         <code>future&lt;R></code> would have been <code>future&lt;future&lt;R>></code>.
@@ -132,10 +133,13 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
                  });
 </pre>
         </cxx-example>
-    </cxx-Notes>
+    </cxx-Note>
       </li>
+      <li><ins>
+        Unlike futures returned from <code>std::async</code> (see <cxx-ref in="cxx" to="futures.async"></cxx-ref> paragraph 4),
+        the destructor of the <code>future</code> object returned from <code>then</code> will not block.
+      </ins></li>
     </ul>
-
   </cxx-Returns>
 
   <cxx-Postconditions>
@@ -255,10 +259,15 @@ policy as the  first parameter and a callable object as the second parameter.
       </li>
       <li>
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)>></code>.
-        <cxx-notes>
+        <p>
+        <cxx-note>
           This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
-        </cxx-notes>
+        </cxx-note>
       </li>
+      <li><ins>
+        Unlike futures returned from <code>std::async</code> (see <cxx-ref in="cxx" to="futures.async"></cxx-ref> paragraph 4),
+        the destructor of the <code>future</code> object returned from <code>then</code> will not block.
+      </ins></li>
     </ul>
 
   </cxx-Returns>
