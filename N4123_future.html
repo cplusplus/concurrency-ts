@@ -160,6 +160,20 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 <cxx-function>
   <cxx-signature>bool is_ready() const;</cxx-signature>
   <cxx-Returns> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</cxx-Returns>
+  <cxx-remarks><ins>The function returns <code>false</code> if the shared state has been invalidated
+  by <code>get()</code>, <code>wait()</code>, <code>wait_for()</code> or <code>wait_until()</code>.</ins></cxx-remarks>
+  <cxx-example>
+  <ins>
+  <pre><ins>
+void g(futue<int> f)
+{
+    if (f.is_ready()) {
+        f.get();
+        assert(!f.is_ready());
+    }
+}
+</ins></pre>
+  </cxx-example>
 </cxx-function>
 
 </cxx-section>
@@ -281,6 +295,8 @@ policy as the  first parameter and a callable object as the second parameter.
 <cxx-function>
 <cxx-signature>bool is_ready() const;</cxx-signature>
 <cxx-Returns> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</cxx-Returns>
+<cxx-remarks><ins>If the function has returned <code>true</code>, all subsequent invocations
+on the same <code>shared_future</code> object will also return <code>true</code>.</ins></cxx-remarks>
 </cxx-function>
 
 </cxx-section>
