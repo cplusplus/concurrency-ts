@@ -163,10 +163,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
   <cxx-remarks><ins>The function returns <code>false</code> if the shared state has been invalidated
   (for example, by <code>get()</code> or <code>wait()</code>).</ins></cxx-remarks>
   <cxx-example>
-  <ins>
-  <pre><ins>
-void g(futue<int> f)
-{
+  <pre><ins>void g(futue&lt;int> f) {
     if (f.is_ready()) {
         f.get();
         assert(!f.is_ready());
