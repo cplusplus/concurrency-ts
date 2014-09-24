@@ -313,6 +313,12 @@ on the same <code>shared_future</code> object will also return <code>true</code>
 A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
 </p>
 
+<p><ins>
+The function template <code>when_all</code> creates a <code>future</code> object that 
+becomes ready when all elements in a set of <code>future</code> and <code>shared_future</code> objects
+become ready.
+</ins></p>
+
 <cxx-function>
 <cxx-signature>
 template <ins>&lt;class InputIterator></ins>
@@ -358,6 +364,9 @@ template &lt;typename... T>
 </cxx-Notes>
 
 <cxx-Effects>
+
+<!-- M0when_all_effects -->
+
   <ul>
     <li>
     <del>
@@ -371,8 +380,7 @@ template &lt;typename... T>
     If any of the <code>future</code>s or <code>shared_future</code>s supplied 
     to a call to <code>when_all</code> refer to deferred tasks 
     that have not started execution, those tasks are executed before the call 
-    to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
-    <code>when_all</code> returns immediately.
+    to <code>when_all</code> returns. 
     </ins></li>
 
     <li><ins>
@@ -383,14 +391,24 @@ template &lt;typename... T>
     <li><ins>
     Once all the <code>future</code>s and <code>shared_future</code>s supplied
     to the call to <code>when_all</code> are ready, the <code>future</code>s
-    are moved, and the <code>shared_future</code>s are copied, into the associated
-    state of the <code>future</code> returned from the call to <code>when_all</code>,
-    preserving the order of the <code>future</code>s supplied to <code>when_all</code>.
-    That <code>future</code> is then ready.
+    are moved, and the <code>shared_future</code>s are copied, 
+
+    into, correspondingly, <code>future</code>s or <code>shared_future</code>s 
+    of a new collection, which can be either <code>tuple</code> or a <code>vector</code>
+    as described below. The order of the objects in the collection matches the order
+    of the arguments supplied to <code>when_all</code>.
+
+    <li><ins>
+    The collection is then stored as the result in a newly created shared state. 
+    </ins></li>
+
+    <li><ins>
+    A new <code>future</code> object that refers to the shared state
+    is created. The exact type of the <code>future</code> is further described below.
     </ins></li>
 
     <li>The <code>future</code> returned by <code>when_all</code> will not throw an exception, but the
-    <code>future</code> held in the output collection may.</li>
+    <code>future</code><ins>s and <code>shared_future</code>s</ins> held in the output collection may.</li>
   </ul>
 </cxx-Effects>
 
@@ -407,11 +425,16 @@ template &lt;typename... T>
     <code>void</code>. The order of the <code>future</code> in the output  vector will be the same as given
     by the input iterator.</li>
 
-    <li><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code> if inputs are fixed in
-    number. The  inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code>
-    objects. The type of the  element at each position of the tuple corresponds to
-    the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
-    may be <code>void</code>.</li>
+    <li>
+      <code><del>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></del></code>
+      <code><ins>future&lt;tuple&lt;F0&lt;R0>, F1&lt;R1>, F2&lt;R2>...>></ins></code> 
+      if inputs are fixed in
+      number. 
+      <del>The inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code> objects.</del> 
+      The type <code><ins>F0, F1, F2</ins></code> of the element at each position of the tuple corresponds to
+      the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
+      maybe <code>void</code>.
+    </li>
   </ul>
 </cxx-Returns>
 
@@ -429,6 +452,12 @@ template &lt;typename... T>
 <p>
 A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
 </p>
+
+<p><ins>
+The function template <code>when_any</code> creates a <code>future</code> object that 
+becomes ready when at least one element in a set of <code>future</code> and <code>shared_future</code> objects
+becomes ready.
+</ins></p>
 
 <cxx-function>
 <cxx-signature>
@@ -475,38 +504,56 @@ template &lt;typename... T>
 </cxx-Notes>
 
 <cxx-Effects>
-<ul>
-  <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
-  all the <code>future</code>s are copied into the collection of the output (returned) <code>future</code>,
-  maintaining the order of the <code>future</code>s in the input collection.</del></li>
 
-  <li><ins>
-  Each of the <code>future</code>s and <code>shared_future</code>s supplied to 
-  <code>when_any</code> is checked in the order supplied. 
-  If any of the given <code>future</code>s or <code>shared_future</code>s are ready, then the call 
-  to <code>when_any</code> returns immediately. If a given <code>future</code> or 
-  <code>shared_future</code> refers to a deferred task that has not yet started execution, 
-  then no further <code>future</code>s or <code>shared_future</code>s are checked, 
-  that task is executed, and the call to <code>when_any</code> then returns immediately.
-  </ins></li>
+<!-- M0when_any_effects -->
 
-  <li><ins>
-  The call to <code>when_any</code> does not wait for non-deferred tasks, or deferred tasks 
-  that have already started executing elsewhere, to complete before returning.
-  </ins></li>
+  <ul>
+    <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
+    all the <code>future</code>s are copied into the collection of the output (returned) <code>future</code>,
+    maintaining the order of the <code>future</code>s in the input collection.</del></li>
 
-  <li><ins>
-  Once at least one of the <code>future</code>s or <code>shared_future</code>s 
-  supplied to the call to <code>when_any</code> are ready, the <code>future</code>s 
-  are moved, and the <code>shared_future</code>s are copied into the associated 
-  state of the <code>future</code> returned from the call to <code>when_any</code>,
-  preserving the order of the parameters supplied to <code>when_any</code>. 
-  That <code>future</code> is then ready.
-  </ins></li>
+    <li><ins>
+    Each of the <code>future</code>s and <code>shared_future</code>s supplied to 
+    <code>when_any</code> is checked in the order supplied. 
+    If a given <code>future</code> or 
+    <code>shared_future</code> refers to a deferred task that has not yet started execution, 
+    then no further <code>future</code>s or <code>shared_future</code>s are checked, 
+    and that task is executed.
+    </ins></li>
 
-  <li>The <code>future</code> returned by <code>when_any</code> will not throw an exception, but the
-  <code>future</code> held in the  output collection may.</li>
-</ul>
+    <li><ins>
+    The call to <code>when_any</code> does not wait for non-deferred tasks, or deferred tasks 
+    that have already started executing elsewhere, to complete before returning.
+    </ins></li>
+
+    <li><ins>
+    Once at least one of the <code>future</code>s or <code>shared_future</code>s 
+    supplied to the call to <code>when_any</code> are ready, the <code>future</code>s 
+    are moved, and the <code>shared_future</code>s are copied 
+
+    into, correspondingly, <code>future</code>s or <code>shared_future</code>s 
+    of a new collection, which can be either <code>tuple</code> or a <code>vector</code>
+    as described below. 
+
+    <li><ins>
+    The order of the objects in the collection matches the order
+    of the arguments supplied to <code>when_any</code>.
+    </ins></li>
+
+    <li><ins>
+    The collection is then stored as the result in the newly created shared state. 
+    </ins></li>
+
+    <li><ins>
+    A new <code>future</code> object that refers to the shared state
+    is created. The exact type of the <code>future</code> is further described below.
+    </ins></li>
+
+    <li>The <code>future</code> returned by <code>when_any</code> will not throw
+    an exception, but the <code>future</code><ins>s and <code>shared_future</code>s</ins>
+    held in the  output collection may.
+    </li>
+  </ul>
 </cxx-Effects>
 
 <cxx-Returns>
@@ -515,19 +562,24 @@ template &lt;typename... T>
 
   <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
   time and the  iterator pair yields <code>future&lt;R></code>. <code>R</code> may be void. The order of
-  the <code>future</code> in the output vector will  be the same as given by the input
+  the <code>future</code><ins>s</ins> in the output vector will  be the same as given by the input
   iterator.</li>
 
   <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
   compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
-  <code>void</code>. The order of the <code>future</code> in the output  vector will be the same as given
+  <code>void</code>. The order of the <code><ins>shared_</ins>future</code><ins>s</ins> in the output vector will be the same as given
   by the input iterator.</li>
 
-  <li><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code> if inputs are fixed in
-  number. The  inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code>
-  objects. The type of the  element at each position of the tuple corresponds to
-  the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
-  maybe <code>void</code>.</li>
+  <li>
+    <code><del>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></del></code>
+    <code><ins>future&lt;tuple&lt;F0&lt;R0>, F1&lt;R1>, F2&lt;R2>...>></ins></code> 
+    if inputs are fixed in
+    number. 
+    <del>The inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code> objects.</del> 
+    The type <code><ins>F0, F1, F2</ins></code> of the element at each position of the tuple corresponds to
+    the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
+    maybe <code>void</code>.
+  </li>
 </ul>
 </cxx-Returns>
 
@@ -545,6 +597,13 @@ template &lt;typename... T>
 <p>
 A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
 </p>
+
+<p><ins>
+The function template <code>when_any_back</code> creates a <code>future</code> object that 
+becomes ready when at least one element in a set of <code>future</code> and <code>shared_future</code> objects
+becomes ready. The ready <code>future</code> or <code>shared_future</code> may be identified in
+constant time.
+</ins></p>
 
 <cxx-function>
 <cxx-signature>
@@ -570,39 +629,64 @@ template &lt;class InputIterator>
 </cxx-Notes>
 
 <cxx-Effects>
+
+<!-- M0when_any_back_effects -->
+
   <ul>
     <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
     all the <code>future</code> are  copied into the collection of the output (returned)
     <code>future</code>.</del></li>
 
     <li><ins>
-    If any of the <code>future</code>s supplied to a call to <code>when_all</code> refer to deferred tasks 
-    that have not started execution, those tasks are executed before the call 
-    to <code>when_all</code> returns. Once all such tasks have been executed, the call to 
-    <code>when_all</code> returns immediately.
+    Each of the <code>future</code>s and <code>shared_future</code>s supplied to 
+    <code>when_any_back</code> is checked in the order supplied. 
+    If a given <code>future</code> or 
+    <code>shared_future</code> refers to a deferred task that has not yet started execution, 
+    then no further <code>future</code>s or <code>shared_future</code>s are checked, 
+    and that task is executed.
     </ins></li>
 
     <li><ins>
-    The call to <code>when_all</code> does not wait for non-deferred tasks, or deferred tasks
+    The call to <code>when_any_back</code> does not wait for non-deferred tasks, or deferred tasks 
     that have already started executing elsewhere, to complete before returning.
     </ins></li>
 
     <li><ins>
-    Once all the <code>future</code>s supplied to the call to <code>when_all</code> are ready, the <code>future</code>
-    are moved into the associated state of the <code>future</code> returned from the call to 
-    <code>when_all</code><ins>.</ins><del>, preserving the order of the <code>future</code>s supplied to <code>when_all</code>.</del>
-    <ins>The last <code>future</code> in the associated state of the returned <code>future</code> is guaranteed to be in the
-      ready state; the order of the other <code>future</code>s is unspecified.</ins>
-    <del>That</del><ins>The returned</ins> <code>future</code> is then ready.
+    Once at least one of the <code>future</code>s or <code>shared_future</code>s 
+    supplied to the call to <code>when_any_back</code> are ready, the <code>future</code>s 
+    are moved, and the <code>shared_future</code>s are copied 
+
+    into, correspondingly, <code>future</code>s or <code>shared_future</code>s 
+    of a new collection, which can be either <code>tuple</code> or a <code>vector</code>
+    as described below. 
+
+    <li><ins>
+    If the collection passed into <code>when_any_back</code> is non-empty (i.e., 
+    <code>first != last</code>),
+
+    the last <code>future</code> or <code>shared_future</code> in the output collection
+    is guaranteed to be in the ready state. The order of other elements in the
+    collection is unspecified.
     </ins></li>
 
+    <li><ins>
+    The collection is then stored as the result in the shared state. 
+    </ins></li>
+
+    <li><ins>
+    A new <code>future</code> object that refers to the newly created shared state
+    is created. The exact type of the <code>future</code> is further described below.
+    </ins></li>
+
+    <li>The <code>future</code> returned by <code>when_any_back</code> will not throw
+    an exception, but the <code>future</code><ins>s and <code>shared_future</code>s</ins>
+    held in the  output collection may.
+    </li>
+
     <li><del>After the copy, the <code>future</code> or <code>shared_future</code> that was first detected as
-    being ready swaps its  position with that of the last element of the result
+    being ready swaps its position with that of the last element of the result
     collection, so that the ready <code>future</code> or <code>shared_future</code> may be identified in
     constant time. Only one <code>future</code> or <code>shared_future</code> is thus  moved.</del></li>
-
-    <li>The <code>future</code> returned by <code>when_any_back</code> will not throw an exception, but
-    the <code>future</code> held in  the output collection may.</li>
   </ul>
 </cxx-Effects>
 
