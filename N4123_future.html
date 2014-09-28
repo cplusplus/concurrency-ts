@@ -1,4 +1,4 @@
-<cxx-clause id="future">
+<cxx-clause id="futures">
 <h1> Improvements to <code>std::future&lt;T></code> and Related APIs</h1>
 
 <cxx-section id="futures.general">
@@ -6,14 +6,81 @@
 <p>
 The extensions proposed here are an evolution of the functionality of
 <code>std::future</code> and <code>std::shared_future</code>. The extensions enable wait free
-composition of asynchronous operations.
+composition of asynchronous operations. 
+<ins><code>std::promise</code> and <code>std::packaged_task</code> are also updated to be 
+associated to the updated <code>std::future</code> </ins>
 </p>
 </cxx-section>
 
+  <cxx-section id="header.future.synop">
+    <h1><ins>Header &lt;experimental/future> synopsis</ins></h1>
+
+    <cxx-ednote>
+      An additional editorial fix as in Fundamental v1 TS is applied in the declaration of <code>swap</code> for <code>packaged_task</code>
+    </cxx-ednote>
+
+    <pre><code><ins>#include &lt;future&gt;
+
+namespace std {
+  namespace experimental {
+  inline namespace fundamentals_v1 {
+
+    template &lt;class R&gt; class promise;
+    template &lt;class R&gt; class promise&lt;R&amp;&gt;;
+    template &lt;&gt; class promise&lt;void&gt;;
+
+    template &lt;class R&gt;
+    void swap(promise&lt;R&gt;&amp; x, promise&lt;R&gt;&amp; y) noexcept;
+
+    template &lt;class R&gt; class future;
+    template &lt;class R&gt; class future&lt;R&amp;&gt;;
+    template <> class future&lt;void&gt;;
+    template &lt;class R&gt; class shared_future;
+    template &lt;class R&gt; class shared_future&lt;R&amp;&gt;;
+    template <> class shared_future&lt;void&gt;;
+       
+    template &lt;class&gt; class packaged_task; // undefined
+    template &lt;class R, class... ArgTypes&gt;
+    class packaged_task&lt;R(ArgTypes...)&gt;;
+
+    template &lt;class R, class... ArgTypes&gt;
+    void swap(packaged_task&lt;R(ArgTypes...)&gt;&amp;, packaged_task&lt;R(ArgTypes...)&gt;&amp;) noexcept;
+    
+    template &lt;class F, class... Args&gt;
+      future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
+      async(F&amp;&amp; f, Args&amp;&amp;... args);
+    template &lt;class F, class... Args&gt;
+      future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
+      async(launch policy, F&amp;&amp; f, Args&amp;&amp;... args);
+      
+    template &lt;class InputIterator>
+      <em>see below</em> when_all(InputIterator first, InputIterator last);
+    template &lt;typename... T>
+      <em>see below</em> when_all(T&amp;&amp;... futures);
+      
+
+  } // namespace fundamentals_v1
+  } // namespace experimental
+
+  template &lt;class R, class Alloc&gt;
+  struct uses_allocator&lt;experimental::promise&lt;R&gt;, Alloc&gt;;
+
+  template &lt;class R, class Alloc&gt;
+  struct uses_allocator&lt;experimental::packaged_task&lt;R&gt;, Alloc&gt;;
+
+} // namespace std</ins></code></pre>
+  </cxx-section>
+  
 <cxx-section id="futures.unique_future">
-<h1> Changes to class template <code>future</code></h1>
+<h1> <del>Changes to c</del><ins>C</ins>lass template <code>future</code></h1>
 
 <p>
+The specification of all declarations within this sub-clause <cxx-ref to="futures.unique_future"></cxx-ref>
+and its sub-clauses are the same as the corresponding declarations,
+as specified in <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref>,
+unless explicitly specified otherwise.
+</p>
+<del>
 To the class declaration found in <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 3, add the following to the public
 functions:
 <cxx-function>
@@ -29,6 +96,49 @@ template&lt;typename F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 </cxx-function>
+</del>
+<p>
+
+    <pre><code><ins>namespace std {
+  namespace experimental {
+  inline namespace fundamentals_v1 {
+
+    template &lt;class R&gt;
+    class future {
+    public:
+      future() noexcept;
+      future(future &amp;&amp;) noexcept;
+      future(const future&amp; rhs) = delete;
+      future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;
+      ~future();
+      future&amp; operator=(const future&amp; rhs) = delete;
+      future&amp; operator=(future&amp;&amp;) noexcept;
+      shared_future&amp;&lt;R&gt; share();
+
+      // retrieving the value
+      see below get();
+
+      // functions to check state
+      bool valid() const noexcept;
+      bool is_ready() const;
+      
+      void wait() const;
+      template &lt;class Rep, class Period&gt;
+        future_status wait_for(const chrono::duration&lt;Rep, Period&gt;&amp; rel_time) const;
+      template &lt;class Clock, class Duration&gt;
+        future_status wait_until(const chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time) const;
+
+      // continuations
+      template&lt;typename F>
+        <em>see below</em> then(F&amp;&amp; func);
+      template&lt;typename F>
+        <em>see below</em> then(launch policy, F&amp;&amp; func);
+
+    };
+
+  } // namespace fundamentals_v1
+  } // namespace experimental
+  } // namespace std</ins></code></pre>
 
 <p>
 In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 and 9, add the following:
@@ -179,8 +289,14 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 </cxx-section>
 
 <cxx-section id="futures.shared_future">
-<h1>Changes to class template <code>shared_future</code></h1>
+<h1> <del>Changes to c</del><ins>C</ins>lass template <code>shared_future</code></h1>
 <p>
+The specification of all declarations within this sub-clause <cxx-ref to="futures.shared_future"></cxx-ref>
+and its sub-clauses are the same as the corresponding declarations,
+as specified in <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref>,
+unless explicitly specified otherwise.
+</p>
+<del>
 To the class declaration found in <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref>
 paragraph 3, add the following to the public functions:
 </p>
@@ -194,6 +310,47 @@ template&lt;typename F>
 template&lt;typename F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
 </pre>
+</del>
+<p>
+    <pre><code><ins>namespace std {
+  namespace experimental {
+  inline namespace fundamentals_v1 {
+
+    template &lt;class R&gt;
+    class shared_future {
+    public:
+      shared_future() noexcept;
+      shared_future(const shared_future &amp;) noexcept;
+      shared_future(future &amp;&amp;) noexcept;
+      shared_future(shared_future &amp;&amp;) noexcept;
+      ~shared_future();
+      shared_future&amp; operator=(const shared_future&amp; rhs);
+      shared_future&amp; operator=(shared_future&amp;&amp;) noexcept;
+      
+      // retrieving the value
+      see below get();
+      
+      // functions to check state
+      bool valid() const noexcept;
+      bool is_ready() const;
+      
+      void wait() const;
+      template &lt;class Rep, class Period&gt;
+        future_status wait_for(const chrono::duration&lt;Rep, Period&gt;&amp; rel_time) const;
+      template &lt;class Clock, class Duration&gt;
+        future_status wait_until(const chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time) const;
+        
+      // continuations        
+      template&lt;typename F>
+        <em>see below</em> then(F&amp;&amp; func);
+      template&lt;typename F>
+        <em>see below</em> then(launch policy, F&amp;&amp; func);
+
+    };
+
+  } // namespace fundamentals_v1
+  } // namespace experimental
+  } // namespace std</ins></code></pre>
 
 <p>
 After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add the following:
@@ -306,15 +463,59 @@ on the same <code>shared_future</code> object will also return <code>true</code>
 
 </cxx-section>
 
-<!--             -->
-<!-- M00when_all -->
-<!--             -->
+  <cxx-section id="futures.promise">
+    <h1><ins>Class template <code>promise</code></ins></h1>
+
+    <p><ins>
+      The specification of all declarations within this sub-clause <cxx-ref to="futures.promise"></cxx-ref>
+      and its sub-clauses are the same as the corresponding declarations,
+      as specified in <cxx-ref in="cxx" to="futures.promise"></cxx-ref>,
+      unless explicitly specified otherwise.
+    </ins></p>
+    <p><ins>
+      The <code>future</code> returned by the function <code>get_future</code> is the one defined in the <code>experimental</code>
+      namespace (<cxx-ref to="futures.unique_future"></cxx-ref>).
+    </ins></p>
+
+  </cxx-section>
+
+  <cxx-section id="futures.task">
+    <h1><ins>Class template <code>packaged_task</code></ins></h1>
+
+    <p><ins>
+      The specification of all declarations within this sub-clause <cxx-ref to="futures.task"></cxx-ref>
+      and its sub-clauses are the same as the corresponding declarations,
+      as specified in <cxx-ref in="cxx" to="futures.task"></cxx-ref>,
+      unless explicitly specified otherwise.
+    </ins></p>
+    <p><ins>
+      The <code>future</code> returned by the function <code>get_future</code> is the one defined in the <code>experimental</code>
+      namespace (<cxx-ref to="futures.unique_future"></cxx-ref>).
+    </ins></p>
+
+  </cxx-section>
+
+  <cxx-section id="futures.async">
+    <h1> <ins>Function template <code>async</code></ins></h1>
+
+    <p><ins>
+      The specification of all declarations within this sub-clause <cxx-ref to="futures.async"></cxx-ref>
+      and its sub-clauses are the same as the corresponding declarations,
+      as specified in <cxx-ref in="cxx" to="futures.async"></cxx-ref>,
+      unless explicitly specified otherwise.
+    </ins></p>
+    <p><ins>
+      The <code>future</code> returned by the function <code>async</code> is the one defined in the <code>experimental</code>
+      namespace (<cxx-ref to="futures.unique_future"></cxx-ref>).
+    </ins></p>
+
+</cxx-section>
 
 <cxx-section id="futures.when_all">
 <h1> Function template <code>when_all</code></h1>
-<p>
+<p><del>
 A new section 30.6.10 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
-</p>
+</del></p>
 
 <p><ins>
 The function template <code>when_all</code> creates a <code>future</code> object that 
@@ -463,9 +664,9 @@ template &lt;typename... T>
 
 <cxx-section id="futures.when_any">
 <h1> Function template <code>when_any</code></h1>
-<p>
+<p><del>
 A new section 30.6.11 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
-</p>
+</del></p>
 
 <p><ins>
 The function template <code>when_any</code> creates a <code>future</code> object that 
