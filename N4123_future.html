@@ -148,8 +148,7 @@ In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 
   <cxx-Effects>Constructs a <code>future</code> object by moving the instance referred to by
   <code>rhs</code> and unwrapping the inner <code>future</code>.</cxx-Effects>
   <cxx-postconditions>
-    <!-- revisit: what happens when innner future is invalid? -->
-    <ul>
+      <ul>
       <li><code>valid()</code> returns the same value as <code>rhs.valid()</code> prior to the 
     constructor invocation.</li>
       <li><code>rhs.valid() == false</code>.</li>
@@ -261,7 +260,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
       <ins>
       In case of implicit unwrapping, the validity of the <code>future</code> returned from
       <code>then</code> cannot be established until after the completion of the 
-      functor passed into <code>then</code>. In such case, the resulting <code>future</code>
+      functor passed into <code>then</code>. If it is not valid, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>, 
       with an error code of <code>std::future_errc::broken_promise</code>.
       </ins>
@@ -527,17 +526,19 @@ become ready.
 <cxx-function>
 <cxx-signature>
 template <ins>&lt;class InputIterator></ins>
-<em>see below</em> when_all(InputIterator first, InputIterator last);
+<del><em>see below</em></del>
+<ins>future&lt;vector&lt;typename InputIterator::value_type>></ins> when_all(InputIterator first, InputIterator last);
 
 template &lt;typename... T>
-<em>see below</em> when_all(T&amp;&amp;... futures);
+<del><em>see below</em></del>
+<ins>future&lt;tuple&lt;T...>></ins> when_all(T&amp;&amp;... futures);
 </cxx-signature>
 
 <cxx-requires>
   <ul>
     <li>
       <ins>
-      For the first overload, <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
+      For the first overload, <code>InputIterator::value_type</code> shall be convertible to <code>future&lt;R></code>
       or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
@@ -617,40 +618,49 @@ template &lt;typename... T>
   </ul>
 </cxx-Effects>
 
+<cxx-postconditions>
+  <ul>
+    <li><ins><code>valid() == true</code><ins>.</li>
+    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
+    <li>All <ins>input</ins><del>output</del> <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+  </ul>
+</cxx-postconditions>
+
 <cxx-Returns>
   <ul>
-    <li><code>future&lt;tuple&lt;>></code> if <code>when_all</code> is called with zero arguments.</li>
+    <li><ins>A future object that becomes ready when all the input
+      <code>future</code>s/<code>shared_future</code>s are ready.<ins>
+    </li>
 
-    <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
+    <li><del><code>future&lt;tuple&lt;>></code> if <code>when_all</code> is called with zero arguments.</del></li>
+
+    <li><del><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
     and the iterator pair  yields <code>future&lt;R></code>. <code>R</code> may be <code>void</code>. The order of the
-    <code>future</code> in the output vector will be the same  as given by the input iterator.</li>
+    <code>future</code> in the output vector will be the same  as given by the input iterator.</del></li>
 
-    <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
+    <li><del><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
     compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
     <code>void</code>. The order of the <code>future</code> in the output  vector will be the same as given
-    by the input iterator.</li>
+    by the input iterator.</del></li>
 
     <li>
-      <code><del>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></del></code>
-      <code><ins>future&lt;tuple&lt;F0&lt;R0>, F1&lt;R1>, F2&lt;R2>...>></ins></code> 
+      <del><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code>
       if inputs are fixed in
       number. 
-      <del>The inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code> objects.</del> 
-      The type <code><ins>F0, F1, F2</ins></code> of the element at each position of the tuple corresponds to
+      The inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code> objects.
+      The type of the element at each position of the tuple corresponds to
       the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
-      maybe <code>void</code>.
+      maybe <code>void</code>.</del>
     </li>
   </ul>
 </cxx-Returns>
 
-<cxx-Postconditions>
-  <ul>
-    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All <ins>input</ins><del>output</del> <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
-  </ul>
-</cxx-Postconditions>
 </cxx-function>
 </cxx-section>
+
+<!--             -->
+<!-- M00when_any -->
+<!--             -->
 
 <cxx-section id="futures.when_any">
 <h1> Function template <code>when_any</code></h1>
@@ -667,17 +677,19 @@ becomes ready.
 <cxx-function>
 <cxx-signature>
 template &lt;class InputIterator>
-<em>see below</em> when_any(InputIterator first, InputIterator last);
+<del><em>see below</em></del>
+<ins>future&lt;vector&lt;typename InputIterator::value_type>></ins> when_any(InputIterator first, InputIterator last);
 
 template &lt;typename... T>
-<em>see below</em> when_any(T&amp;&amp;... futures);
+<del><em>see below</em></del>
+<ins>future&lt;tuple&lt;T...>></ins> when_any(T&amp;&amp;... futures);
 </cxx-signature>
 
 <cxx-requires>
   <ul>
     <li>
       <ins>
-      For the first overload, <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
+      For the first overload, <code>InputIterator::value_type</code> shall be convertible to <code>future&lt;R></code>
       or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
@@ -761,41 +773,50 @@ template &lt;typename... T>
   </ul>
 </cxx-Effects>
 
+<cxx-postconditions>
+  <ul>
+    <li><ins><code>valid() == true</code><ins>.</li>
+    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
+    <li>All <ins>input</ins><del>output</del> <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+  </ul>
+</cxx-postconditions>
+
 <cxx-Returns>
 <ul>
-  <li><code>future&lt;tuple&lt;>></code> if <code>when_any</code> is called with zero arguments. </li>
+  <li><ins>A future object that becomes ready when any of the input
+    <code>future</code>s/<code>shared_future</code>s are ready.<ins>
+  </li>
 
-  <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
+  <li><del><code>future&lt;tuple&lt;>></code> if <code>when_any</code> is called with zero arguments.<del></li>
+
+  <li><del><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
   time and the  iterator pair yields <code>future&lt;R></code>. <code>R</code> may be void. The order of
-  the <code>future</code><ins>s</ins> in the output vector will  be the same as given by the input
-  iterator.</li>
+  the <code>future</code> in the output vector will  be the same as given by the input
+  iterator.</del></li>
 
-  <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
+  <li><del><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
   compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
-  <code>void</code>. The order of the <code><ins>shared_</ins>future</code><ins>s</ins> in the output vector will be the same as given
-  by the input iterator.</li>
+  <code>void</code>. The order of the <code>future</code> in the output vector will be the same as given
+  by the input iterator.</del></li>
 
   <li>
-    <code><del>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></del></code>
-    <code><ins>future&lt;tuple&lt;F0&lt;R0>, F1&lt;R1>, F2&lt;R2>...>></ins></code> 
+    <del><code>future&lt;tuple&lt;future&lt;R0>, future&lt;R1>, future&lt;R2>...>></code>
     if inputs are fixed in
     number. 
-    <del>The inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code> objects.</del> 
-    The type <code><ins>F0, F1, F2</ins></code> of the element at each position of the tuple corresponds to
+    The inputs can be any arbitrary number of <code>future</code> and <code>shared_future</code> objects.
+    The type of the element at each position of the tuple corresponds to
     the type of the argument at the same  position. Any of <code>R0</code>, <code>R1</code>, <code>R2</code>, etc.
-    maybe <code>void</code>.
+    maybe <code>void</code>.</del>
   </li>
 </ul>
 </cxx-Returns>
 
-<cxx-Postconditions>
-<ul>
-  <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-  <li>All input <code>shared_future&lt;T> valid() == true</code>.</li>
-</ul>
-</cxx-Postconditions>
 </cxx-function>
 </cxx-section>
+
+<!--                  -->
+<!-- M00when_any_back -->
+<!--                  -->
 
 <cxx-section id="futures.when_any_back">
 <h1> Function template <code>when_any_back</code></h1>
@@ -813,24 +834,46 @@ constant time.
 <cxx-function>
 <cxx-signature>
 template &lt;class InputIterator>
-<em>see below</em> when_any_back(InputIterator first, InputIterator last);
+<del><em>see below</em></del>
+<ins>future&lt;vector&lt;typename InputIterator::value_type>></ins> when_any_back(InputIterator first, InputIterator last);
+
+<ins>template &lt;typename... T>
+future&lt;tuple&lt;T...>> when_any_back(T&amp;&amp;... futures);</ins>
 </cxx-signature>
 
 <cxx-requires>
-  <code>InputIterator</code>'s value type shall be convertible to <code>future&lt;R></code>
-  or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
-  <ins>
-    If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
-    in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
-  </ins>
+  <ul>
+    <li>
+      <ins>
+      For the first overload, <code>InputIterator::value_type</code> shall be convertible to <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
+      If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
+      in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
+      </ins>
+    </li>
+    <li>
+      <ins>For the second overload, </ins><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.
+      <ins>
+      The effect of calling <code>when_any</code> on a <code>future</code> or a
+      <code>shared_future</code> object for which <code>valid() == false</code> is undefined.
+      </ins>
+    </li>
+  </ul>
 </cxx-requires>
 
 <cxx-Notes>
-  <ul>
-    <li>The function <code>when_any_back</code> takes a pair of <code>InputIterators</code>.</li>
-    <li>Calling <code>when_any_back</code> where <code>InputIterator</code> <code>first</code> equals
-    <code>last</code>, returns a <code>future</code> with an empty vector that is immediately ready.</li>
-  </ul>
+<ul>
+  <li><ins>There are two variations of <code>when_any_back</code>. The first version takes a pair of
+  <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R></code> and
+  <code>shared_future&lt;R></code> objects, where <code>R</code> need  not be the same type.</ins></li>
+
+  <li><ins>Calling the first signature of <code>when_any_back</code> where <code>InputIterator</code> <code>first</code>
+  equals <code>last</code>, returns a <code>future</code> with an empty vector that is immediately
+  ready.</ins></li>
+
+  <li><ins>Calling the second signature of <code>when_any_back</code> with no arguments returns a
+  <code>future&lt;tuple&lt;>></code> that is immediately ready.</ins></li>
+</ul>
 </cxx-Notes>
 
 <cxx-Effects>
@@ -839,7 +882,7 @@ template &lt;class InputIterator>
 
   <ul>
     <li><del>Each <code>future</code> and <code>shared_future</code> is waited upon. When at least one is ready,
-    all the <code>future</code> are  copied into the collection of the output (returned)
+    all the <code>future</code> are copied into the collection of the output (returned)
     <code>future</code>.</del></li>
 
     <li><ins>
@@ -895,22 +938,29 @@ template &lt;class InputIterator>
   </ul>
 </cxx-Effects>
 
+<cxx-postconditions>
+  <ul>
+    <li><ins><code>valid() == true</code><ins>.</li>
+    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
+    <li>All <ins>input</ins><del>output</del> <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+  </ul>
+</cxx-postconditions>
+
 <cxx-Returns>
   <ul>
-    <li><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
-    time and the  iterator pair yields <code>future&lt;R></code>. <code>R</code> may be <code>void</code>.</li>
-    <li><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
+    <li><ins>A future object that becomes ready when any of the input
+      <code>future</code>s/<code>shared_future</code>s are ready.<ins>
+    </li>
+
+    <li><del><code>future&lt;vector&lt;future&lt;R>>></code> if the input cardinality is unknown at compile
+    time and the  iterator pair yields <code>future&lt;R></code>. <code>R</code> may be <code>void</code>.</del></li>
+
+    <li><del><code>future&lt;vector&lt;shared_future&lt;R>>></code> if the input cardinality is unknown at
     compile time and  the iterator pair yields <code>shared_future&lt;R></code>. <code>R</code> may be
-    <code>void</code>.</li>
+    <code>void</code>.</del></li>
   </ul>
 </cxx-Returns>
 
-<cxx-Postconditions>
-  <ul>
-    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All input <code>shared_future<T> valid() == true</code>.</li>
-  </ul>
-</cxx-Postconditions>
 </cxx-function>
 </cxx-section>
 
