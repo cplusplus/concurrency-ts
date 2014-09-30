@@ -63,8 +63,18 @@ namespace std {
 
     template &lt;class InputIterator>
       <em>see below</em> when_all(InputIterator first, InputIterator last);
-    template &lt;typename... T>
-      <em>see below</em> when_all(T&amp;&amp;... futures);
+    template &lt;class... Futures>
+      <em>see below</em> when_all(Futures&amp;&amp;... futures);
+
+    template &lt;class InputIterator>
+      <em>see below</em> when_any(InputIterator first, InputIterator last);
+    template &lt;class... Futures>
+      <em>see below</em> when_any(Futures&amp;&amp;... futures);
+
+    template &lt;class InputIterator>
+      <em>see below</em> when_any_back(InputIterator first, InputIterator last);
+    template &lt;class... Futures>
+      <em>see below</em> when_any_back(Futures&amp;&amp;... futures);
 
 
   } // namespace concurrency_v1
@@ -550,29 +560,33 @@ become ready.
 <cxx-signature>
 template <ins>&lt;class InputIterator></ins>
 <del><em>see below</em></del>
-<ins>future&lt;vector&lt;typename InputIterator::value_type>></ins> when_all(InputIterator first, InputIterator last);
+<ins>future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>></ins>
+when_all(InputIterator first, InputIterator last);
 
-template &lt;typename... T>
+template &lt;<del>typename</del><ins>class</ins>... <del>T</del><ins>Futures</ins>>
 <del><em>see below</em></del>
-<ins>future&lt;tuple&lt;T...>></ins> when_all(T&amp;&amp;... futures);
+<ins>future&lt;tuple&lt;decay_t&lt;Futures&gt;...>></ins> when_all(<del>T</del><ins>Futures</ins>&amp;&amp;... futures);
 </cxx-signature>
 
 <cxx-requires>
   <ul>
     <li>
       <ins>
-      For the first overload, <code>InputIterator::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
+      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
       </ins>
     </li>
     <li>
-      <ins>For the second overload, </ins><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.
-      <ins>
-      The effect of calling <code>when_all</code> on a <code>future</code> or a
-      <code>shared_future</code> object for which <code>valid() == false</code> is undefined.
-      </ins>
+      <ins>For the second overload, </ins><del><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code></del>
+      <ins>let <em><code>F<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> type in <code>Futures</code>, 
+      <em><code>U<sub>i</sub></code></em> be <code>remove_reference_t&lt;<em>F<sub>i</sub></em>&gt;</code>, and
+      <em><code>f<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> parameter in the function parameter 
+      pack <code>futures</code>, where all indexing is zero-based. Then each <em><code>U<sub>i</sub></code></em>
+      shall be the type <code>future&lt;<em>R<sub>i</sub></em>&gt;</code> or (possibly <code>const</code>) 
+      <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>; and <code><em>f<sub>i</sub></em>.valid()</code> 
+      shall be <code>true</code> for all <em>i</em></ins>.
     </li>
   </ul>
 </cxx-requires>
@@ -701,29 +715,33 @@ becomes ready.
 <cxx-signature>
 template &lt;class InputIterator>
 <del><em>see below</em></del>
-<ins>future&lt;vector&lt;typename InputIterator::value_type>></ins> when_any(InputIterator first, InputIterator last);
+<ins>future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>></ins>
+when_any(InputIterator first, InputIterator last);
 
-template &lt;typename... T>
+template &lt;<del>typename</del><ins>class</ins>... <del>T</del><ins>Futures</ins>>
 <del><em>see below</em></del>
-<ins>future&lt;tuple&lt;T...>></ins> when_any(T&amp;&amp;... futures);
+<ins>future&lt;tuple&lt;decay_t&lt;Futures&gt;...>></ins> when_any(<del>T</del><ins>Futures</ins>&amp;&amp;... futures);
 </cxx-signature>
 
 <cxx-requires>
   <ul>
     <li>
       <ins>
-      For the first overload, <code>InputIterator::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
+      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
       </ins>
     </li>
     <li>
-      <ins>For the second overload, </ins><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.
-      <ins>
-      The effect of calling <code>when_any</code> on a <code>future</code> or a
-      <code>shared_future</code> object for which <code>valid() == false</code> is undefined.
-      </ins>
+      <ins>For the second overload, </ins><del><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code></del>
+      <ins>let <em><code>F<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> type in <code>Futures</code>, 
+      <em><code>U<sub>i</sub></code></em> be <code>remove_reference_t&lt;<em>F<sub>i</sub></em>&gt;</code>, and
+      <em><code>f<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> parameter in the function parameter 
+      pack <code>futures</code>, where all indexing is zero-based. Then each <em><code>U<sub>i</sub></code></em>
+      shall be the type <code>future&lt;<em>R<sub>i</sub></em>&gt;</code> or (possibly <code>const</code>) 
+      <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>; and <code><em>f<sub>i</sub></em>.valid()</code> 
+      shall be <code>true</code> for all <em>i</em></ins>.
     </li>
   </ul>
 </cxx-requires>
@@ -858,28 +876,32 @@ constant time.
 <cxx-signature>
 template &lt;class InputIterator>
 <del><em>see below</em></del>
-<ins>future&lt;vector&lt;typename InputIterator::value_type>></ins> when_any_back(InputIterator first, InputIterator last);
+<ins>future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>></ins>
+when_any_back(InputIterator first, InputIterator last);
 
-<ins>template &lt;typename... T>
-future&lt;tuple&lt;T...>> when_any_back(T&amp;&amp;... futures);</ins>
+<ins>template &lt;<del>typename</del><ins>class</ins>... <del>T</del><ins>Futures</ins>>
+future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_any_back(<del>T</del><ins>Futures</ins>&amp;&amp;... futures);</ins>
 </cxx-signature>
 
 <cxx-requires>
   <ul>
     <li>
       <ins>
-      For the first overload, <code>InputIterator::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>. All <code>R</code> types must be the same.
+      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
       </ins>
     </li>
     <li>
-      <ins>For the second overload, </ins><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code>.
-      <ins>
-      The effect of calling <code>when_any_back</code> on a <code>future</code> or a
-      <code>shared_future</code> object for which <code>valid() == false</code> is undefined.
-      </ins>
+      <ins>For the second overload, </ins><del><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code></del>
+      <ins>let <em><code>F<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> type in <code>Futures</code>, 
+      <em><code>U<sub>i</sub></code></em> be <code>remove_reference_t&lt;<em>F<sub>i</sub></em>&gt;</code>, and
+      <em><code>f<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> parameter in the function parameter 
+      pack <code>futures</code>, where all indexing is zero-based. Then each <em><code>U<sub>i</sub></code></em>
+      shall be the type <code>future&lt;<em>R<sub>i</sub></em>&gt;</code> or (possibly <code>const</code>) 
+      <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>; and <code><em>f<sub>i</sub></em>.valid()</code> 
+      shall be <code>true</code> for all <em>i</em></ins>.
     </li>
   </ul>
 </cxx-requires>
