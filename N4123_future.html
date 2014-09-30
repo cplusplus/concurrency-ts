@@ -1022,39 +1022,35 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 </cxx-section>
 
 <cxx-section id="futures.make_exceptional_future">
-<h1> Function template <code>make_exceptional_future</code></h1>
+<h1><ins>Function template <code>make_exceptional_future</code></ins></h1>
 <p>
-A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
+<ins>A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.</ins>
 </p>
 
 <cxx-function>
-  <cxx-signature>
+  <cxx-signature><ins>
   template &lt;typename T>
   future&lt;T&gt; make_exceptional_future(exception_ptr ex);
+</ins></cxx-signature>
 
-  </cxx-signature>
-
-  <cxx-Effects> As if
-  <cxx-codeblock>
+  <cxx-Effects><ins>As if</ins>
+  <cxx-codeblock><ins>
   promise&lt;T&gt; p;
   p.set_exception(ex);
-  return p.get_future();
-  </cxx-codeblock>
+  return p.get_future();</ins></cxx-codeblock>
   </cxx-Effects>
 
 </cxx-function>
 <cxx-function>
-  <cxx-codeblock>
+  <cxx-codeblock><ins>
   template &lt;typename T, typename E>
-  future&lt;T&gt; make_exceptional_future(E ex);
+  future&lt;T&gt; make_exceptional_future(E ex);</ins></cxx-codeblock>
 
-  </cxx-codeblock>
-
-  <cxx-Effects> As if
-  <cxx-codeblock>
-    promise&lt;T&gt; p;
+  <cxx-Effects><ins>As if</ins>
+  <cxx-codeblock><ins>
+  promise&lt;T&gt; p;
   p.set_exception(make_exception_ptr(ex));
-  return p.get_future();
+  return p.get_future();</ins>
   </cxx-codeblock>
   </cxx-Effects>
 
