@@ -375,9 +375,9 @@ template&lt;typename F>
 
       // continuations
       template&lt;typename F>
-        <em>see below</em> then(F&amp;&amp; func);
+        <em>see below</em> then(F&amp;&amp; func) const;
       template&lt;typename F>
-        <em>see below</em> then(launch policy, F&amp;&amp; func);
+        <em>see below</em> then(launch policy, F&amp;&amp; func) const;
 
     };
 
@@ -398,10 +398,10 @@ as specified below.
 <cxx-function>
 <cxx-signature>
 template&lt;typename F>
-<em>see below</em> shared_future::then(F&amp;&amp; func);
+<em>see below</em> then(F&amp;&amp; func) <ins>const</ins>;
 
 template&lt;typename F>
-<em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
+<em>see below</em> then(launch policy, F&amp;&amp; func) <ins>const</ins>;
 </cxx-signature>
 
 <cxx-Notes>The two functions differ only by input parameters. The first
