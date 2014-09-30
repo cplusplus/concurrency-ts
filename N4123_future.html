@@ -53,12 +53,12 @@ namespace std {
       future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
       async(launch policy, F&amp;&amp; f, Args&amp;&amp;... args);
 
-    template &lt;typename T>
+    template &lt;class T>
     future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
     future&lt;void> make_ready_future();
 
     future&lt;T> make_exceptional_future(exception_ptr value);
-    template &lt;typename T, typename E>
+    template &lt;class T, class E>
     future&lt;T&gt; make_exceptional_future(E ex);
 
     template &lt;class InputIterator>
@@ -146,9 +146,9 @@ template&lt;typename F>
         future_status wait_until(const chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time) const;
 
       // continuations
-      template&lt;typename F>
+      template&lt;class F>
         <em>see below</em> then(F&amp;&amp; func);
-      template&lt;typename F>
+      template&lt;class F>
         <em>see below</em> then(launch policy, F&amp;&amp; func);
 
     };
@@ -200,10 +200,10 @@ as specified below.
 </p>
 <cxx-function>
 <cxx-signature>
-template&lt;typename F>
+template&lt;<del>typename</del><ins>class</ins> F>
 <em>see below</em> then(F&amp;&amp; func);
 
-template&lt;typename F>
+template&lt;<del>typename</del><ins>class</ins> F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
@@ -374,9 +374,9 @@ template&lt;typename F>
         future_status wait_until(const chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time) const;
 
       // continuations
-      template&lt;typename F>
+      template&lt;class F>
         <em>see below</em> then(F&amp;&amp; func);
-      template&lt;typename F>
+      template&lt;class F>
         <em>see below</em> then(launch policy, F&amp;&amp; func);
 
     };
@@ -397,10 +397,10 @@ as specified below.
 </p>
 <cxx-function>
 <cxx-signature>
-template&lt;typename F>
+template&lt;<del>typename</del><ins>class</ins> F>
 <em>see below</em> shared_future::then(F&amp;&amp; func);
 
-template&lt;typename F>
+template&lt;<del>typename</del><ins>class</ins> F>
 <em>see below</em> shared_future::then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
@@ -1017,7 +1017,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 
 <cxx-function>
   <cxx-signature>
-  template &lt;typename T>
+  template &lt;<del>typename</del><ins>class</ins> T>
   future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
 
   future&lt;void> make_ready_future();
@@ -1051,7 +1051,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 
 <cxx-function>
   <cxx-signature><ins>
-  template &lt;typename T>
+  template &lt;class T>
   future&lt;T&gt; make_exceptional_future(exception_ptr ex);
 </ins></cxx-signature>
 
@@ -1065,7 +1065,7 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 </cxx-function>
 <cxx-function>
   <cxx-codeblock><ins>
-  template &lt;typename T, typename E>
+  template &lt;class T, class E>
   future&lt;T&gt; make_exceptional_future(E ex);</ins></cxx-codeblock>
 
   <cxx-Effects><ins>As if</ins>
