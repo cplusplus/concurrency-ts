@@ -405,9 +405,10 @@ template&lt;typename F>
 </cxx-signature>
 
 <cxx-Notes>The two functions differ only by input parameters. The first
-only takes a callable object which  accepts a <code>shared_future</code> object as a
+only takes a callable object which accepts a <code>shared_future</code> object as a
 parameter. The second function takes a launch
-policy as the  first parameter and a callable object as the second parameter.
+policy as the first parameter and a callable object <ins>which accepts a <code>shared_future</code> object as a
+parameter,</ins> as the second parameter.
 </cxx-Notes>
 
 <cxx-Effects>
@@ -416,7 +417,7 @@ policy as the  first parameter and a callable object as the second parameter.
   <code>future</code> object. The further behavior of the functions is as follows.
   </ins>
   <ul>
-    <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
+    <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func))<ins>, *this</ins>)</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
     <li>The continuation launches according to the specified policy<ins>, if it is provided</ins>.</li>
     <li>When the launch policy is not provided the continuation
     inherits the parent's launch policy.</li>
@@ -429,7 +430,7 @@ policy as the  first parameter and a callable object as the second parameter.
     policy), the continuation behaves the same as the second function with a policy
     argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
     <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
-    calling <code>wait()</code> or <code>get()</code> on the resulting <code>shared_future</code>.
+    calling <code>wait()</code> or <code>get()</code> on the resulting <code><del>shared_</del>future</code>.
     <cxx-note>
     This is similar to <code>future</code>. See example in <cxx-ref to="futures.unique_future"></cxx-ref>.
     </cxx-note>
@@ -443,11 +444,11 @@ policy as the  first parameter and a callable object as the second parameter.
 
     <ul>
       <li>
-        When <code>result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)></code>
+        When <code>result_of_t&lt;decay_t&lt;F>(<ins>shared_future&lt;R></ins>)></code>
         is <code>future&lt;R<ins>2</ins>></code>, the function returns <code>future&lt;R<ins>2</ins>></code>.
       </li>
       <li>
-        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(<ins>future&lt;R></ins>)>></code>.
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(<ins>shared_future&lt;R></ins>)>></code>.
         <p>
         <cxx-note>
           This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
@@ -469,7 +470,7 @@ policy as the  first parameter and a callable object as the second parameter.
     </li>
     <li>
     <code>valid() == true</code> on the original <code>shared_future</code> object.
-    <ins><code>valid() == true</code> on the <code>shared_future</code> returned from <code>then.</code></ins>
+    <ins><code>valid() == true</code> on the <code><del>shared_</del>future</code> returned from <code>then.</code></ins>
 
     <cxx-Notes>
       <ins>
