@@ -155,11 +155,11 @@ template&lt;typename F>
   } // namespace std</ins></code></pre>
 
 <p>
-In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 8 and 9, add the following:
+In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 9 and 10, add the following:
 </p>
 <cxx-function>
   <cxx-signature>future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;</cxx-signature>
-  <cxx-Effects>Constructs a <code>future</code> object by moving the instance referred to by
+  <cxx-Effects>Constructs a <code>future</code> object from the shared state referred to by
   <code>rhs</code><del> and unwrapping the inner <code>future</code></del>.
 
   <ins>
@@ -381,6 +381,41 @@ template&lt;typename F>
   } // namespace concurrency_v1
   } // namespace experimental
   } // namespace std</ins></code></pre>
+
+<p><ins>
+After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 10, add the following:
+</ins></p>
+
+<cxx-function>
+  <cxx-signature><ins>shared_future(future&lt;shared_future&lt;R>>&amp;&amp; rhs) noexcept;</ins></cxx-signature>
+  
+  <cxx-Effects><ins>Constructs a <code>shared_future</code> object from the shared state referred to by
+  <code>rhs</code>.
+
+The <code>shared_future</code> becomes ready when one of the following occurs:</ins>
+<ul>
+  <li><ins>
+    Both the outer <code>future</code> and the inner <code>shared_future</code> are ready. 
+    The <code>shared_future</code> inherits the value or the exception from the inner <code>shared_future</code>.
+  </ins></li>
+  
+  <li><ins>
+    The outer <code>future</code> is ready but the inner <code>shared_future</code> is invalid.
+    The <code>shared_future</code> gets an exception of type <code>std::future_error</code>, with an error code of <code>std::future_errc::broken_promise</code>.
+  </ins></li>
+</ul>
+
+</cxx-Effects>
+  <cxx-postconditions>
+      <ul>
+      <li><del><code>valid()</code> returns the same value as <code>rhs.valid()</code> prior to the
+    constructor invocation.</del></li>
+      <li><ins><code>valid() == true</code>.</ins></li>
+      <li><code>rhs.valid() == false</code>.</li>
+    </ul>
+  </cxx-postconditions>
+</cxx-function>
+
 
 <p>
 After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add the following:
