@@ -73,9 +73,6 @@ namespace std {
 
     template &lt;class InputIterator>
       <em>see below</em> when_any_back(InputIterator first, InputIterator last);
-    template &lt;class... Futures>
-      <em>see below</em> when_any_back(Futures&amp;&amp;... futures);
-
 
   } // namespace concurrency_v1
   } // namespace experimental
@@ -879,48 +876,16 @@ template &lt;class InputIterator>
 <del><em>see below</em></del>
 <ins>future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>></ins>
 when_any_back(InputIterator first, InputIterator last);
-
-<ins>template &lt;<del>typename</del><ins>class</ins>... <del>T</del><ins>Futures</ins>>
-future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_any_back(<del>T</del><ins>Futures</ins>&amp;&amp;... futures);</ins>
 </cxx-signature>
 
 <cxx-requires>
-  <ul>
-    <li>
-      <ins>
-      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
+  <ins>
+      <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
       or <code>shared_future&lt;R></code>.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
-      </ins>
-    </li>
-    <li>
-      <ins>For the second overload, </ins><del><code>T</code> is of type <code>future&lt;R></code> or <code>shared_future&lt;R></code></del>
-      <ins>let <em><code>F<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> type in <code>Futures</code>, 
-      <em><code>U<sub>i</sub></code></em> be <code>remove_reference_t&lt;<em>F<sub>i</sub></em>&gt;</code>, and
-      <em><code>f<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> parameter in the function parameter 
-      pack <code>futures</code>, where all indexing is zero-based. Then each <em><code>U<sub>i</sub></code></em>
-      shall be the type <code>future&lt;<em>R<sub>i</sub></em>&gt;</code> or (possibly <code>const</code>) 
-      <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>; and <code><em>f<sub>i</sub></em>.valid()</code> 
-      shall be <code>true</code> for all <em>i</em></ins>.
-    </li>
-  </ul>
+  </ins>
 </cxx-requires>
-
-<cxx-Notes>
-<ul>
-  <li><ins>There are two variations of <code>when_any_back</code>. The first version takes a pair of
-  <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R></code> and
-  <code>shared_future&lt;R></code> objects, where <code>R</code> need  not be the same type.</ins></li>
-
-  <li><ins>Calling the first signature of <code>when_any_back</code> where <code>InputIterator</code> <code>first</code>
-  equals <code>last</code>, returns a <code>future</code> with an empty vector that is immediately
-  ready.</ins></li>
-
-  <li><ins>Calling the second signature of <code>when_any_back</code> with no arguments returns a
-  <code>future&lt;tuple&lt;>></code> that is immediately ready.</ins></li>
-</ul>
-</cxx-Notes>
 
 <cxx-Effects>
 
