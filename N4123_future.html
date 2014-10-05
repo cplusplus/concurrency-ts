@@ -302,17 +302,6 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 <cxx-function>
   <cxx-signature>bool is_ready() const;</cxx-signature>
   <cxx-Returns> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</cxx-Returns>
-  <cxx-remarks><ins>The function returns <code>false</code> if the shared state has been invalidated
-  (for example, by <code>get()</code> or <code>wait()</code>).</ins></cxx-remarks>
-  <cxx-example>
-  <pre><ins>void g(futue&lt;int> f) {
-    if (f.is_ready()) {
-        f.get();
-        assert(!f.is_ready());
-    }
-}
-</ins></pre>
-  </cxx-example>
 </cxx-function>
 
 </cxx-section>
