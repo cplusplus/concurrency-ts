@@ -1018,10 +1018,10 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 
 <cxx-function>
   <cxx-signature>
-  template &lt;<del>typename</del><ins>class</ins> T>
-  future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
+template &lt;<del>typename</del><ins>class</ins> T>
+future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
 
-  future&lt;void> make_ready_future();
+future&lt;void> make_ready_future();
   </cxx-signature>
 
   <cxx-Effects> The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it
@@ -1052,28 +1052,28 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 
 <cxx-function>
   <cxx-signature><ins>
-  template &lt;class T>
-  future&lt;T&gt; make_exceptional_future(exception_ptr ex);
+template &lt;class T>
+future&lt;T&gt; make_exceptional_future(exception_ptr ex);
 </ins></cxx-signature>
 
   <cxx-Effects><ins>As if</ins>
   <cxx-codeblock><ins>
-  promise&lt;T&gt; p;
-  p.set_exception(ex);
-  return p.get_future();</ins></cxx-codeblock>
+promise&lt;T&gt; p;
+p.set_exception(ex);
+return p.get_future();</ins></cxx-codeblock>
   </cxx-Effects>
 
 </cxx-function>
 <cxx-function>
   <cxx-codeblock><ins>
-  template &lt;class T, class E>
-  future&lt;T&gt; make_exceptional_future(E ex);</ins></cxx-codeblock>
+template &lt;class T, class E>
+future&lt;T&gt; make_exceptional_future(E ex);</ins></cxx-codeblock>
 
   <cxx-Effects><ins>As if</ins>
   <cxx-codeblock><ins>
-  promise&lt;T&gt; p;
-  p.set_exception(make_exception_ptr(ex));
-  return p.get_future();</ins>
+promise&lt;T&gt; p;
+p.set_exception(make_exception_ptr(ex));
+return p.get_future();</ins>
   </cxx-codeblock>
   </cxx-Effects>
 
