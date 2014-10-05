@@ -595,7 +595,7 @@ template &lt;<del>typename</del><ins>class</ins>... <del>T</del><ins>Futures</in
     <li>
       <ins>
       For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>.
+      or <code>shared_future&lt;R></code>, but not both.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
       </ins>
@@ -750,7 +750,7 @@ template &lt;<del>typename</del><ins>class</ins>... <del>T</del><ins>Futures</in
     <li>
       <ins>
       For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>.
+      or <code>shared_future&lt;R></code>, but not both.
       If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
       in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
       </ins>
