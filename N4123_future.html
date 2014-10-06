@@ -204,7 +204,9 @@ template&lt;<del>typename</del><ins>class</ins> F>
 <em>see below</em> then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
-  <cxx-Notes> The two functions differ only by input parameters. The first only
+<cxx-requires><ins><code><em>INVOKE</em>(func, *this)</code> shall be a valid expression.</ins></cxx-requires>
+
+  <cxx-Notes>The two functions differ only by input parameters. The first only
   takes a callable object which accepts a <code>future</code> object as a parameter. The
   second function takes a launch policy as the first
   parameter and a callable object as the second parameter.
@@ -424,6 +426,8 @@ template&lt;<del>typename</del><ins>class</ins> F>
 template&lt;<del>typename</del><ins>class</ins> F>
 <em>see below</em> then(launch policy, F&amp;&amp; func) <ins>const</ins>;
 </cxx-signature>
+
+<cxx-requires><ins><code><em>INVOKE</em>(func, *this)</code> shall be a valid expression.</ins></cxx-requires>
 
 <cxx-Notes>The two functions differ only by input parameters. The first
 only takes a callable object which accepts a <code>shared_future</code> object as a
