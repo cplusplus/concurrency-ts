@@ -4,12 +4,16 @@
 <cxx-section id="futures.general">
 <h1>General</h1>
 <p>
+
 The extensions proposed here are an evolution of the functionality of
-<code>std::future</code> and <code>std::shared_future</code>. The extensions enable wait free
-composition of asynchronous operations.
-<ins><code>std::promise</code>, <code>std::packaged_task</code> and <code>std::async</code> are also updated to be
-associated to the updated <code>std::future</code>.</ins>
+<code>std::future</code> and <code>std::shared_future</code>. The extensions
+enable wait free composition of asynchronous operations. <ins>Class templates
+<code>std::promise</code>, <code>std::packaged_task</code> and function
+template <code>std::async</code> are also updated to be compatible with the
+updated <code>std::future</code>.</ins>
+
 </p>
+
 </cxx-section>
 
   <cxx-section id="header.future.synop">
@@ -206,7 +210,7 @@ template&lt;<del>typename</del><ins>class</ins> F>
 
 <cxx-requires><ins><code><em>INVOKE</em>(func, *this)</code> shall be a valid expression.</ins></cxx-requires>
 
-  <cxx-Notes>The two functions differ only by input parameters. The first only
+  <cxx-Notes>The two functions differ only by input parameters. The first <del>only</del>
   takes a callable object which accepts a <code>future</code> object as a parameter. The
   second function takes a launch policy as the first
   parameter and a callable object as the second parameter.
@@ -227,7 +231,7 @@ template&lt;<del>typename</del><ins>class</ins> F>
       the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
       </li>
       <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
-      no associated launch  policy), the continuation behaves the same as the second
+      no associated launch  policy), the continuation behaves the same as in the second
       overload with a policy argument of <code>launch::async | launch::deferred</code> and the
       same argument for <code>func</code>.</li>
       <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
@@ -291,7 +295,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
       <ins>
       In case of implicit unwrapping, the validity of the <code>future</code> returned from
       <code>then</code> cannot be established until after the completion of the
-      functor passed into <code>then</code>. If it is not valid, the resulting <code>future</code>
+      continuation. If it is not valid, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>,
       with an error code of <code>std::future_errc::broken_promise</code>.
       </ins>
@@ -430,7 +434,7 @@ template&lt;<del>typename</del><ins>class</ins> F>
 <cxx-requires><ins><code><em>INVOKE</em>(func, *this)</code> shall be a valid expression.</ins></cxx-requires>
 
 <cxx-Notes>The two functions differ only by input parameters. The first
-only takes a callable object which accepts a <code>shared_future</code> object as a
+<del>only</del> takes a callable object which accepts a <code>shared_future</code> object as a
 parameter. The second function takes a launch
 policy as the first parameter and a callable object <ins>which accepts a <code>shared_future</code> object as a
 parameter,</ins> as the second parameter.
@@ -452,7 +456,7 @@ parameter,</ins> as the second parameter.
     the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
     </li>
     <li>If the parent was created with <code>std::promise</code> (has no associated launch
-    policy), the continuation behaves the same as the second function with a policy
+    policy), the continuation behaves the same as in the second function with a policy
     argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
     <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
     calling <code>wait()</code> or <code>get()</code> on the resulting <code><del>shared_</del>future</code>.
@@ -501,7 +505,7 @@ parameter,</ins> as the second parameter.
       <ins>
       In case of implicit unwrapping, the validity of the <code>future</code> returned from
       <code>then</code> cannot be established until after the completion of the
-      functor passed into <code>then</code>. In such case, the resulting <code>future</code>
+      continuation. In such case, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>,
       with an error code of <code>std::future_errc::broken_promise</code>.
       </ins>
