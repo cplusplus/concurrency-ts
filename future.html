@@ -8,9 +8,8 @@
 The extensions proposed here are an evolution of the functionality of
 <code>std::future</code> and <code>std::shared_future</code>. The extensions
 enable wait free composition of asynchronous operations. Class templates
-<code>std::promise</code>, <code>std::packaged_task</code> and function
-template <code>std::async</code> are also updated to be compatible with the
-updated <code>std::future</code>.
+<code>std::promise</code> and <code>std::packaged_task</code> are also updated 
+to be compatible with the updated <code>std::future</code>.
 
 </p>
 
@@ -49,13 +48,6 @@ namespace std {
 
     template &lt;class R, class... ArgTypes&gt;
     void swap(packaged_task&lt;R(ArgTypes...)&gt;&amp;, packaged_task&lt;R(ArgTypes...)&gt;&amp;) noexcept;
-
-    template &lt;class F, class... Args&gt;
-      future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
-      async(F&amp;&amp; f, Args&amp;&amp;... args);
-    template &lt;class F, class... Args&gt;
-      future&lt;result_of_t&lt;decay_t&lt;F&gt;(decay_t&lt;Args&gt;...)&gt;&gt;
-      async(launch policy, F&amp;&amp; f, Args&amp;&amp;... args);
 
     template &lt;class T>
     future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
@@ -265,10 +257,6 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
         </cxx-example>
     </cxx-Note>
       </li>
-      <li>
-        Unlike futures returned from <code>std::async</code> (see <cxx-ref in="cxx" to="futures.async"></cxx-ref> paragraph 4),
-        the destructor of the <code>future</code> object returned from <code>then</code> will not block.
-      </li>
     </ul>
   </cxx-Returns>
 
@@ -452,10 +440,6 @@ parameter, as the second parameter.
           This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
         </cxx-note>
       </li>
-      <li>
-        Unlike futures returned from <code>std::async</code> (see <cxx-ref in="cxx" to="futures.async"></cxx-ref> paragraph 4),
-        the destructor of the <code>future</code> object returned from <code>then</code> will not block.
-      </li>
     </ul>
 
   </cxx-Returns>
@@ -522,22 +506,6 @@ on the same <code>shared_future</code> object will also return <code>true</code>
     </p>
 
   </cxx-section>
-
-  <cxx-section id="futures.async">
-    <h1> Function template <code>async</code></h1>
-
-    <p>
-      The specification of all declarations within this sub-clause <cxx-ref to="futures.async"></cxx-ref>
-      and its sub-clauses are the same as the corresponding declarations,
-      as specified in <cxx-ref in="cxx" to="futures.async"></cxx-ref>,
-      unless explicitly specified otherwise.
-    </p>
-    <p>
-      The <code>future</code> returned by the function <code>async</code> is the one defined in the <code>experimental</code>
-      namespace (<cxx-ref to="futures.unique_future"></cxx-ref>).
-    </p>
-
-</cxx-section>
 
 <cxx-section id="futures.when_all">
 <h1> Function template <code>when_all</code></h1>
