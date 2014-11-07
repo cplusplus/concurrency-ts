@@ -128,8 +128,6 @@ unless explicitly specified otherwise.
       // continuations
       template&lt;class F>
         <em>see below</em> then(F&amp;&amp; func);
-      template&lt;class F>
-        <em>see below</em> then(launch policy, F&amp;&amp; func);
 
     };
 
@@ -181,48 +179,29 @@ as specified below.
 <cxx-signature>
 template&lt;class F>
 <em>see below</em> then(F&amp;&amp; func);
-
-template&lt;class F>
-<em>see below</em> then(launch policy, F&amp;&amp; func);
 </cxx-signature>
 
 <cxx-requires><code><em>INVOKE</em>(func, *this)</code> shall be a valid expression.</cxx-requires>
 
-  <cxx-Notes>The two functions differ only by input parameters. The first 
-  takes a callable object which accepts a <code>future</code> object as a parameter. The
-  second function takes a launch policy as the first
-  parameter and a callable object as the second parameter.
+  <cxx-Notes>
+    The function takes a callable object which accepts a <code>future</code>
+    object as a parameter. 
   </cxx-Notes>
   <cxx-Effects>
-    
-    Both functions create a shared state that is associated with the returned
-    <code>future</code> object. The further behavior of the functions is as follows.
-    
+    The function creates a shared state that is associated with the returned
+    <code>future</code> object. The further behavior of the function is as follows.
     <ul>
-      <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)))</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
-      <li>The continuation launches according to the specified launch policy, if it is provided.</li>
-      <li>When the launch policy is not provided the continuation inherits
-      the parent's launch policy.</li>
+      <li>
+        When the object's shared state is ready, the continuation 
+        <code>INVOKE(DECAY_COPY(std::forward&lt;F>(func)), *this)</code> is called on
+        an unspecified thread of execution with the call to 
+        <code>DECAY_COPY()</code> being evaluated in the thread that called 
+        <code>then</code>.
+      </li>
       <li>
       Any value returned from the continuation is stored as the result in the
       shared state of the resulting <code>future</code>. Any exception propagated from the execution of
       the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
-      </li>
-      <li>If the parent was created with <code>std::promise</code> or with a <code>packaged_task</code> (has
-      no associated launch  policy), the continuation behaves the same as in the second
-      overload with a policy argument of <code>launch::async | launch::deferred</code> and the
-      same argument for <code>func</code>.</li>
-      <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
-      calling <code>wait()</code> or <code>get()</code> on the resulting <code>future</code>.
-      <a id="futures.unique_future.example"></a>
-      <cxx-example>
-      <pre>
-auto f1 = async(launch::deferred, [] { return 1; });
-
-auto f2 = f1.then([](future&lt;int> n) { return 2; });
-
-f2.wait(); // execution of f1 starts here, followed by f2
-      </pre> </cxx-example>
       </li>
     </ul>
   </cxx-Effects>
@@ -238,15 +217,15 @@ f2.wait(); // execution of f1 starts here, followed by f2
       </li>
       <li>
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(future&lt;R>)>></code>.
-        <p>
-    <cxx-Note>
+        </p>
+      <cxx-Note>
         The first rule above is called the <em>implicit unwrapping</em>. Without this rule,
         the return type of <code>then</code> taking a closure returning a
         <code>future&lt;R></code> would have been <code>future&lt;future&lt;R>></code>.
         This rule avoids such nested <code>future</code> objects.
-        <cxx-example>
-          The type of <code>f2</code> below is
+        The type of <code>f2</code> below is
           <code>future&lt;int></code> and not <code>future&lt;future&lt;int>></code>:
+        <cxx-example>
 <pre>
 future&lt;int> f1 = g();
 future&lt;int> f2 = f1.then([](future&lt;int> f) {
@@ -255,7 +234,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
                  });
 </pre>
         </cxx-example>
-    </cxx-Note>
+        </cxx-Note>
       </li>
     </ul>
   </cxx-Returns>
@@ -265,13 +244,11 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
   <li><code>valid() == false</code> on the original <code>future</code>;
     <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code>
     <cxx-Notes>
-      
       In case of implicit unwrapping, the validity of the <code>future</code> returned from
       <code>then</code> cannot be established until after the completion of the
       continuation. If it is not valid, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>,
       with an error code of <code>std::future_errc::broken_promise</code>.
-      
     </cxx-Notes>
   </li>
   </ul>
@@ -326,9 +303,6 @@ unless explicitly specified otherwise.
       // continuations
       template&lt;class F>
         <em>see below</em> then(F&amp;&amp; func) const;
-      template&lt;class F>
-        <em>see below</em> then(launch policy, F&amp;&amp; func) const;
-
     };
 
   } // namespace concurrency_v1
@@ -383,46 +357,32 @@ as specified below.
 <cxx-signature>
 template&lt;class F>
 <em>see below</em> then(F&amp;&amp; func) const;
-
-template&lt;class F>
-<em>see below</em> then(launch policy, F&amp;&amp; func) const;
 </cxx-signature>
 
 <cxx-requires><code><em>INVOKE</em>(func, *this)</code> shall be a valid expression.</cxx-requires>
 
-<cxx-Notes>The two functions differ only by input parameters. The first
-takes a callable object which accepts a <code>shared_future</code> object as a
-parameter. The second function takes a launch
-policy as the first parameter and a callable object which accepts a <code>shared_future</code> object as a
-parameter, as the second parameter.
+<cxx-Notes>The function takes a callable object which accepts a
+<code>shared_future</code> object as a parameter.
 </cxx-Notes>
 
-<cxx-Effects>
-  
-  Both functions create a shared state that is associated with the returned
-  <code>future</code> object. The further behavior of the functions is as follows.
-  
-  <ul>
-    <li>The continuation <code>INVOKE(DECAY_COPY (std::forward&lt;F>(func)), *this)</code> is called when the object's shared state is ready (has a value or exception  stored).</li>
-    <li>The continuation launches according to the specified policy, if it is provided.</li>
-    <li>When the launch policy is not provided the continuation
-    inherits the parent's launch policy.</li>
-    <li>
-    Any value returned from the continuation is stored as the result in the
-    shared state of the resulting <code>future</code>. Any exception propagated from the execution of
-    the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
-    </li>
-    <li>If the parent was created with <code>std::promise</code> (has no associated launch
-    policy), the continuation behaves the same as in the second function with a policy
-    argument of <code>launch::async | launch::deferred</code> and the same argument for <code>func</code>.</li>
-    <li>If the parent has a policy of <code>launch::deferred</code>, then it is filled by
-    calling <code>wait()</code> or <code>get()</code> on the resulting <code>future</code>.
-    <cxx-note>
-    This is similar to <code>future</code>. See example in <cxx-ref to="futures.unique_future"></cxx-ref>.
-    </cxx-note>
-    </li>
-  </ul>
-</cxx-Effects>
+  <cxx-Effects>
+    The function creates a shared state that is associated with the returned
+    <code>future</code> object. The further behavior of the function is as follows.
+    <ul>
+      <li>
+        When the object's shared state is ready, the continuation 
+        <code>INVOKE(DECAY_COPY(std::forward&lt;F>(func)), *this)</code> is called on
+        an unspecified thread of execution with the call to
+        <code>DECAY_COPY()</code> being evaluated in the thread that called 
+        <code>then</code>.
+      </li>
+      <li>
+      Any value returned from the continuation is stored as the result in the
+      shared state of the resulting <code>future</code>. Any exception propagated from the execution of
+      the continuation is stored as the exceptional result in the shared state of the resulting <code>future</code>.
+      </li>
+    </ul>
+  </cxx-Effects>
 
   <cxx-Returns>
     The return type of <code>then</code> depends on the return type of the closure
@@ -437,7 +397,8 @@ parameter, as the second parameter.
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(shared_future&lt;R>)>></code>.
         <p>
         <cxx-note>
-          This is the same as in <code>future</code>. See the notes on <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
+          This is the same as in <code>future</code>. See the notes on 
+          <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
         </cxx-note>
       </li>
     </ul>
@@ -569,17 +530,6 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 <!-- M0when_all_effects -->
 
   <ul>
-    <li>
-    If any of the <code>future</code>s or <code>shared_future</code>s supplied
-    to a call to <code>when_all</code> refer to deferred tasks
-    that have not started execution, those tasks are executed before the call
-    to <code>when_all</code> returns.
-    </li>
-
-    <li>
-    The call to <code>when_all</code> does not wait for non-deferred tasks, or deferred tasks
-    that have already started executing elsewhere, to complete before returning.
-    </li>
 
     <li>
     Once all the <code>future</code>s and <code>shared_future</code>s supplied
@@ -691,18 +641,9 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_any(Futures&amp;&amp;... fut
 <!-- M0when_any_effects -->
 
   <ul>
-    <li>
-    Each of the <code>future</code>s and <code>shared_future</code>s supplied to
-    <code>when_any</code> is checked in the order supplied.
-    If a given <code>future</code> or
-    <code>shared_future</code> refers to a deferred task that has not yet started execution,
-    then no further <code>future</code>s or <code>shared_future</code>s are checked,
-    and that task is executed.
-    </li>
 
     <li>
-    The call to <code>when_any</code> does not wait for non-deferred tasks, or deferred tasks
-    that have already started executing elsewhere, to complete before returning.
+    The call to <code>when_any</code> does not wait tasks to complete before returning.
     </li>
 
     <li>
@@ -792,18 +733,9 @@ when_any_back(InputIterator first, InputIterator last);
 <!-- M0when_any_back_effects -->
 
   <ul>
-    <li>
-    Each of the <code>future</code>s and <code>shared_future</code>s supplied to
-    <code>when_any_back</code> is checked in the order supplied.
-    If a given <code>future</code> or
-    <code>shared_future</code> refers to a deferred task that has not yet started execution,
-    then no further <code>future</code>s or <code>shared_future</code>s are checked,
-    and that task is executed.
-    </li>
 
     <li>
-    The call to <code>when_any_back</code> does not wait for non-deferred tasks, or deferred tasks
-    that have already started executing elsewhere, to complete before returning.
+    The call to <code>when_any_back</code> does not wait for tasks to complete before returning.
     </li>
 
     <li>
