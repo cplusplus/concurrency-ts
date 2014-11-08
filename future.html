@@ -62,13 +62,13 @@ namespace std {
     template &lt;class... Futures>
       <em>see below</em> when_all(Futures&amp;&amp;... futures);
 
+    template&lt;class Sequence>
+    struct when_any_result;
+
     template &lt;class InputIterator>
       <em>see below</em> when_any(InputIterator first, InputIterator last);
     template &lt;class... Futures>
       <em>see below</em> when_any(Futures&amp;&amp;... futures);
-
-    template &lt;class InputIterator>
-      <em>see below</em> when_any_back(InputIterator first, InputIterator last);
 
   } // namespace concurrency_v1
   } // namespace experimental
@@ -468,6 +468,10 @@ on the same <code>shared_future</code> object will also return <code>true</code>
 
   </cxx-section>
 
+<!--             -->
+<!-- M00when_all -->
+<!--             -->
+
 <cxx-section id="futures.when_all">
 <h1> Function template <code>when_all</code></h1>
 
@@ -480,7 +484,6 @@ become ready.
 <cxx-function>
 <cxx-signature>
 template &lt;class InputIterator>
-<em>see below</em>
 future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>>
 when_all(InputIterator first, InputIterator last);
 
@@ -512,15 +515,12 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 
 <cxx-Notes>
   <ul>
-    <li>There are two variations of <code>when_all</code>. The first version takes a pair of
-    <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R0></code> and
-    <code>shared_future&lt;R1></code> objects, where <code>R0</code>  and <code>R1</code> need not be the same type.</li>
 
-    <li>Calling the first signature of <code>when_all</code> where <code>InputIterator</code> first
+    <li>Calling the first overload of <code>when_all</code> where <code>InputIterator</code> first
     equals last,  returns a <code>future</code> with an empty vector that is immediately
     ready.</li>
 
-    <li>Calling the second signature of <code>when_all</code> with no arguments returns a
+    <li>Calling the second overload of <code>when_all</code> with no arguments returns a
     <code>future&lt;tuple&lt;>></code> that is  immediately ready.</li>
     </ul>
 </cxx-Notes>
@@ -532,23 +532,23 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
   <ul>
 
     <li>
+    A new shared state containing a collection type <code>Sequence</code> is
+    created, where <code>Sequence</code> is either <code>tuple</code> or a
+    <code>vector</code> based on the overload, as specified above.
+
+    A new <code>future</code> object that refers to that shared state is created
+    and returned from <code>when_any</code>.
+    </li>
+
+    <li>
     Once all the <code>future</code>s and <code>shared_future</code>s supplied
     to the call to <code>when_all</code> are ready, the <code>future</code>s
-    are moved, and the <code>shared_future</code>s are copied,
+    are moved, and the <code>shared_future</code>s are copied, into, 
+    correspondingly, <code>future</code>s or <code>shared_future</code>s
+    of the new collection in the shared state. 
 
-    into, correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of a new collection, which can be either <code>tuple</code> or a <code>vector</code>
-    as described below. The order of the objects in the collection matches the order
+    The order of the objects in the collection matches the order
     of the arguments supplied to <code>when_all</code>.
-
-    <li>
-    The collection is then stored as the result in a newly created shared state.
-    </li>
-
-    <li>
-    A new <code>future</code> object that refers to the shared state
-    is created. The exact type of the <code>future</code> is further described below.
-    </li>
 
     <li>The <code>future</code> returned by <code>when_all</code> will not throw an exception, but the
     <code>future</code>s and <code>shared_future</code>s held in the output collection may.</li>
@@ -559,7 +559,7 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
   <ul>
     <li><code>valid() == true</code>.</li>
     <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All input<code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+    <li>All input <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
 
@@ -578,11 +578,27 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 <!-- M00when_any -->
 <!--             -->
 
+<cxx-section id="futures.when_any_result">
+<h1> Class template <code>when_any_result</code></h1>
+
+<p>
+The library provides a template for storing the result of <code>when_any</code>.
+</p>
+
+<pre></code>
+template&lt;class Sequence>
+struct when_any_result {
+    size_t index;
+    Sequence futures;
+};
+</code></pre>
+
+</cxx-section>
+
 <cxx-section id="futures.when_any">
 <h1> Function template <code>when_any</code></h1>
-<p></p>
 
-
+<p>
 The function template <code>when_any</code> creates a <code>future</code> object that
 becomes ready when at least one element in a set of <code>future</code> and <code>shared_future</code> objects
 becomes ready.
@@ -591,11 +607,11 @@ becomes ready.
 <cxx-function>
 <cxx-signature>
 template &lt;class InputIterator>
-future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>>
+future&lt;when_any_result&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>>>
 when_any(InputIterator first, InputIterator last);
 
 template &lt;class... Futures>
-future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_any(Futures&amp;&amp;... futures);
+future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futures&amp;&amp;... futures);
 </cxx-signature>
 
 <cxx-requires>
@@ -623,16 +639,19 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_any(Futures&amp;&amp;... fut
 
 <cxx-Notes>
 <ul>
-  <li>There are two variations of <code>when_any</code>. The first version takes a pair of
-  <code>InputIterators</code>. The  second takes any arbitrary number of <code>future&lt;R></code> and
-  <code>shared_future&lt;R></code> objects, where <code>R</code> need  not be the same type.</li>
+  <li>Calling the first overload of <code>when_any</code> where
+    <code>InputIterator</code> <code>first</code> equals <code>last</code>, 
+    returns a <code>future</code> that is immediately ready.
+    The value of the <code>index</code> field of the <code>when_any_result</code> is 
+    unspecified. The <code>futures</code> field is an empty <code>vector</code>.
+  </li>
 
-  <li>Calling the first signature of <code>when_any</code> where <code>InputIterator</code> <code>first</code>
-  equals <code>last</code>, returns a <code>future</code> with an empty vector that is immediately
-  ready.</li>
+  <li>Calling the second overload of <code>when_any</code> with no arguments returns a
+    <code>future</code> that is immediately ready.
+    The value of the <code>index</code> field of the <code>when_any_result</code> is 
+    unspecified. The <code>futures</code> field is <code>tuple&lt;></code>.
+  </li>
 
-  <li>Calling the second signature of <code>when_any</code> with no arguments returns a
-  <code>future&lt;tuple&lt;>></code> that is immediately ready.</li>
 </ul>
 </cxx-Notes>
 
@@ -643,30 +662,23 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_any(Futures&amp;&amp;... fut
   <ul>
 
     <li>
-    The call to <code>when_any</code> does not wait tasks to complete before returning.
+    A new shared state containing <code>when_any_result&lt;Sequence></code> is created, 
+    where <code>Sequence</code> is determined based on the overload, as specified above.
+
+    A new <code>future</code> object that refers to that shared state is created and returned
+    from <code>when_any</code>.
     </li>
 
     <li>
     Once at least one of the <code>future</code>s or <code>shared_future</code>s
     supplied to the call to <code>when_any</code> are ready, the <code>future</code>s
-    are moved, and the <code>shared_future</code>s are copied
-
-    into, correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of a new collection, which can be either <code>tuple</code> or a <code>vector</code>
-    as described below.
+    are moved, and the <code>shared_future</code>s are copied into, 
+    correspondingly, <code>future</code>s or <code>shared_future</code>s
+    of the <code>futures</code> collection in the shared state.
 
     <li>
-    The order of the objects in the collection matches the order
+    The order of the objects in the <code>futures</code> collection matches the order
     of the arguments supplied to <code>when_any</code>.
-    </li>
-
-    <li>
-    The collection is then stored as the result in the newly created shared state.
-    </li>
-
-    <li>
-    A new <code>future</code> object that refers to the shared state
-    is created. The exact type of the <code>future</code> is further described below.
     </li>
 
     <li>The <code>future</code> returned by <code>when_any</code> will not throw
@@ -690,102 +702,6 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_any(Futures&amp;&amp;... fut
     <code>future</code>s/<code>shared_future</code>s are ready.
   </li>
 </ul>
-</cxx-Returns>
-
-</cxx-function>
-</cxx-section>
-
-<!--                  -->
-<!-- M00when_any_back -->
-<!--                  -->
-
-<cxx-section id="futures.when_any_back">
-<h1> Function template <code>when_any_back</code></h1>
-<p>
-A new section 30.6.12 shall be inserted at the end of <cxx-ref in="cxx" to="futures"></cxx-ref>. Below is the content of that section.
-</p>
-
-<p>
-The function template <code>when_any_back</code> creates a <code>future</code> object that
-becomes ready when at least one element in a set of <code>future</code> and <code>shared_future</code> objects
-becomes ready. The ready <code>future</code> or <code>shared_future</code> may be identified in
-constant time.
-</p>
-
-<cxx-function>
-<cxx-signature>
-template &lt;class InputIterator>
-future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>>
-when_any_back(InputIterator first, InputIterator last);
-</cxx-signature>
-
-<cxx-requires>
-  
-      <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>.
-      If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
-      in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
-  
-</cxx-requires>
-
-<cxx-Effects>
-
-<!-- M0when_any_back_effects -->
-
-  <ul>
-
-    <li>
-    The call to <code>when_any_back</code> does not wait for tasks to complete before returning.
-    </li>
-
-    <li>
-    Once at least one of the <code>future</code>s or <code>shared_future</code>s
-    supplied to the call to <code>when_any_back</code> are ready, the <code>future</code>s
-    are moved, and the <code>shared_future</code>s are copied
-
-    into, correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of a new collection, which can be either <code>tuple</code> or a <code>vector</code>
-    as described below.
-
-    <li>
-    If the collection passed into <code>when_any_back</code> is non-empty (i.e.,
-    <code>first != last</code>),
-
-    the last <code>future</code> or <code>shared_future</code> in the output collection
-    is guaranteed to be in the ready state. The order of other elements in the
-    collection is unspecified.
-    </li>
-
-    <li>
-    The collection is then stored as the result in the shared state.
-    </li>
-
-    <li>
-    A new <code>future</code> object that refers to the newly created shared state
-    is created. The exact type of the <code>future</code> is further described below.
-    </li>
-
-    <li>The <code>future</code> returned by <code>when_any_back</code> will not throw
-    an exception, but the <code>future</code>s and <code>shared_future</code>s
-    held in the  output collection may.
-    </li>
-  </ul>
-</cxx-Effects>
-
-<cxx-postconditions>
-  <ul>
-    <li><code>valid() == true</code>.</li>
-    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All input<code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
-  </ul>
-</cxx-postconditions>
-
-<cxx-Returns>
-  <ul>
-    <li>A future object that becomes ready when any of the input
-      <code>future</code>s/<code>shared_future</code>s are ready.
-    </li>
-  </ul>
 </cxx-Returns>
 
 </cxx-function>
