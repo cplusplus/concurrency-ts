@@ -716,26 +716,29 @@ A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futu
 <cxx-function>
   <cxx-signature>
 template &lt;class T>
-future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
+future&lt;V> make_ready_future(T&amp;&amp; value);
 
 future&lt;void> make_ready_future();
   </cxx-signature>
-
+<p>
+  Let <code>U</code> be <code>decay_t&lt;T></code>. Then <code>V</code> is <code>X&amp;</code> if <code>U</code> equals
+  <code>reference_wrapper&lt;X></code>, otherwise <code>V</code> is <code>U</code>.
+</p>
   <cxx-Effects> The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it
   is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.
   </cxx-Effects>
 
   <cxx-Returns>
     <ul>
-      <li><code>future&lt;decay_t&lt;T>></code>, if function is given a value of type <code>T</code>.</li>
+      <li><code>future&lt;V></code>, if function is given a value of type <code>T</code>.</li>
       <li><code>future&lt;void></code>, if the function is not given any inputs. </li>
     </ul>
   </cxx-Returns>
 
   <cxx-postconditions>
     <ul>
-      <li>Returned <code>future&lt;decay_t&lt;T>>, valid() == true</code>.</li>
-      <li>Returned <code>future&lt;decay_t&lt;T>>, is_ready() == true</code>.</li>
+      <li>Returned <code>future&lt;V>, valid() == true</code>.</li>
+      <li>Returned <code>future&lt;V>, is_ready() == true</code>.</li>
     </ul>
   </cxx-postconditions>
 </cxx-function>
