@@ -537,7 +537,7 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
     <code>vector</code> based on the overload, as specified above.
 
     A new <code>future</code> object that refers to that shared state is created
-    and returned from <code>when_any</code>.
+    and returned from <code>when_all</code>.
     </li>
 
     <li>
@@ -559,13 +559,13 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
   <ul>
     <li><code>valid() == true</code>.</li>
     <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All input <code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+    <li>All input <code>shared_future&lt;T></code>s <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
 
 <cxx-Returns>
   <ul>
-    <li>A future object that becomes ready when all the input
+    <li>A <code>future</code> object that becomes ready when all the input
       <code>future</code>s/<code>shared_future</code>s are ready.
     </li>
   </ul>
@@ -585,7 +585,7 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 The library provides a template for storing the result of <code>when_any</code>.
 </p>
 
-<pre></code>
+<pre><code>
 template&lt;class Sequence>
 struct when_any_result {
     size_t index;
@@ -663,7 +663,8 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
 
     <li>
     A new shared state containing <code>when_any_result&lt;Sequence></code> is created, 
-    where <code>Sequence</code> is determined based on the overload, as specified above.
+    where <code>Sequence</code> is a <code>vector</code> for the first overload and a 
+    <code>tuple</code> for the second overload.
 
     A new <code>future</code> object that refers to that shared state is created and returned
     from <code>when_any</code>.
