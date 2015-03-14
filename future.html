@@ -33,36 +33,36 @@ namespace std {
     template &lt;&gt; class promise&lt;void&gt;;
 
     template &lt;class R&gt;
-    void swap(promise&lt;R&gt;&amp; x, promise&lt;R&gt;&amp; y) noexcept;
+      void swap(promise&lt;R&gt;&amp; x, promise&lt;R&gt;&amp; y) noexcept;
 
     template &lt;class R&gt; class future;
     template &lt;class R&gt; class future&lt;R&amp;&gt;;
-    template <> class future&lt;void&gt;;
+    template &lt;&gt; class future&lt;void&gt;;
     template &lt;class R&gt; class shared_future;
     template &lt;class R&gt; class shared_future&lt;R&amp;&gt;;
-    template <> class shared_future&lt;void&gt;;
+    template &lt;&gt; class shared_future&lt;void&gt;;
 
     template &lt;class&gt; class packaged_task; // undefined
     template &lt;class R, class... ArgTypes&gt;
-    class packaged_task&lt;R(ArgTypes...)&gt;;
+      class packaged_task&lt;R(ArgTypes...)&gt;;
 
     template &lt;class R, class... ArgTypes&gt;
-    void swap(packaged_task&lt;R(ArgTypes...)&gt;&amp;, packaged_task&lt;R(ArgTypes...)&gt;&amp;) noexcept;
+      void swap(packaged_task&lt;R(ArgTypes...)&gt;&amp;, packaged_task&lt;R(ArgTypes...)&gt;&amp;) noexcept;
 
     template &lt;class T>
-    future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
+      future&lt;decay_t&lt;T>> make_ready_future(T&amp;&amp; value);
     future&lt;void> make_ready_future();
 
-    future&lt;T> make_exceptional_future(exception_ptr value);
+    future&lt;T> make_exceptional_future(exception_ptr ex);
     template &lt;class T, class E>
-    future&lt;T&gt; make_exceptional_future(E ex);
+      future&lt;T&gt; make_exceptional_future(E ex);
 
     template &lt;class InputIterator>
       <em>see below</em> when_all(InputIterator first, InputIterator last);
     template &lt;class... Futures>
       <em>see below</em> when_all(Futures&amp;&amp;... futures);
 
-    template&lt;class Sequence>
+    template &lt;class Sequence>
     struct when_any_result;
 
     template &lt;class InputIterator>
@@ -74,10 +74,10 @@ namespace std {
   } // namespace experimental
 
   template &lt;class R, class Alloc&gt;
-  struct uses_allocator&lt;experimental::promise&lt;R&gt;, Alloc&gt;;
+    struct uses_allocator&lt;experimental::promise&lt;R&gt;, Alloc&gt;;
 
   template &lt;class R, class Alloc&gt;
-  struct uses_allocator&lt;experimental::packaged_task&lt;R&gt;, Alloc&gt;;
+    struct uses_allocator&lt;experimental::packaged_task&lt;R&gt;, Alloc&gt;;
 
 } // namespace std</code></pre>
   </cxx-section>
@@ -105,19 +105,19 @@ unless explicitly specified otherwise.
     public:
       future() noexcept;
       future(future &amp;&amp;) noexcept;
-      future(const future&amp; rhs) = delete;
-      future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;
+      future(const future&amp;) = delete;
+      future(future&lt;future&lt;R>>&amp;&amp;) noexcept;
       ~future();
-      future&amp; operator=(const future&amp; rhs) = delete;
+      future&amp; operator=(const future&amp;) = delete;
       future&amp; operator=(future&amp;&amp;) noexcept;
-      shared_future&amp;&lt;R&gt; share();
+      shared_future&lt;R&amp;&gt; share();
 
       // retrieving the value
       <em>see below</em> get();
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const;
+      bool is_ready() const noexcept;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -126,7 +126,7 @@ unless explicitly specified otherwise.
         future_status wait_until(const chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time) const;
 
       // continuations
-      template&lt;class F>
+      template &lt;class F>
         <em>see below</em> then(F&amp;&amp; func);
 
     };
@@ -151,7 +151,7 @@ The <code>future</code> becomes ready when one of the following occurs:
   </li>
 
   <li>
-    <code>rhs</code> is ready but <code>rhs.get()</code> is invalid. An exception of type <code>std::future_error</code>, with an error code of <code>std::future_errc::broken_promise</code> is stored in the <code>future</code>'s shared state.
+    <code>rhs</code> is ready but <code>rhs.get()</code> is invalid. An exception of type <code>std::future_error</code>, with an error condition of <code>std::future_errc::broken_promise</code> is stored in the <code>future</code>'s shared state.
   </li>
 </ul>
 
@@ -171,17 +171,17 @@ After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add 
 <p>
 
 The member function template <code>then</code> provides a mechanism for attaching
-a <i>continuation</i> to a <code>future</code> object, that will be executed
+a <i>continuation</i> to a <code>future</code> object, which will be executed
 as specified below.
 
 </p>
 <cxx-function>
 <cxx-signature>
-template&lt;class F>
+template &lt;class F>
 <em>see below</em> then(F&amp;&amp; func);
 </cxx-signature>
 
-<cxx-requires><code><em>INVOKE</em>(func, std::move(*this))</code> shall be a valid expression.</cxx-requires>
+<cxx-requires><code><em>INVOKE</em>(<em>DECAY_COPY</em> (std::forward&lt;F>(func)), std::move(*this))</code> shall be a valid expression.</cxx-requires>
 
   <cxx-Notes>
     The function takes a callable object which accepts a <code>future</code>
@@ -193,9 +193,9 @@ template&lt;class F>
     <ul>
       <li>
         When the object's shared state is ready, the continuation
-        <code>INVOKE(DECAY_COPY(std::forward&lt;F>(func)), std::move(*this))</code> is called on
-        an unspecified thread of execution with the call to
-        <code>DECAY_COPY()</code> being evaluated in the thread that called
+        <code><em>INVOKE</em>(<em>DECAY_COPY</em>(std::forward&lt;F>(func)), std::move(*this))</code> is called on
+        an unspecified thread of execution with the call to 
+        <code><em>DECAY_COPY</em>()</code> being evaluated in the thread that called 
         <code>then</code>.
       </li>
       <li>
@@ -219,7 +219,7 @@ template&lt;class F>
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(future&lt;R>)>></code>.
         </p>
       <cxx-Note>
-        The first rule above is called the <em>implicit unwrapping</em>. Without this rule,
+        The first rule above is called <em>implicit unwrapping</em>. Without this rule,
         the return type of <code>then</code> taking a closure returning a
         <code>future&lt;R></code> would have been <code>future&lt;future&lt;R>></code>.
         This rule avoids such nested <code>future</code> objects.
@@ -241,14 +241,14 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 
   <cxx-Postconditions>
   <ul>
-  <li><code>valid() == false</code> on the original <code>future</code>;
+  <li><code>valid() == false</code> on the original <code>future</code>.
     <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code>
     <cxx-Notes>
       In case of implicit unwrapping, the validity of the <code>future</code> returned from
       <code>then</code> cannot be established until after the completion of the
       continuation. If it is not valid, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>,
-      with an error code of <code>std::future_errc::broken_promise</code>.
+      with an error condition of <code>std::future_errc::broken_promise</code>.
     </cxx-Notes>
   </li>
   </ul>
@@ -256,8 +256,8 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 </cxx-function>
 
 <cxx-function>
-  <cxx-signature>bool is_ready() const;</cxx-signature>
-  <cxx-Returns> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</cxx-Returns>
+  <cxx-signature>bool is_ready() const noexcept;</cxx-signature>
+  <cxx-Returns> <code>true</code> if the shared state is ready, otherwise <code>false</code>.</cxx-Returns>
 </cxx-function>
 
 </cxx-section>
@@ -280,11 +280,11 @@ unless explicitly specified otherwise.
     class shared_future {
     public:
       shared_future() noexcept;
-      shared_future(const shared_future &amp;) noexcept;
-      shared_future(future &amp;&amp;) noexcept;
-      shared_future(shared_future &amp;&amp;) noexcept;
+      shared_future(const shared_future&amp;) noexcept;
+      shared_future(future&lt;R>&amp;&amp;) noexcept;
+      shared_future(future&lt;shared_future&lt;R>>&amp;&amp; rhs) noexcept;
       ~shared_future();
-      shared_future&amp; operator=(const shared_future&amp; rhs);
+      shared_future&amp; operator=(const shared_future&amp;);
       shared_future&amp; operator=(shared_future&amp;&amp;) noexcept;
 
       // retrieving the value
@@ -292,7 +292,7 @@ unless explicitly specified otherwise.
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const;
+      bool is_ready() const noexcept;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -301,7 +301,7 @@ unless explicitly specified otherwise.
         future_status wait_until(const chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time) const;
 
       // continuations
-      template&lt;class F>
+      template &lt;class F>
         <em>see below</em> then(F&amp;&amp; func) const;
     };
 
@@ -324,12 +324,12 @@ The <code>shared_future</code> becomes ready when one of the following occurs:
 <ul>
   <li>
     Both the outer <code>future</code> and the inner <code>shared_future</code> are ready.
-    The <code>shared_future</code> inherits the value or the exception from the inner <code>shared_future</code>.
+    The <code>shared_future</code> stores the value or the exception from the inner <code>shared_future</code>.
   </li>
 
   <li>
     The outer <code>future</code> is ready but the inner <code>shared_future</code> is invalid.
-    The <code>shared_future</code> gets an exception of type <code>std::future_error</code>, with an error code of <code>std::future_errc::broken_promise</code>.
+    The <code>shared_future</code> stores an exception of type <code>std::future_error</code>, with an error condition of <code>std::future_errc::broken_promise</code>.
   </li>
 </ul>
 
@@ -349,17 +349,17 @@ After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add 
 
 <p>
 The member function template <code>then</code> provides a mechanism for attaching
-a <i>continuation</i> to a <code>shared_future</code> object, that will be executed
+a <i>continuation</i> to a <code>shared_future</code> object, which will be executed
 as specified below.
 </p>
 
 <cxx-function>
 <cxx-signature>
-template&lt;class F>
+template &lt;class F>
 <em>see below</em> then(F&amp;&amp; func) const;
 </cxx-signature>
 
-<cxx-requires><code><em>INVOKE</em>(func, *this)</code> shall be a valid expression.</cxx-requires>
+<cxx-requires><code><em>INVOKE</em>(<em>DECAY_COPY</em> (std::forward&lt;F>(func)), *this)</code> shall be a valid expression.</cxx-requires>
 
 <cxx-Notes>The function takes a callable object which accepts a
 <code>shared_future</code> object as a parameter.
@@ -371,9 +371,9 @@ template&lt;class F>
     <ul>
       <li>
         When the object's shared state is ready, the continuation
-        <code>INVOKE(DECAY_COPY(std::forward&lt;F>(func)), *this)</code> is called on
+        <code><em>INVOKE</em>(<em>DECAY_COPY</em>(std::forward&lt;F>(func)), *this)</code> is called on
         an unspecified thread of execution with the call to
-        <code>DECAY_COPY()</code> being evaluated in the thread that called
+        <code><em>DECAY_COPY</em>()</code> being evaluated in the thread that called 
         <code>then</code>.
       </li>
       <li>
@@ -397,7 +397,7 @@ template&lt;class F>
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(shared_future&lt;R>)>></code>.
         <p>
         <cxx-note>
-          This is the same as in <code>future</code>. See the notes on
+          This analogous to <code>future</code>. See the notes on
           <code>future::then</code> return type in <cxx-ref to="futures.unique_future"></cxx-ref>.
         </cxx-note>
       </li>
@@ -417,7 +417,7 @@ template&lt;class F>
       <code>then</code> cannot be established until after the completion of the
       continuation. In such case, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>,
-      with an error code of <code>std::future_errc::broken_promise</code>.
+      with an error condition of <code>std::future_errc::broken_promise</code>.
 
     </cxx-Notes>
 
@@ -428,10 +428,8 @@ template&lt;class F>
 </cxx-function>
 
 <cxx-function>
-<cxx-signature>bool is_ready() const;</cxx-signature>
-<cxx-Returns> <code>true</code> if the shared state is ready, <code>false</code> if it isn't.</cxx-Returns>
-<cxx-remarks>If the function has returned <code>true</code>, all subsequent invocations
-on the same <code>shared_future</code> object will also return <code>true</code>.</cxx-remarks>
+<cxx-signature>bool is_ready() const noexcept;</cxx-signature>
+<cxx-Returns> <code>true</code> if the shared state is ready, otherwise <code>false</code>.</cxx-Returns>
 </cxx-function>
 
 </cxx-section>
@@ -494,21 +492,13 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 <cxx-requires>
   <ul>
     <li>
-      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>, but not both.
-      If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
-      in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
-
+      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>, for some type <code>R</code>.
     </li>
+
     <li>
-      For the second overload,
-      let <em><code>F<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> type in <code>Futures</code>,
-      <em><code>U<sub>i</sub></code></em> be <code>remove_reference_t&lt;<em>F<sub>i</sub></em>&gt;</code>, and
-      <em><code>f<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> parameter in the function parameter
-      pack <code>futures</code>, where all indexing is zero-based. Then each <em><code>U<sub>i</sub></code></em>
-      shall be the type <code>future&lt;<em>R<sub>i</sub></em>&gt;</code> or (possibly <code>const</code>)
-      <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>; and <code><em>f<sub>i</sub></em>.valid()</code>
-      shall be <code>true</code> for all <em>i</em>.
+      All <code>future</code>s and <code>shared_future</code>s passed into 
+      <code>when_all</code> must be in a valid state (i.e. <code>valid() == true</code>).
     </li>
   </ul>
 </cxx-requires>
@@ -516,14 +506,22 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 <cxx-Notes>
   <ul>
 
-    <li>Calling the first overload of <code>when_all</code> where <code>InputIterator</code> first
-    equals last,  returns a <code>future</code> with an empty vector that is immediately
+    <li>Calling the first overload of <code>when_all</code> where
+      <code>first == last</code>, returns a <code>future</code> with an empty vector that is immediately
     ready.</li>
 
     <li>Calling the second overload of <code>when_all</code> with no arguments returns a
     <code>future&lt;tuple&lt;>></code> that is  immediately ready.</li>
     </ul>
 </cxx-Notes>
+
+<cxx-remarks>
+  For the second overload, let <em><code>U<sub>i</sub></code></em> be 
+  <code>decay_t&lt;F<sub>i</sub>></code> for each <code>F<sub>i</sub></code> in
+  <code>Futures</code>. This function shall not participate in overload resolution unless each 
+  <em><code>U<sub>i</sub></code></em> is either <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
+  or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
+</cxx-remarks>
 
 <cxx-Effects>
 
@@ -532,7 +530,7 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
   <ul>
 
     <li>
-    A new shared state containing a collection type <code>Sequence</code> is
+    A new shared state containing a <code>Sequence</code> is
     created, where <code>Sequence</code> is either <code>tuple</code> or a
     <code>vector</code> based on the overload, as specified above.
 
@@ -545,21 +543,21 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
     to the call to <code>when_all</code> are ready, the <code>future</code>s
     are moved, and the <code>shared_future</code>s are copied, into,
     correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of the new collection in the shared state.
+    of the <code>futures</code> member of <code>Sequence</code> in the shared state.
 
-    The order of the objects in the collection matches the order
+    The order of the objects in the shared state matches the order
     of the arguments supplied to <code>when_all</code>.
 
     <li>The <code>future</code> returned by <code>when_all</code> will not throw an exception, but the
-    <code>future</code>s and <code>shared_future</code>s held in the output collection may.</li>
+    <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
   </ul>
 </cxx-Effects>
 
 <cxx-postconditions>
   <ul>
     <li><code>valid() == true</code>.</li>
-    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All input <code>shared_future&lt;T></code>s <code>valid() == true</code>.</li>
+    <li>For all input <code>future&lt;T></code>s, <code>valid() == false</code>.</li>
+    <li>For all input <code>shared_future&lt;T></code>s, <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
 
@@ -617,30 +615,22 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
 <cxx-requires>
   <ul>
     <li>
-
-      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> shall be convertible to <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>, but not both.
-      If any of the <code>future&lt;R></code> or <code>shared_future&lt;R></code> objects are
-      in invalid state (i.e. <code>valid() == false</code>), the behavior is undefined.
-
+      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code>, for some type <code>R</code>.
     </li>
+
     <li>
-      For the second overload,
-      let <em><code>F<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> type in <code>Futures</code>,
-      <em><code>U<sub>i</sub></code></em> be <code>remove_reference_t&lt;<em>F<sub>i</sub></em>&gt;</code>, and
-      <em><code>f<sub>i</sub></code></em> be the <em>i<sup>th</sup></em> parameter in the function parameter
-      pack <code>futures</code>, where all indexing is zero-based. Then each <em><code>U<sub>i</sub></code></em>
-      shall be the type <code>future&lt;<em>R<sub>i</sub></em>&gt;</code> or (possibly <code>const</code>)
-      <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>; and <code><em>f<sub>i</sub></em>.valid()</code>
-      shall be <code>true</code> for all <em>i</em>.
+      All <code>future</code>s and <code>shared_future</code>s passed into 
+      <code>when_any</code> must be in a valid state (i.e. <code>valid() == true</code>).
     </li>
+
   </ul>
 </cxx-requires>
 
 <cxx-Notes>
 <ul>
   <li>Calling the first overload of <code>when_any</code> where
-    <code>InputIterator</code> <code>first</code> equals <code>last</code>,
+    <code>first == last</code>, 
     returns a <code>future</code> that is immediately ready.
     The value of the <code>index</code> field of the <code>when_any_result</code> is
     unspecified. The <code>futures</code> field is an empty <code>vector</code>.
@@ -654,6 +644,14 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
 
 </ul>
 </cxx-Notes>
+
+<cxx-remarks>
+  For the second overload, let <em><code>U<sub>i</sub></code></em> be 
+  <code>decay_t&lt;F<sub>i</sub>></code> for each <code>F<sub>i</sub></code> in
+  <code>Futures</code>. This function shall not participate in overload resolution unless each 
+  <em><code>U<sub>i</sub></code></em> is either <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
+  or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
+</cxx-remarks>
 
 <cxx-Effects>
 
@@ -672,19 +670,19 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
 
     <li>
     Once at least one of the <code>future</code>s or <code>shared_future</code>s
-    supplied to the call to <code>when_any</code> are ready, the <code>future</code>s
+    supplied to the call to <code>when_any</code> is ready, the <code>future</code>s
     are moved, and the <code>shared_future</code>s are copied into,
     correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of the <code>futures</code> collection in the shared state.
+    of the <code>futures</code> member of <code>Sequence</code> in the shared state.
 
     <li>
-    The order of the objects in the <code>futures</code> collection matches the order
+    The order of the objects in the <code>futures</code> shared state matches the order
     of the arguments supplied to <code>when_any</code>.
     </li>
 
     <li>The <code>future</code> returned by <code>when_any</code> will not throw
     an exception, but the <code>future</code>s and <code>shared_future</code>s
-    held in the  output collection may.
+    held in the shared state may.
     </li>
   </ul>
 </cxx-Effects>
@@ -692,14 +690,14 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
 <cxx-postconditions>
   <ul>
     <li><code>valid() == true</code>.</li>
-    <li>All input <code>future&lt;T></code>s <code>valid() == false</code>.</li>
-    <li>All input<code>shared_future&lt;T></code> <code>valid() == true</code>.</li>
+    <li>For all input <code>future&lt;T></code>s, <code>valid() == false</code>.</li>
+    <li>For all input<code>shared_future&lt;T></code>s, <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
 
 <cxx-Returns>
 <ul>
-  <li>A future object that becomes ready when any of the input
+  <li>A <code>future</code> object that becomes ready when any of the input
     <code>future</code>s/<code>shared_future</code>s are ready.
   </li>
 </ul>
@@ -725,7 +723,21 @@ future&lt;void> make_ready_future();
   Let <code>U</code> be <code>decay_t&lt;T></code>. Then <code>V</code> is <code>X&amp;</code> if <code>U</code> equals
   <code>reference_wrapper&lt;X></code>, otherwise <code>V</code> is <code>U</code>.
 </p>
-  <cxx-Effects> The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it
+  <cxx-Effects> 
+    <ul>
+      <li>
+        For the first overload, the value that is passed in to the 
+        function is moved to the shared state of the returned <code>future</code> if it
+        is an rvalue. Otherwise the value is copied to the shared state of the returned
+        <code>future</code>.
+      </li>
+      
+      <li>
+        The second overload creates a shared state for the returned <code>future</code>.
+      </li>
+    </ul>
+
+  The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it
   is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.
   </cxx-Effects>
 
@@ -757,7 +769,7 @@ template &lt;class T>
 future&lt;T&gt; make_exceptional_future(exception_ptr ex);
 </cxx-signature>
 
-  <cxx-Effects>As if
+  <cxx-Effects>Equivalent to
   <cxx-codeblock>
 promise&lt;T&gt; p;
 p.set_exception(ex);
@@ -770,7 +782,7 @@ return p.get_future();</cxx-codeblock>
 template &lt;class T, class E>
 future&lt;T&gt; make_exceptional_future(E ex);</cxx-codeblock>
 
-  <cxx-Effects>As if
+  <cxx-Effects>Equivalent to
   <cxx-codeblock>
 promise&lt;T&gt; p;
 p.set_exception(make_exception_ptr(ex));
