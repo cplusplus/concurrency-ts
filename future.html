@@ -207,7 +207,7 @@ template &lt;class F>
   </cxx-Effects>
 
   <cxx-Returns>
-    The return type of <code>then</code> depends on the return type of the closure
+    The return type of <code>then</code> depends on the return type of 
     <code>func</code> as defined below:
 
     <ul>
@@ -220,7 +220,7 @@ template &lt;class F>
         </p>
       <cxx-Note>
         The first rule above is called <em>implicit unwrapping</em>. Without this rule,
-        the return type of <code>then</code> taking a closure returning a
+        the return type of <code>then</code> taking a callable returning a
         <code>future&lt;R></code> would have been <code>future&lt;future&lt;R>></code>.
         This rule avoids such nested <code>future</code> objects.
         The type of <code>f2</code> below is
@@ -385,7 +385,7 @@ template &lt;class F>
   </cxx-Effects>
 
   <cxx-Returns>
-    The return type of <code>then</code> depends on the return type of the closure
+    The return type of <code>then</code> depends on the return type of 
     <code>func</code> as defined below:
 
     <ul>
