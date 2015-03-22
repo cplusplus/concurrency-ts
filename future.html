@@ -209,7 +209,7 @@ template &lt;class F>
     <ul>
       <li>
         When <code>result_of_t&lt;decay_t&lt;F>(future&lt;R>)></code>
-        is <code>future&lt;R2></code>, the function returns <code>future&lt;R2></code>.
+        is <code>future&lt;R2></code>, for some type <code>R2</code>, the function returns <code>future&lt;R2></code>.
       </li>
       <li>
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(future&lt;R>)>></code>.
@@ -383,7 +383,7 @@ template &lt;class F>
     <ul>
       <li>
         When <code>result_of_t&lt;decay_t&lt;F>(shared_future&lt;R>)></code>
-        is <code>future&lt;R2></code>, the function returns <code>future&lt;R2></code>.
+        is <code>future&lt;R2></code>, for some type <code>R2</code>, the function returns <code>future&lt;R2></code>.
       </li>
       <li>
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F>(shared_future&lt;R>)>></code>.
