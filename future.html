@@ -183,10 +183,6 @@ template &lt;class F>
 
 <cxx-requires><code><em>INVOKE</em>(<em>DECAY_COPY</em> (std::forward&lt;F>(func)), std::move(*this))</code> shall be a valid expression.</cxx-requires>
 
-  <cxx-Notes>
-    The function takes a callable object which accepts a <code>future</code>
-    object as a parameter.
-  </cxx-Notes>
   <cxx-Effects>
     The function creates a shared state that is associated with the returned
     <code>future</code> object. The further behavior of the function is defined below.
@@ -360,10 +356,6 @@ template &lt;class F>
 </cxx-signature>
 
 <cxx-requires><code><em>INVOKE</em>(<em>DECAY_COPY</em> (std::forward&lt;F>(func)), *this)</code> shall be a valid expression.</cxx-requires>
-
-<cxx-Notes>The function takes a callable object which accepts a
-<code>shared_future</code> object as a parameter.
-</cxx-Notes>
 
   <cxx-Effects>
     The function creates a shared state that is associated with the returned
