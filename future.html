@@ -319,12 +319,11 @@ After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 10, add 
 The <code>shared_future</code> becomes ready when one of the following occurs:
 <ul>
   <li>
-    Both the outer <code>future</code> and the inner <code>shared_future</code> are ready.
-    The <code>shared_future</code> stores the value or the exception from the inner <code>shared_future</code>.
+    Both the <code>rhs</code> and <code>rhs.get()</code> are ready. The value or the exception from <code>rhs.get()</code> is stored in the <code>shared_future</code>'s shared state.
   </li>
 
   <li>
-    The outer <code>future</code> is ready but the inner <code>shared_future</code> is invalid.
+    <code>rhs</code> is ready but <code>rhs.get()</code> is invalid.
     The <code>shared_future</code> stores an exception of type <code>std::future_error</code>, with an error condition of <code>std::future_errc::broken_promise</code>.
   </li>
 </ul>
