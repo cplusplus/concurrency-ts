@@ -1,0 +1,289 @@
+<cxx-clause id="coordination">
+<h1>Latches and Barriers</h1>
+
+<cxx-section id="coordination.general">
+<h1>General</h1>
+<p>
+
+This section describes various concepts related to thread co-ordination, and defines the <code>latch</code>, <code>barrier</code> and <code>flex_barrier</code> classes.
+</p>
+<cxx-ednote>
+This section uses the term 'thread' throughout. Where relevant, it should be updated to refer to execution agents when these are adopted in the standard. See N4231 and N4156.
+</cxx-ednote>
+
+</cxx-section>
+
+<cxx-section id="thread.coordination">
+<h1>N Coordination Mechanisms<span style="float:right"><a href="#thread.coordination">[thread.coordination]</a></span></h1>
+
+<cxx-section id="thread.coordination.terminology">
+<h1>N.1 Terminology<span style="float:right"><a href="#thread.coordination.terminology">[thread.coordination.terminology]</a></span></h1>
+In this sub-clause, a <em>synchronization point</em> represents a point at which a thread may block until a given condition has been reached.
+</cxx-section>
+
+<cxx-section id="thread.coordination.latch">
+<h1>N.2 Latches<span style="float:right"><a href="#thread.coordination.latch">[thread.coordination.latch]</a></span></h1>
+Latches are a thread coordination mechanism that allow one or more threads to block until an operation is completed. An individual latch is a single-use object; once the operation has been completed, the latch cannot be reused.
+</cxx-section>
+
+<cxx-section id="thread.coordination.latch.synopsis">
+<h1>Header &lt;experimental/latch&gt; synopsis</h1>
+<pre><code>
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+  class latch {
+   public:
+    explicit latch(ptrdiff_t count);
+    latch(const latch&) = delete;
+    latch(latch&&) = delete;
+    
+    ~latch();
+
+
+    latch& operator=(const latch&) = delete;
+    latch& operator=(latch&&) = delete;
+
+    void count_down_and_wait();
+    void count_down(ptrdiff_t n);
+
+
+    bool is_ready() const noexcept;
+    void wait() const;
+
+   private:
+    ptrdiff_t counter_; // exposition only
+  };
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
+</code></pre>
+</cxx-section>
+
+<cxx-section id="coordination.latch.class">
+<h1>N.2.1 Class <code>latch</code><span style="float:right">
+<a href="#thread.coordination.latch.class">[thread.coordination.latch.class]</a></span></h1>
+<p>
+A latch maintains an internal <code>counter_</code> that is initialized when the latch is created. Threads may block at a synchronization point waiting for <code>counter_</code> to be decremented to <code>0</code>. When <code>counter_</code> reaches <code>0</code>, all such blocked threads are released.
+</p>
+<p>
+Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wait()</code>, and <code>is_ready()</code> behave as atomic operations.
+</p>
+
+<cxx-function>
+  <cxx-signature>explicit latch(ptrdiff_t count);</cxx-signature>
+  <cxx-requires><code>count &gt;= 0.</code></cxx-requires>
+  <cxx-synchronization>None</cxx-synchronization>
+  <cxx-postconditions><code>counter_ == count</code>.</cxx-postconditions>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>~latch();</cxx-signature>
+  <cxx-requires>No threads are blocked at the synchronization point.</cxx-requires>
+  <cxx-remarks>May be called even if some threads have not yet returned from <code>wait()</code> or <code>count_down_and_wait()</code> provided that <code>counter_</code> is <code>0</code>. <cxx-note>[<em>Note:</em> The destructor might not return until all threads have exited <code>wait()</code> or <code>count_down_and_wait()</code>. &mdash; <em>end note</em>]</cxx-note></cxx-remarks>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>void count_down_and_wait();</cxx-signature>
+  <cxx-requires><code>counter_ &gt; 0.</code></cxx-requires>
+  <cxx-effects>Decrements <code>counter_</code> by <code>1</code>. Blocks at the synchronization point until <code>counter_</code> reaches <code>0</code>. </cxx-effects>
+  <cxx-synchronization>Synchronizes with all calls that block on this latch and with all is_ready calls on this latch that return true.</cxx-synchronization>
+  <cxx-throws>Nothing.</cxx-throws>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>void count_down(ptrdiff_t n);</cxx-signature>
+  <cxx-requires><code>counter_ &gt;= n</code> and <code>n &gt;= 0</code>.</cxx-requires>
+  <cxx-effects>Decrements <code>counter_</code> by <code>n</code>. Does not block.</cxx-effects>
+  <cxx-synchronization>Synchronizes with all calls that block on this latch and with all is_ready calls on this latch that return true.</cxx-synchronization>
+  <cxx-throws>Nothing.</cxx-throws>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>void wait() const;</cxx-signature>
+  <cxx-effects>If <code>counter_</code> is <code>0</code>, returns immediately. Otherwise, blocks the calling thread at the synchronization point until <code>counter_</code> reaches <code>0</code>.</cxx-effects>
+  <cxx-throws>Nothing.</cxx-throws>
+  <cxx-ednote>[<em>Editor&#39;s note:</em>SG1 seems to have a convention that blocking functions are never marked noexcept (e.g. future::wait) even if they never throw. LWG requests that SG1 check whether this pattern is intended, and update the noexcept clauses here accordingly &mdash; <em>end editor&#39;s note</em>]</cxx-ednote>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>is_ready() const noexcept;</cxx-signature>
+  <cxx-returns><code>counter_ == 0</code>. Does not block.</cxx-returns>
+</cxx-function>
+</cxx-section>
+
+<cxx-section id="thread.coordination.barrier">
+<h1>N.3 Barrier types<span style="float:right"><a href="#thread.coordination.barrier">[thread.coordination.barrier]</a></span></h1>
+<p>
+Barriers are a thread coordination mechanism that allow a <em>set of participating threads</em> to block until an operation is completed. Unlike a latch, a barrier is re-usable: once the participating threads are released from a barrier's synchronization point, they can re-use the same barrier. It is thus useful for managing repeated tasks, or phases of a larger task, that are handled by multiple threads.
+</p>
+<p>
+The <em>barrier types</em> are the standard library types <code>barrier</code> and <code>flex_barrier</code>. They shall meet the requirements set out in this sub-clause. In this description, <code>b</code> denotes an object of a barrier type.
+</p>
+<p>
+Each barrier type defines a <em>completion phase</em> as a (possibly empty) set of effects. When the member functions defined in this sub-clause <em>arrive at the barrier's synchronization point</em>, they have the following effects: 
+</p>
+<ol>
+<li>
+The function blocks.
+</li>
+<li>
+When all threads in the barrier's set of participating threads are blocked at its synchronization point, one participating thread is unblocked and executes the barrier type's completion phase.
+</li>
+<li>
+When the completion phase is completed, all other participating threads are unblocked. The end of the completion phase synchronizes with the returns from all calls unblocked by its completion.
+</li>
+</ol>
+<p>
+The expression <code>b.arrive_and_drop()</code> shall be well-formed and have the following semantics:
+</p>
+  <cxx-requires>The current thread is a member of the set of participating threads.</cxx-requires>
+  <cxx-effects>Arrives at the barrier&#39;s synchronization point. <cxx-note>[<em>Note:</em> It is safe for a thread to call <code>arrive_and_wait()</code> or <code>arrive_and_drop()</code> again immediately. It is not necessary to ensure that all blocked threads have exited <code>arrive_and_wait()</code> before one thread calls it again. &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+  <cxx-synchronization>The call to <code>arrive_and_wait()</code> synchronizes with the start of the completion phase.</cxx-synchronization>
+  <cxx-throws>Nothing.</cxx-throws>
+<p>
+The expression <code>b.arrive_and_drop()</code> shall be well-formed and have the following semantics:
+</p>
+  <cxx-requires>The current thread is a member of the set of participating threads.</cxx-requires>
+  <cxx-effects>Either arrives at the barrier's synchronization point and then removes the current thread from the set of participating threads, or just removes the current thread from the set of participating threads. <cxx-note>[<em>Note:</em> Removing the current thread from the set of participating threads can cause the completion phase to start.  &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+  <cxx-synchronization>The call to <code>arrive_and_drop()</code> synchronizes with the start of the completion phase.</cxx-synchronization>
+  <cxx-throws>Nothing.</cxx-throws>
+  <cxx-notes>If all participating threads call <code>arrive_and_drop()</code>, any further operations on the barrier are undefined, apart from calling the destructor. If a thread that has called <code>arrive_and_drop()</code> calls another method on the same barrier, other than the destructor, the results are undefined.</cxx-notes>
+<p>
+Calls to <code>arrive_and_wait()</code> and <code>arrive_and_drop()</code> never introduce data races with themselves or each other.
+</p>
+</cxx-section>
+
+<cxx-section id="thread.coordination.barrier.synopsis">
+<h1>Header &lt;experimental/barrier&gt; synopsis</h1>
+<pre><code>
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+  class barrier;
+  class flex_barrier;
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace std
+</pre></code>
+</cxx-section>
+
+<cxx-section id="coordination.barrier.class">
+<h1>N.2.1 Class <code>barrier</code><span style="float:right">
+<a href="#thread.coordination.barrier.class">[thread.coordination.barrier.class]</a></span></h1>
+<p>
+<code>barrier</code> is a barrier type whose completion phase has no effects. Its constructor takes a parameter representing the initial size of its set of participating threads.
+</p>
+
+<pre><code>
+class barrier {
+ public:
+  explicit barrier(ptrdiff_t num_threads);
+  barrier(const barrier&) = delete;
+  barrier(barrier&&) = delete;
+
+  ~barrier();
+
+
+  barrier& operator=(const barrier&) = delete;
+  barrier& operator=(barrier&&) = delete;
+
+  void arrive_and_wait();
+  void arrive_and_drop();
+};
+</pre></code>
+
+<cxx-function>
+  <cxx-signature>explicit barrier(ptrdiff_t num_threads);</cxx-signature>
+  <cxx-requires><code>num_threads >= 0.</code> <cxx-note>[<em>Note:</em> If num_threads is zero, the barrier may only be destroyed. &mdash; <em>end note</em>]</cxx-note></cxx-requires>
+  <cxx-effects>Initializes the barrier for num_threads participating threads. <cxx-note>[<em>Note:</em> The set of participating threads is the first num_threads threads to arrive at the synchronization point. &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>~barrier();</cxx-signature>
+  <cxx-requires>No threads are blocked at the synchronization point.</cxx-requires>
+  <cxx-effects>Destroys the barrier</cxx-effects>
+</cxx-function>
+
+</cxx-section>
+
+<cxx-section id="coordination.flexbarrier.class">
+<h1>N.2.1 Class <code>flex_barrier</code><span style="float:right">
+<a href="#thread.coordination.flexbarrier.class">[thread.coordination.flexbarrier.class]</a></span></h1>
+<p>
+<code>flex_barrier</code> is a barrier type whose completion phase can be controlled by a constructor parameter.
+</p>
+
+<pre><code>
+class flex_barrier {
+ public:
+  template &lt;class F&gt;
+    flex_barrier(ptrdiff_t num_threads, F completion);
+  explicit flex_barrier(ptrdiff_t num_threads);
+  flex_barrier(const flex_barrier&) = delete;
+  flex_barrier(flex_barrier&&) = delete;
+
+  ~flex_barrier();
+
+
+  flex_barrier& operator=(const flex_barrier&) = delete;
+  flex_barrier& operator=(flex_barrier&&) = delete;
+
+  void arrive_and_wait();
+  void arrive_and_drop();
+
+
+ private:
+  function&lt;ptrdiff_t()&gt; completion_;  // exposition only
+};
+
+</pre></code>
+<p>
+The completion phase calls <code>completion_()</code>. If this returns <code>-1</code>, then the set of participating threads is unchanged. Otherwise, the set of participating threads becomes a new set with a size equal to the returned value. <cxx-note>[<em>Note:</em> If <code>completion_()</code> returns <code>0</code> then the set of participating threads becomes empty, and this object may only be destroyed. &mdash; <em>end note</em>]</cxx-note>
+</p>
+
+
+
+<cxx-function>
+  <cxx-signature>
+    template <class F>
+    flex_barrier(ptrdiff_t num_threads, F completion);
+  </cxx-signature>
+  <cxx-requires>
+  <ul>
+    <li>
+    <code>num_threads >= 0.</code>
+    </li><li>
+    <code>F</code> shall meet the requirements of <code>CopyConstructible</code>.
+    </li><li>
+    <code>completion</code> shall be Callable (C++14 §[func.wrap.func]) with no arguments and return type convertible to <code>ptrdiff_t</code>.
+    </li><li>
+    Invoking <code>completion</code> shall return a value greater than or equal to <code>-1</code> and shall not exit via an exception.
+    </li>
+  </ul></cxx-requires>
+
+  <cxx-effects>Initializes the <code>flex_barrier</code> with the set of participating threads, of size <code>num_threads</code>, and initializes <code>completion_</code> with <code>std::move(completion)</code>. <cxx-note>[<em>Note:</em> The set of participating threads consists of the first num_threads threads that will arrive at the synchronization point. &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+  <cxx-notes>If num_threads is zero the set of participating threads is empty, and this object may only be destroyed.</cxx-notes>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>explicit flex_barrier(ptrdiff_t num_threads);</cxx-signature>
+  </cxx-signature>
+  <cxx-requires><code>num_threads >= 0.</code></cxx-requires>
+  <cxx-effects>Has the same effect as creating a <code>flex_barrier</code> with <code>num_threads</code> and with a callable object whose invocation returns <code>-1</code> and has no side effects.</cxx-effects>
+</cxx-function>
+
+<cxx-function>
+  <cxx-signature>~flex_barrier();</cxx-signature>
+  <cxx-requires>No threads are blocked at the synchronization point.</cxx-requires>
+  <cxx-effects>Destroys the barrier.</cxx-effects>
+</cxx-function>
+
+</cxx-section>
+
+
+<!-- End section id="thread.coordination" -->
+</cxx-section>
+
+<!-- End clause id="coordination" -->
+</cxx-clause>
