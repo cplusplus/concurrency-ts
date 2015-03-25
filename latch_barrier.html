@@ -14,15 +14,15 @@ This section uses the term 'thread' throughout. Where relevant, it should be upd
 </cxx-section>
 
 <cxx-section id="thread.coordination">
-<h1>N Coordination Mechanisms<span style="float:right"><a href="#thread.coordination">[thread.coordination]</a></span></h1>
+<h1>Coordination Mechanisms</h1>
 
 <cxx-section id="thread.coordination.terminology">
-<h1>N.1 Terminology<span style="float:right"><a href="#thread.coordination.terminology">[thread.coordination.terminology]</a></span></h1>
+<h1>Terminology</h1>
 In this sub-clause, a <em>synchronization point</em> represents a point at which a thread may block until a given condition has been reached.
 </cxx-section>
 
 <cxx-section id="thread.coordination.latch">
-<h1>N.2 Latches<span style="float:right"><a href="#thread.coordination.latch">[thread.coordination.latch]</a></span></h1>
+<h1>Latches</h1>
 Latches are a thread coordination mechanism that allow one or more threads to block until an operation is completed. An individual latch is a single-use object; once the operation has been completed, the latch cannot be reused.
 </cxx-section>
 
@@ -61,8 +61,7 @@ inline namespace concurrency_v1 {
 </cxx-section>
 
 <cxx-section id="coordination.latch.class">
-<h1>N.2.1 Class <code>latch</code><span style="float:right">
-<a href="#thread.coordination.latch.class">[thread.coordination.latch.class]</a></span></h1>
+<h1>Class <code>latch</code></h1>
 <p>
 A latch maintains an internal <code>counter_</code> that is initialized when the latch is created. Threads may block at a synchronization point waiting for <code>counter_</code> to be decremented to <code>0</code>. When <code>counter_</code> reaches <code>0</code>, all such blocked threads are released.
 </p>
@@ -80,7 +79,7 @@ Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wai
 <cxx-function>
   <cxx-signature>~latch();</cxx-signature>
   <cxx-requires>No threads are blocked at the synchronization point.</cxx-requires>
-  <cxx-remarks>May be called even if some threads have not yet returned from <code>wait()</code> or <code>count_down_and_wait()</code> provided that <code>counter_</code> is <code>0</code>. <cxx-note>[<em>Note:</em> The destructor might not return until all threads have exited <code>wait()</code> or <code>count_down_and_wait()</code>. &mdash; <em>end note</em>]</cxx-note></cxx-remarks>
+  <cxx-remarks>May be called even if some threads have not yet returned from <code>wait()</code> or <code>count_down_and_wait()</code> provided that <code>counter_</code> is <code>0</code>. <cxx-note>The destructor might not return until all threads have exited <code>wait()</code> or <code>count_down_and_wait()</code>.</cxx-note></cxx-remarks>
 </cxx-function>
 
 <cxx-function>
@@ -103,7 +102,7 @@ Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wai
   <cxx-signature>void wait() const;</cxx-signature>
   <cxx-effects>If <code>counter_</code> is <code>0</code>, returns immediately. Otherwise, blocks the calling thread at the synchronization point until <code>counter_</code> reaches <code>0</code>.</cxx-effects>
   <cxx-throws>Nothing.</cxx-throws>
-  <cxx-ednote>[<em>Editor&#39;s note:</em>SG1 seems to have a convention that blocking functions are never marked noexcept (e.g. future::wait) even if they never throw. LWG requests that SG1 check whether this pattern is intended, and update the noexcept clauses here accordingly &mdash; <em>end editor&#39;s note</em>]</cxx-ednote>
+  <cxx-ednote>SG1 seems to have a convention that blocking functions are never marked noexcept (e.g. future::wait) even if they never throw. LWG requests that SG1 check whether this pattern is intended, and update the noexcept clauses here accordingly.</cxx-ednote>
 </cxx-function>
 
 <cxx-function>
@@ -113,7 +112,7 @@ Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wai
 </cxx-section>
 
 <cxx-section id="thread.coordination.barrier">
-<h1>N.3 Barrier types<span style="float:right"><a href="#thread.coordination.barrier">[thread.coordination.barrier]</a></span></h1>
+<h1>Barrier types</h1>
 <p>
 Barriers are a thread coordination mechanism that allow a <em>set of participating threads</em> to block until an operation is completed. Unlike a latch, a barrier is re-usable: once the participating threads are released from a barrier's synchronization point, they can re-use the same barrier. It is thus useful for managing repeated tasks, or phases of a larger task, that are handled by multiple threads.
 </p>
@@ -135,20 +134,27 @@ When the completion phase is completed, all other participating threads are unbl
 </li>
 </ol>
 <p>
-The expression <code>b.arrive_and_drop()</code> shall be well-formed and have the following semantics:
+The expression <code>b.arrive_and_wait()</code> shall be well-formed and have the following semantics:
 </p>
+<cxx-function>
+  <cxx-signature>void arrive_and_wait();</cxx-signature>
   <cxx-requires>The current thread is a member of the set of participating threads.</cxx-requires>
-  <cxx-effects>Arrives at the barrier&#39;s synchronization point. <cxx-note>[<em>Note:</em> It is safe for a thread to call <code>arrive_and_wait()</code> or <code>arrive_and_drop()</code> again immediately. It is not necessary to ensure that all blocked threads have exited <code>arrive_and_wait()</code> before one thread calls it again. &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+  <cxx-effects>Arrives at the barrier&#39;s synchronization point. <cxx-note>It is safe for a thread to call <code>arrive_and_wait()</code> or <code>arrive_and_drop()</code> again immediately. It is not necessary to ensure that all blocked threads have exited <code>arrive_and_wait()</code> before one thread calls it again.</cxx-note></cxx-effects>
   <cxx-synchronization>The call to <code>arrive_and_wait()</code> synchronizes with the start of the completion phase.</cxx-synchronization>
   <cxx-throws>Nothing.</cxx-throws>
+</cxx-function>
 <p>
 The expression <code>b.arrive_and_drop()</code> shall be well-formed and have the following semantics:
 </p>
+<cxx-function>
+  <cxx-signature>void arrive_and_drop();</cxx-signature>
   <cxx-requires>The current thread is a member of the set of participating threads.</cxx-requires>
-  <cxx-effects>Either arrives at the barrier's synchronization point and then removes the current thread from the set of participating threads, or just removes the current thread from the set of participating threads. <cxx-note>[<em>Note:</em> Removing the current thread from the set of participating threads can cause the completion phase to start.  &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+  <cxx-effects>Either arrives at the barrier's synchronization point and then removes the current thread from the set of participating threads, or just removes the current thread from the set of participating threads. <cxx-note>Removing the current thread from the set of participating threads can cause the completion phase to start. </cxx-note></cxx-effects>
   <cxx-synchronization>The call to <code>arrive_and_drop()</code> synchronizes with the start of the completion phase.</cxx-synchronization>
   <cxx-throws>Nothing.</cxx-throws>
-  <cxx-notes>If all participating threads call <code>arrive_and_drop()</code>, any further operations on the barrier are undefined, apart from calling the destructor. If a thread that has called <code>arrive_and_drop()</code> calls another method on the same barrier, other than the destructor, the results are undefined.</cxx-notes>
+  <cxx-notes>If all participating threads call <code>arrive_and_drop()</code>, any further operations on the barrier are undefined, apart from calling the destructor.
+If a thread that has called <code>arrive_and_drop()</code> calls another method on the same barrier, other than the destructor, the results are undefined.</cxx-notes>
+</cxx-function>
 <p>
 Calls to <code>arrive_and_wait()</code> and <code>arrive_and_drop()</code> never introduce data races with themselves or each other.
 </p>
@@ -169,8 +175,7 @@ inline namespace concurrency_v1 {
 </cxx-section>
 
 <cxx-section id="coordination.barrier.class">
-<h1>N.2.1 Class <code>barrier</code><span style="float:right">
-<a href="#thread.coordination.barrier.class">[thread.coordination.barrier.class]</a></span></h1>
+<h1>Class <code>barrier</code></h1>
 <p>
 <code>barrier</code> is a barrier type whose completion phase has no effects. Its constructor takes a parameter representing the initial size of its set of participating threads.
 </p>
@@ -195,8 +200,8 @@ class barrier {
 
 <cxx-function>
   <cxx-signature>explicit barrier(ptrdiff_t num_threads);</cxx-signature>
-  <cxx-requires><code>num_threads >= 0.</code> <cxx-note>[<em>Note:</em> If num_threads is zero, the barrier may only be destroyed. &mdash; <em>end note</em>]</cxx-note></cxx-requires>
-  <cxx-effects>Initializes the barrier for num_threads participating threads. <cxx-note>[<em>Note:</em> The set of participating threads is the first num_threads threads to arrive at the synchronization point. &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+  <cxx-requires><code>num_threads >= 0.</code> <cxx-note>If <code>num_threads</code> is zero, the barrier may only be destroyed.</cxx-note></cxx-requires>
+  <cxx-effects>Initializes the barrier for <code>num_threads</code> participating threads. <cxx-note>The set of participating threads is the first <code>num_threads</code> threads to arrive at the synchronization point.</cxx-note></cxx-effects>
 </cxx-function>
 
 <cxx-function>
@@ -208,8 +213,7 @@ class barrier {
 </cxx-section>
 
 <cxx-section id="coordination.flexbarrier.class">
-<h1>N.2.1 Class <code>flex_barrier</code><span style="float:right">
-<a href="#thread.coordination.flexbarrier.class">[thread.coordination.flexbarrier.class]</a></span></h1>
+<h1>Class <code>flex_barrier</code></h1>
 <p>
 <code>flex_barrier</code> is a barrier type whose completion phase can be controlled by a constructor parameter.
 </p>
@@ -239,15 +243,12 @@ class flex_barrier {
 
 </pre></code>
 <p>
-The completion phase calls <code>completion_()</code>. If this returns <code>-1</code>, then the set of participating threads is unchanged. Otherwise, the set of participating threads becomes a new set with a size equal to the returned value. <cxx-note>[<em>Note:</em> If <code>completion_()</code> returns <code>0</code> then the set of participating threads becomes empty, and this object may only be destroyed. &mdash; <em>end note</em>]</cxx-note>
+The completion phase calls <code>completion_()</code>. If this returns <code>-1</code>, then the set of participating threads is unchanged. Otherwise, the set of participating threads becomes a new set with a size equal to the returned value. <cxx-note>If <code>completion_()</code> returns <code>0</code> then the set of participating threads becomes empty, and this object may only be destroyed.</cxx-note>
 </p>
-
-
-
 <cxx-function>
   <cxx-signature>
-    template <class F>
-    flex_barrier(ptrdiff_t num_threads, F completion);
+template &lt;class F&gt;
+flex_barrier(ptrdiff_t num_threads, F completion);
   </cxx-signature>
   <cxx-requires>
   <ul>
@@ -262,7 +263,7 @@ The completion phase calls <code>completion_()</code>. If this returns <code>-1<
     </li>
   </ul></cxx-requires>
 
-  <cxx-effects>Initializes the <code>flex_barrier</code> with the set of participating threads, of size <code>num_threads</code>, and initializes <code>completion_</code> with <code>std::move(completion)</code>. <cxx-note>[<em>Note:</em> The set of participating threads consists of the first num_threads threads that will arrive at the synchronization point. &mdash; <em>end note</em>]</cxx-note></cxx-effects>
+  <cxx-effects>Initializes the <code>flex_barrier</code> with the set of participating threads, of size <code>num_threads</code>, and initializes <code>completion_</code> with <code>std::move(completion)</code>. <cxx-note>The set of participating threads consists of the first num_threads threads that will arrive at the synchronization point.</cxx-note></cxx-effects>
   <cxx-notes>If num_threads is zero the set of participating threads is empty, and this object may only be destroyed.</cxx-notes>
 </cxx-function>
 
