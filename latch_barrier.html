@@ -4,7 +4,6 @@
 <cxx-section id="coordination.general">
 <h1>General</h1>
 <p>
-
 This section describes various concepts related to thread co-ordination, and defines the <code>latch</code>, <code>barrier</code> and <code>flex_barrier</code> classes.
 </p>
 <cxx-ednote>
@@ -13,17 +12,18 @@ This section uses the term 'thread' throughout. Where relevant, it should be upd
 
 </cxx-section>
 
-<cxx-section id="thread.coordination">
-<h1>Coordination Mechanisms</h1>
-
 <cxx-section id="thread.coordination.terminology">
 <h1>Terminology</h1>
+<p>
 In this sub-clause, a <em>synchronization point</em> represents a point at which a thread may block until a given condition has been reached.
+</p>
 </cxx-section>
 
 <cxx-section id="thread.coordination.latch">
 <h1>Latches</h1>
+<p>
 Latches are a thread coordination mechanism that allow one or more threads to block until an operation is completed. An individual latch is a single-use object; once the operation has been completed, the latch cannot be reused.
+</p>
 </cxx-section>
 
 <cxx-section id="thread.coordination.latch.synopsis">
@@ -280,10 +280,6 @@ flex_barrier(ptrdiff_t num_threads, F completion);
   <cxx-effects>Destroys the barrier.</cxx-effects>
 </cxx-function>
 
-</cxx-section>
-
-
-<!-- End section id="thread.coordination" -->
 </cxx-section>
 
 <!-- End clause id="coordination" -->
