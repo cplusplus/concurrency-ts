@@ -5,7 +5,25 @@
 <h1>General</h1>
 <p>
 
-TBD
+This section provides alternatives to raw pointers for thread-safe atomic 
+pointer operations, and defines the <code>atomic_shared_ptr</code> and 
+<code>atomic_weak_ptr</code> classes.
+
+</p>
+<p>
+
+The class templates <code>atomic_shared_ptr&lt;T></code> and 
+<code>atomic_weak_ptr&lt;T></code> have the 
+corresponding non-atomic types <code>shared_ptr&lt;T></code> and 
+<code>weak_ptr&lt;T></code>. The template parameter <code>T</code> of 
+these class templates may be an incomplete type.
+
+</p>
+<p>
+
+The behavior of all operations is as specified in
+<cxx-ref in="cxx" to="atomics.types.operations.req"></cxx-ref>, 
+unless stated otherwise.
 
 </p>
 
@@ -25,9 +43,7 @@ template &lt;class T> struct atomic_weak_ptr;
 
 <cxx-section id="atomic.shared_ptr">
 <h1>Class template <code>atomic_shared_ptr</code></h1>
-<p>
-  Text TBD
-</p>
+
 <pre><code>
 namespace std {
   namespace experimental {
@@ -138,9 +154,6 @@ lock-free, such as by including a spinlock as part of the atomic object's state,
 and the destruction or the deallocation may attempt to acquire a lock.
 </cxx-Note> 
 </p>
-<cxx-Note> 
-The template parameter <code>T</code> of these class templates may be an incomplete type.
-</cxx-Note> 
 <p>
 <cxx-Note>
 These types replace all known uses of the functions
