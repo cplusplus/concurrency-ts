@@ -71,8 +71,8 @@ p:first-child, ul, ol {margin-top: 0}
 [para_num]::before { content: attr(para_num); float: left;
                      font-size: 70%; margin-left: -2.5em; width: 1.5em; text-align: right; }
 
-del {text-decoration: line-through; color: #8B0040;}
-ins {text-decoration: underline; color: #005100;}
+del {text-decoration: line-through; background-color: red; color: #8B0040;}
+ins {text-decoration: underline; background-color: yellow; color: #005100;}
 
 pre {
     margin-left: 1em;
