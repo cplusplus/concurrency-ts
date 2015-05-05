@@ -135,9 +135,6 @@ unless explicitly specified otherwise.
   } // namespace experimental
   } // namespace std</code></pre>
 
-<p>
-In <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> between paragraphs 9 and 10, add the following:
-</p>
 <cxx-function>
   <cxx-signature>future(future&lt;future&lt;R>>&amp;&amp; rhs) noexcept;</cxx-signature>
   <cxx-Effects>Constructs a <code>future</code> object from the shared state referred to by
@@ -164,9 +161,6 @@ The <code>future</code> becomes ready when one of the following occurs:
   </cxx-postconditions>
 </cxx-function>
 
-<p>
-After <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref> paragraph 26, add the following:
-</p>
 <p>
 
 The member function template <code>then</code> provides a mechanism for attaching
@@ -305,10 +299,6 @@ unless explicitly specified otherwise.
   } // namespace std
 </pre>
 
-<p>
-After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 10, add the following:
-</p>
-
 <cxx-function>
   <cxx-signature>shared_future(future&lt;shared_future&lt;R>>&amp;&amp; rhs) noexcept;</cxx-signature>
 
@@ -335,11 +325,6 @@ The <code>shared_future</code> becomes ready when one of the following occurs:
     </ul>
   </cxx-postconditions>
 </cxx-function>
-
-
-<p>
-After <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref> paragraph 28, add the following:
-</p>
 
 <p>
 The member function template <code>then</code> provides a mechanism for attaching
@@ -493,24 +478,28 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
   </ul>
 </cxx-requires>
 
-<cxx-Notes>
-  <ul>
-
-    <li>Calling the first overload of <code>when_all</code> where
-      <code>first == last</code>, returns a <code>future</code> with an empty vector that is immediately
-    ready.</li>
-
-    <li>Calling the second overload of <code>when_all</code> with no arguments returns a
-    <code>future&lt;tuple&lt;>></code> that is  immediately ready.</li>
-    </ul>
-</cxx-Notes>
-
 <cxx-remarks>
-  For the second overload, let <em><code>U<sub>i</sub></code></em> be 
-  <code>decay_t&lt;F<sub>i</sub>></code> for each <code>F<sub>i</sub></code> in
-  <code>Futures</code>. This function shall not participate in overload resolution unless each 
-  <em><code>U<sub>i</sub></code></em> is either <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-  or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
+  For the second overload, 
+
+<ins>
+let <em><code>D<sub>i</sub></code></em> be 
+  <code>decay_t&lt;F<sub>i</sub>></code>,
+and </ins>
+
+  let <em><code>U<sub>i</sub></code></em> be 
+  <code><ins>remove_reference_t</ins><del>decay_t</del>&lt;F<sub>i</sub>></code> 
+  for each <code>F<sub>i</sub></code> in
+  <code>Futures</code>. This function shall not participate in overload resolution unless 
+
+  <del>each <em><code>U<sub>i</sub></code></em> is either
+    <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
+    or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
+  </del>
+  <ins>
+  for each <em>i</em> 
+    either <em><code>D<sub>i</sub></code></em> is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
+    or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
+  </ins>
 </cxx-remarks>
 
 <cxx-Effects>
@@ -528,28 +517,74 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
     and returned from <code>when_all</code>.
     </li>
 
+<p><ins><em>Editor's note: moved Notes into normative text:</em></ins></p>
+
     <li>
+      If the first overload is called with <code>first == last</code>, <code>when_all</code>
+      returns a <code>future</code> with an empty vector that is immediately
+      ready.
+    </li>
+
+    <li>Otherwise, if the second overload is called with no arguments,
+    <code>when_all</code> returns a <code>future&lt;tuple&lt;>></code> 
+    that is immediately ready.</li>
+
+    <li>
+    <ins>
+      Otherwise, any <code>future</code>s are moved, and any <code>shared_future</code>s
+      are copied, into, correspondingly, <code>future</code>s or 
+      <code>shared_future</code>s of 
+      <code>Sequence</code> in the shared state.
+    </li>
+
+    <li>
+      The order of the objects in the shared state matches the order
+      of the arguments supplied to <code>when_all</code>.
+    </li>
+    <li>
+    <ins>
+      Once all the <code>future</code>s and <code>shared_future</code>s supplied
+      to the call to <code>when_all</code> are ready, the resulting <code>future</code>,
+      as well as the <code>future</code>s and <code>shared_future</code>s
+      of the <code>Sequence</code>, are ready.
+    </ins>
+    </li>
+    <li>
+    <del>
     Once all the <code>future</code>s and <code>shared_future</code>s supplied
     to the call to <code>when_all</code> are ready, the <code>future</code>s
     are moved, and the <code>shared_future</code>s are copied, into,
     correspondingly, <code>future</code>s or <code>shared_future</code>s
     of the <code>futures</code> member of <code>Sequence</code> in the shared state.
-
-    The order of the objects in the shared state matches the order
-    of the arguments supplied to <code>when_all</code>.
-
-    <li>The <code>future</code> returned by <code>when_all</code> will not throw an exception, but the
-    <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
+    </del>
+    </li>
+    <li>The <ins>shared state of the </ins><code>future</code> returned by <code>when_all</code> 
+      will not <del>throw</del><ins>store<ins> an exception, but the
+      <ins>shared states of</ins> of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
   </ul>
 </cxx-Effects>
 
 <cxx-postconditions>
   <ul>
-    <li><code>valid() == true</code>.</li>
-    <li>For all input <code>future&lt;T></code>s, <code>valid() == false</code>.</li>
-    <li>For all input <code>shared_future&lt;T></code>s, <code>valid() == true</code>.</li>
+    <li><ins>For the returned <code>future</code>, </ins> <code>valid() == true</code>.</li>
+    <li>For all input <code>future<del>&lt;T></del></code>s, <code>valid() == false</code>.</li>
+    <li>For all input <code>shared_future<del>&lt;T></del></code>s, <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
+
+<cxx-returns>
+<ins>
+An object of type
+
+<code>future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>></code>
+for the first overload or 
+<code>future&lt;tuple&lt;decay_t&lt;Futures&gt;...>></code>
+for the second overload.
+
+The object refers to the shared state created by this call to <code>when_all</code>.
+</ins>
+</cxx-returns>
+
 
 </cxx-function>
 </cxx-section>
@@ -609,30 +644,28 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
   </ul>
 </cxx-requires>
 
-<cxx-Notes>
-<ul>
-  <li>Calling the first overload of <code>when_any</code> where
-    <code>first == last</code>, 
-    returns a <code>future</code> that is immediately ready.
-    The value of the <code>index</code> field of the <code>when_any_result</code> is
-    unspecified. The <code>futures</code> field is an empty <code>vector</code>.
-  </li>
-
-  <li>Calling the second overload of <code>when_any</code> with no arguments returns a
-    <code>future</code> that is immediately ready.
-    The value of the <code>index</code> field of the <code>when_any_result</code> is
-    unspecified. The <code>futures</code> field is <code>tuple&lt;></code>.
-  </li>
-
-</ul>
-</cxx-Notes>
-
 <cxx-remarks>
-  For the second overload, let <em><code>U<sub>i</sub></code></em> be 
-  <code>decay_t&lt;F<sub>i</sub>></code> for each <code>F<sub>i</sub></code> in
-  <code>Futures</code>. This function shall not participate in overload resolution unless each 
-  <em><code>U<sub>i</sub></code></em> is either <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-  or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
+  For the second overload, 
+
+<ins>
+let <em><code>D<sub>i</sub></code></em> be 
+  <code>decay_t&lt;F<sub>i</sub>></code>,
+and </ins>
+
+  let <em><code>U<sub>i</sub></code></em> be 
+  <code><ins>remove_reference_t</ins><del>decay_t</del>&lt;F<sub>i</sub>></code> 
+  for each <code>F<sub>i</sub></code> in
+  <code>Futures</code>. This function shall not participate in overload resolution unless 
+
+  <del>each <em><code>U<sub>i</sub></code></em> is either
+    <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
+    or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
+  </del>
+  <ins>
+  for each <em>i</em> 
+    either <em><code>D<sub>i</sub></code></em> is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
+    or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
+  </ins>
 </cxx-remarks>
 
 <cxx-Effects>
@@ -650,30 +683,77 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
     from <code>when_any</code>.
     </li>
 
-    <li>
-    Once at least one of the <code>future</code>s or <code>shared_future</code>s
-    supplied to the call to <code>when_any</code> is ready, the <code>future</code>s
-    are moved, and the <code>shared_future</code>s are copied into,
-    correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of the <code>futures</code> member of <code>Sequence</code> in the shared state.
+<p><ins><em>Editor's note: moved Notes into normative text:</em></ins></p>
+
 
     <li>
-    The order of the objects in the <code>futures</code> shared state matches the order
-    of the arguments supplied to <code>when_any</code>.
+      If the first overload is called with <code>first == last</code>,
+      <code>when_any</code> returns a <code>future</code> that is immediately ready.
+      The value of the <code>index</code> field of the <code>when_any_result</code> is
+      unspecified. The <code>futures</code> field is an empty <code>vector</code>.
     </li>
 
-    <li>The <code>future</code> returned by <code>when_any</code> will not throw
-    an exception, but the <code>future</code>s and <code>shared_future</code>s
-    held in the shared state may.
+    <li>Otherwise, if the second overload of is called with no arguments,
+      <code>when_any</code> returns a <code>future</code> that is immediately ready.
+      The value of the <code>index</code> field of the <code>when_any_result</code> is
+      unspecified. The <code>futures</code> field is <code>tuple&lt;></code>.
+    </li>
+
+    <li>
+    <ins>
+      Otherwise, any <code>future</code>s are moved, and any <code>shared_future</code>s
+      are copied, into, correspondingly, <code>future</code>s or 
+      <code>shared_future</code>s of the <code>futures</code> member of 
+      <code>when_any_result&lt;Sequence></code> in the shared state.
+    </ins>
+    </li>
+    <li>
+      The order of the objects in the <code>futures</code> shared state matches the order
+      of the arguments supplied to <code>when_any</code>. 
+    </li>
+    <li>
+    <ins>
+      Once at least one of the <code>future</code>s or <code>shared_future</code>s supplied
+      to the call to <code>when_any</code> is ready, the resulting <code>future</code>
+      is are ready.
+
+      Given the result future <code>f</code>,
+      <code>f.get().index</code> is the position of the ready <code>future</code> 
+      or <code>shared_future</code> in the
+      <code>futures</code> member of 
+      <code>when_any_result&lt;Sequence></code> in the shared state.
+
+    </ins>
+    </li>
+<!--     <li>
+    <ins>
+      Given the result future <code>f</code>, for the first overload, 
+      <code>f.get().Sequence[f.get().index].is_ready() == true</code>;
+      for the second overload, <code>first[f.get().index].is_ready == true</code>.
+    </ins>
+    </li> -->
+
+    <li>
+    <del>
+      Once at least one of the <code>future</code>s or <code>shared_future</code>s
+      supplied to the call to <code>when_any</code> is ready, the <code>future</code>s
+      are moved, and the <code>shared_future</code>s are copied into,
+      correspondingly, <code>future</code>s or <code>shared_future</code>s
+      of the <code>futures</code> member of <code>Sequence</code> in the shared state.
+    </del>
+
+    <li>The <ins>shared state of the </ins><code>future</code> returned by <code>when_all</code> 
+      will not <del>throw</del><ins>store<ins> an exception, but the
+      <ins>shared states of</ins> of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
     </li>
   </ul>
 </cxx-Effects>
 
 <cxx-postconditions>
   <ul>
-    <li><code>valid() == true</code>.</li>
-    <li>For all input <code>future&lt;T></code>s, <code>valid() == false</code>.</li>
-    <li>For all input<code>shared_future&lt;T></code>s, <code>valid() == true</code>.</li>
+    <li><ins>For the returned <code>future</code>, </ins> <code>valid() == true</code>.</li>
+    <li>For all input <code>future<del>&lt;T></del></code>s, <code>valid() == false</code>.</li>
+    <li>For all input <code>shared_future<del>&lt;T></del></code>s, <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
 
