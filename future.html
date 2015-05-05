@@ -117,7 +117,7 @@ unless explicitly specified otherwise.
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const <del>noexcept</del>;
+      bool is_ready() const;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -245,7 +245,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 </cxx-function>
 
 <cxx-function>
-  <cxx-signature>bool is_ready() const <del>noexcept</del>;</cxx-signature>
+  <cxx-signature>bool is_ready() const;</cxx-signature>
   <cxx-Returns> <code>true</code> if the shared state is ready, otherwise <code>false</code>.</cxx-Returns>
 </cxx-function>
 
@@ -281,7 +281,7 @@ unless explicitly specified otherwise.
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const <del>noexcept</del>;
+      bool is_ready() const;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -403,7 +403,7 @@ template &lt;class F>
 </cxx-function>
 
 <cxx-function>
-<cxx-signature>bool is_ready() const <del>noexcept</del>;</cxx-signature>
+<cxx-signature>bool is_ready() const;</cxx-signature>
 <cxx-Returns> <code>true</code> if the shared state is ready, otherwise <code>false</code>.</cxx-Returns>
 </cxx-function>
 
@@ -481,25 +481,18 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 <cxx-remarks>
   For the second overload, 
 
-<ins>
 let <em><code>D<sub>i</sub></code></em> be 
   <code>decay_t&lt;F<sub>i</sub>></code>,
-and </ins>
+and
 
   let <em><code>U<sub>i</sub></code></em> be 
-  <code><ins>remove_reference_t</ins><del>decay_t</del>&lt;F<sub>i</sub>></code> 
+  <code>remove_reference_t&lt;F<sub>i</sub>></code> 
   for each <code>F<sub>i</sub></code> in
   <code>Futures</code>. This function shall not participate in overload resolution unless 
 
-  <del>each <em><code>U<sub>i</sub></code></em> is either
-    <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-    or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
-  </del>
-  <ins>
   for each <em>i</em> 
     either <em><code>D<sub>i</sub></code></em> is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
     or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-  </ins>
 </cxx-remarks>
 
 <cxx-Effects>
@@ -517,8 +510,6 @@ and </ins>
     and returned from <code>when_all</code>.
     </li>
 
-<p><ins><em>Editor's note: moved Notes into normative text:</em></ins></p>
-
     <li>
       If the first overload is called with <code>first == last</code>, <code>when_all</code>
       returns a <code>future</code> with an empty vector that is immediately
@@ -530,7 +521,6 @@ and </ins>
     that is immediately ready.</li>
 
     <li>
-    <ins>
       Otherwise, any <code>future</code>s are moved, and any <code>shared_future</code>s
       are copied, into, correspondingly, <code>future</code>s or 
       <code>shared_future</code>s of 
@@ -542,42 +532,33 @@ and </ins>
       of the arguments supplied to <code>when_all</code>.
     </li>
     <li>
-    <ins>
       Once all the <code>future</code>s and <code>shared_future</code>s supplied
       to the call to <code>when_all</code> are ready, the resulting <code>future</code>,
       as well as the <code>future</code>s and <code>shared_future</code>s
       of the <code>Sequence</code>, are ready.
-    </ins>
     </li>
     <li>
-    <del>
-    Once all the <code>future</code>s and <code>shared_future</code>s supplied
-    to the call to <code>when_all</code> are ready, the <code>future</code>s
-    are moved, and the <code>shared_future</code>s are copied, into,
-    correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of the <code>futures</code> member of <code>Sequence</code> in the shared state.
-    </del>
+
     </li>
-    <li>The <ins>shared state of the </ins><code>future</code> returned by <code>when_all</code> 
-      will not <del>throw</del><ins>store<ins> an exception, but the
-      <ins>shared states of</ins> of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
+    <li>The shared state of the <code>future</code> returned by <code>when_all</code> 
+      will not store an exception, but the
+      shared states of of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
   </ul>
 </cxx-Effects>
 
 <cxx-postconditions>
   <ul>
-    <li><ins>For the returned <code>future</code>, </ins> <code>valid() == true</code>.</li>
-    <li>For all input <code>future<del>&lt;T></del></code>s, <code>valid() == false</code>.</li>
-    <li>For all input <code>shared_future<del>&lt;T></del></code>s, <code>valid() == true</code>.</li>
+    <li>For the returned <code>future</code>, <code>valid() == true</code>.</li>
+    <li>For all input <code>future</code>s, <code>valid() == false</code>.</li>
+    <li>For all input <code>shared_future</code>s, <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
 
 <cxx-returns>
-<ins>
 
 A <code>future</code> object that becomes ready when all of the input
 <code>future</code>s/<code>shared_future</code>s are ready.
-</ins>
+
 </cxx-returns>
 
 
@@ -642,25 +623,18 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
 <cxx-remarks>
   For the second overload, 
 
-<ins>
 let <em><code>D<sub>i</sub></code></em> be 
   <code>decay_t&lt;F<sub>i</sub>></code>,
-and </ins>
+and
 
   let <em><code>U<sub>i</sub></code></em> be 
-  <code><ins>remove_reference_t</ins><del>decay_t</del>&lt;F<sub>i</sub>></code> 
+  <code>remove_reference_t&lt;F<sub>i</sub>></code> 
   for each <code>F<sub>i</sub></code> in
   <code>Futures</code>. This function shall not participate in overload resolution unless 
 
-  <del>each <em><code>U<sub>i</sub></code></em> is either
-    <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-    or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
-  </del>
-  <ins>
   for each <em>i</em> 
     either <em><code>D<sub>i</sub></code></em> is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
     or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-  </ins>
 </cxx-remarks>
 
 <cxx-Effects>
@@ -678,9 +652,6 @@ and </ins>
     from <code>when_any</code>.
     </li>
 
-<p><ins><em>Editor's note: moved Notes into normative text:</em></ins></p>
-
-
     <li>
       If the first overload is called with <code>first == last</code>,
       <code>when_any</code> returns a <code>future</code> that is immediately ready.
@@ -695,19 +666,18 @@ and </ins>
     </li>
 
     <li>
-    <ins>
       Otherwise, any <code>future</code>s are moved, and any <code>shared_future</code>s
       are copied, into, correspondingly, <code>future</code>s or 
       <code>shared_future</code>s of the <code>futures</code> member of 
       <code>when_any_result&lt;Sequence></code> in the shared state.
-    </ins>
+
     </li>
     <li>
       The order of the objects in the <code>futures</code> shared state matches the order
       of the arguments supplied to <code>when_any</code>. 
     </li>
     <li>
-    <ins>
+
       Once at least one of the <code>future</code>s or <code>shared_future</code>s supplied
       to the call to <code>when_any</code> is ready, the resulting <code>future</code>
       is are ready.
@@ -718,7 +688,7 @@ and </ins>
       <code>futures</code> member of 
       <code>when_any_result&lt;Sequence></code> in the shared state.
 
-    </ins>
+
     </li>
 <!--     <li>
     <ins>
@@ -729,26 +699,19 @@ and </ins>
     </li> -->
 
     <li>
-    <del>
-      Once at least one of the <code>future</code>s or <code>shared_future</code>s
-      supplied to the call to <code>when_any</code> is ready, the <code>future</code>s
-      are moved, and the <code>shared_future</code>s are copied into,
-      correspondingly, <code>future</code>s or <code>shared_future</code>s
-      of the <code>futures</code> member of <code>Sequence</code> in the shared state.
-    </del>
 
-    <li>The <ins>shared state of the </ins><code>future</code> returned by <code>when_all</code> 
-      will not <del>throw</del><ins>store<ins> an exception, but the
-      <ins>shared states of</ins> of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
+    <li>The shared state of the <code>future</code> returned by <code>when_all</code> 
+      will not store an exception, but the
+      shared states of of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
     </li>
   </ul>
 </cxx-Effects>
 
 <cxx-postconditions>
   <ul>
-    <li><ins>For the returned <code>future</code>, </ins> <code>valid() == true</code>.</li>
-    <li>For all input <code>future<del>&lt;T></del></code>s, <code>valid() == false</code>.</li>
-    <li>For all input <code>shared_future<del>&lt;T></del></code>s, <code>valid() == true</code>.</li>
+    <li>For the returned <code>future</code>, <code>valid() == true</code>.</li>
+    <li>For all input <code>future</code>s, <code>valid() == false</code>.</li>
+    <li>For all input <code>shared_future</code>s, <code>valid() == true</code>.</li>
   </ul>
 </cxx-postconditions>
 
