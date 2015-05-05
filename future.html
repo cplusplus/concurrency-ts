@@ -117,7 +117,7 @@ unless explicitly specified otherwise.
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const noexcept;
+      bool is_ready() const <del>noexcept</del>;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -245,7 +245,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 </cxx-function>
 
 <cxx-function>
-  <cxx-signature>bool is_ready() const noexcept;</cxx-signature>
+  <cxx-signature>bool is_ready() const <del>noexcept</del>;</cxx-signature>
   <cxx-Returns> <code>true</code> if the shared state is ready, otherwise <code>false</code>.</cxx-Returns>
 </cxx-function>
 
@@ -281,7 +281,7 @@ unless explicitly specified otherwise.
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const noexcept;
+      bool is_ready() const <del>noexcept</del>;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -403,7 +403,7 @@ template &lt;class F>
 </cxx-function>
 
 <cxx-function>
-<cxx-signature>bool is_ready() const noexcept;</cxx-signature>
+<cxx-signature>bool is_ready() const <del>noexcept</del>;</cxx-signature>
 <cxx-Returns> <code>true</code> if the shared state is ready, otherwise <code>false</code>.</cxx-Returns>
 </cxx-function>
 
