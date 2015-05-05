@@ -574,14 +574,9 @@ and </ins>
 
 <cxx-returns>
 <ins>
-An object of type
 
-<code>future&lt;vector&lt;typename iterator_traits&lt;InputIterator&gt;::value_type>></code>
-for the first overload or 
-<code>future&lt;tuple&lt;decay_t&lt;Futures&gt;...>></code>
-for the second overload.
-
-The object refers to the shared state created by this call to <code>when_all</code>.
+A <code>future</code> object that becomes ready when all of the input
+<code>future</code>s/<code>shared_future</code>s are ready.
 </ins>
 </cxx-returns>
 
