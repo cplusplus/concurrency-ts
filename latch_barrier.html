@@ -41,7 +41,6 @@ inline namespace concurrency_v1 {
     ~latch();
 
     <del>latch& operator=(latch&&) = delete;</del>
-
     void count_down_and_wait();
     void count_down(ptrdiff_t n);
 
@@ -225,13 +224,11 @@ class flex_barrier {
 
   ~flex_barrier();
 
-
   flex_barrier& operator=(const flex_barrier&) = delete;
   flex_barrier& operator=(flex_barrier&&) = delete;
 
   void arrive_and_wait();
   void arrive_and_drop();
-
 
  private:
   function&lt;ptrdiff_t()&gt; completion_;  // <em>exposition only</em>
