@@ -726,32 +726,36 @@ future&lt;void> make_ready_future();
     <ins>The function creates a shared state
       that is immediately ready and returns a <code>future</code> associated 
       with that shared state.
-      For the first overload, the type of the shared state is <code>V</code> and the result is <code>value</code>.
+      For the first overload, the type of the shared state is <code>V</code> and the result is
+      constructed from <code>forward&lt;T>(value)</code>.
       For the second overload, the type of the shared state is <code>void</code>.
     </ins>
+<del>
     <ul>
       <li>
-<del>        For the first overload, the value that is passed in to the 
+        For the first overload, the value that is passed in to the 
         function is moved to the shared state of the returned <code>future</code> if it
         is an rvalue. Otherwise the value is copied to the shared state of the returned
-        <code>future</code>.</del>
+        <code>future</code>.
       </li>
-      
       <li>
-        <del>The second overload creates a shared state for the returned <code>future</code>.</del>
+        The second overload creates a shared state for the returned <code>future</code>.
       </li>
     </ul>
-<del>
-  The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it
-  is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.</del>
-  </cxx-Effects>
 
-  <del><em>Returns:</em></del>
+  The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it
+  is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.
+</del>
+  </cxx-Effects>
+<del>
+  <cxx-Returns>
     <ul>
-      <li><del><code>future&lt;V></code>, if function is given a value of type <code>T</code>.</del></li>
-      <li><del><code>future&lt;void></code>, if the function is not given any inputs.</del></li>
+      <li><code>future&lt;V></code>, if function is given a value of type <code>T</code>.</li>
+      <li><code>future&lt;void></code>, if the function is not given any inputs.</li>
     </ul>
-  
+  </cxx-returns>
+</del>
+
   <cxx-postconditions>
       <ins>For the </ins>returned <code>future, valid() == true</code> and <code>is_ready() == true</code>.
   </cxx-postconditions>
