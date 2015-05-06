@@ -1,0 +1,176 @@
+<cxx-clause id="atomic">
+<h1>Atomic Smart Pointers</h1>
+
+<cxx-section id="atomic.smartptr.general">
+<h1>General</h1>
+<p>
+
+This section provides alternatives to raw pointers for thread-safe atomic 
+pointer operations, and defines the <code>atomic_shared_ptr</code> and 
+<code>atomic_weak_ptr</code> class templates.
+
+</p>
+<p>
+
+The class templates <code>atomic_shared_ptr&lt;T></code> and 
+<code>atomic_weak_ptr&lt;T></code> have the 
+corresponding non-atomic types <code>shared_ptr&lt;T></code> and 
+<code>weak_ptr&lt;T></code>. The template parameter <code>T</code> of 
+these class templates may be an incomplete type.
+
+</p>
+<p>
+
+The behavior of all operations is as specified in
+<cxx-ref in="cxx" to="atomics.types.operations.req"></cxx-ref>, 
+unless stated otherwise.
+
+</p>
+
+</cxx-section>
+
+<cxx-section id="atomic.smartptr.synop">
+<h1>Header &lt;experimental/atomic> synopsis</h1>
+
+<pre><code>
+#include &lt;atomic&gt;
+
+
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+
+  template &lt;class T> struct atomic_shared_ptr;
+  template &lt;class T> struct atomic_weak_ptr;
+
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace st
+
+
+</code></pre>
+
+</cxx-section>
+
+<cxx-section id="atomic.shared_ptr">
+<h1>Class template <code>atomic_shared_ptr</code></h1>
+
+<pre><code>
+namespace std {
+  namespace experimental {
+  inline namespace concurrency_v1 {
+
+  template &lt;class T&gt; struct atomic_shared_ptr {
+    bool is_lock_free() const noexcept;
+    void store(shared_ptr&lt;T&gt;, memory_order = memory_order_seq_cst) noexcept;
+    shared_ptr&lt;T&gt; load(memory_order = memory_order_seq_cst) const noexcept;
+    operator shared_ptr&lt;T&gt;() const noexcept;
+    
+    shared_ptr&lt;T&gt; exchange(shared_ptr&lt;T&gt;, 
+      memory_order = memory_order_seq_cst) noexcept;
+    
+    bool compare_exchange_weak(shared_ptr&lt;T&gt;&, const shared_ptr&lt;T&gt;&,
+      memory_order, memory_order) noexcept;
+    bool compare_exchange_weak(shared_ptr&lt;T&gt;&, shared_ptr&lt;T&gt;&&, 
+      memory_order,  memory_order) noexcept;
+    bool compare_exchange_weak(shared_ptr&lt;T&gt;&, const shared_ptr&lt;T&gt;&,
+      memory_order = memory_order_seq_cst) noexcept;
+    bool compare_exchange_weak(shared_ptr&lt;T&gt;&, shared_ptr&lt;T&gt;&&, 
+      memory_order = memory_order_seq_cst) noexcept;
+
+    bool compare_exchange_strong(shared_ptr&lt;T&gt;&, const shared_ptr&lt;T&gt;&,
+      memory_order, memory_order) noexcept;
+    bool compare_exchange_strong(shared_ptr&lt;T&gt;&, shared_ptr&lt;T&gt;&&,
+      memory_order, memory_order) noexcept;
+    bool compare_exchange_strong(shared_ptr&lt;T&gt;&, const shared_ptr&lt;T&gt;&,
+      memory_order = memory_order_seq_cst) noexcept;
+    bool compare_exchange_strong(shared_ptr&lt;T&gt;&, shared_ptr&lt;T&gt;&&, 
+      memory_order = memory_order_seq_cst) noexcept;
+
+    atomic_shared_ptr() noexcept = default;
+    atomic_shared_ptr(shared_ptr&lt;T&gt;) noexcept;
+    atomic_shared_ptr(const atomic_shared_ptr&) = delete;
+    atomic_shared_ptr& operator=(const atomic_shared_ptr&) = delete;
+    atomic_shared_ptr& operator=(shared_ptr&lt;T&gt;) noexcept;
+  };
+  } // namespace concurrency_v1
+  } // namespace experimental
+} // namespace std</code></pre>
+<br>
+<cxx-function>
+  <cxx-signature>atomic_shared_ptr() noexcept = default;</cxx-signature>
+  <cxx-effects>Initializes the atomic object to an empty value.</cxx-effects>
+</cxx-function>
+
+</cxx-section>
+
+<cxx-section id="atomic.weak_ptr">
+<h1>Class template <code>atomic_weak_ptr</code></h1>
+
+<pre><code>
+namespace std {
+  namespace experimental {
+  inline namespace concurrency_v1 {
+
+  template &lt;class T&gt; struct atomic_weak_ptr {
+    bool is_lock_free() const noexcept;
+    void store(weak_ptr&lt;T&gt;, memory_order = memory_order_seq_cst) noexcept;
+    weak_ptr&lt;T&gt; load(memory_order = memory_order_seq_cst) const noexcept;
+    operator weak_ptr&lt;T&gt;() const noexcept;
+
+    weak_ptr&lt;T&gt; exchange(weak_ptr&lt;T&gt;,
+      memory_order = memory_order_seq_cst) noexcept;
+
+    bool compare_exchange_weak(weak_ptr&lt;T&gt;&, const weak_ptr&lt;T&gt;&,
+      memory_order, memory_order) noexcept;
+    bool compare_exchange_weak(weak_ptr&lt;T&gt;&, weak_ptr&lt;T&gt;&&,
+      memory_order, memory_order) noexcept;
+    bool compare_exchange_weak(weak_ptr&lt;T&gt;&, const weak_ptr&lt;T&gt;&, 
+      memory_order = memory_order_seq_cst) noexcept;
+    bool compare_exchange_weak(weak_ptr&lt;T&gt;&, weak_ptr&lt;T&gt;&&, 
+      memory_order = memory_order_seq_cst) noexcept;
+
+    bool compare_exchange_strong(weak_ptr&lt;T&gt;&, const weak_ptr&lt;T&gt;&, 
+      memory_order, memory_order) noexcept;
+    bool compare_exchange_strong(weak_ptr&lt;T&gt;&, weak_ptr&lt;T&gt;&&, 
+      memory_order, memory_order) noexcept;
+    bool compare_exchange_strong(weak_ptr&lt;T&gt;&, const weak_ptr&lt;T&gt;&, 
+      memory_order = memory_order_seq_cst) noexcept;
+    bool compare_exchange_strong(weak_ptr&lt;T&gt;&, weak_ptr&lt;T&gt;&&, 
+      memory_order = memory_order_seq_cst) noexcept;
+
+    atomic_weak_ptr() noexcept = default;
+    atomic_weak_ptr(weak_ptr&lt;T&gt;) noexcept;
+    atomic_weak_ptr(const atomic_weak_ptr&) = delete;
+    atomic_weak_ptr& operator=(const atomic_weak_ptr&) = delete;
+    atomic_weak_ptr& operator=(weak_ptr&lt;T&gt;) noexcept;
+  };
+  } // namespace concurrency_v1
+  } // namespace experimental
+} // namespace std
+</code></pre>
+<br>
+<cxx-function>
+  <cxx-signature>atomic_weak_ptr() noexcept = default;</cxx-signature>
+  <cxx-effects>Initializes the atomic object to an empty value.</cxx-effects>
+</cxx-function>
+<p>
+When any operation on an <code>atomic_shared_ptr</code> or <code>atomic_weak_ptr</code>
+causes an object to be destroyed or memory to be deallocated, that destruction or deallocation
+shall be sequenced after the changes to the atomic object's state. 
+</p>
+<p>
+<cxx-Note>
+This prevents potential deadlock if the atomic smart pointer operation is not 
+lock-free, such as by including a spinlock as part of the atomic object's state, 
+and the destruction or the deallocation may attempt to acquire a lock.
+</cxx-Note> 
+</p>
+<p>
+<cxx-Note>
+These types replace all known uses of the functions
+in <cxx-ref in="cxx" to="util.smartptr.shared.atomic"></cxx-ref>.
+</cxx-Note>
+</p>
+
+  </cxx-section>
