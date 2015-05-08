@@ -10,8 +10,8 @@ else:
 
     reflags = re.S | re.M
 
-    replaced = re.sub(r"<ins>(.*?)</ins>", r"\1", wholefile, count = 0, flags = reflags)
-    replaced = re.sub(r"<del>.*?</del>", r"", replaced, count = 0, flags = reflags)
+    replaced = re.sub(r"<ins.*?>(.*?)</ins>", r"\1", wholefile, count = 0, flags = reflags)
+    replaced = re.sub(r"<del.*?>.*?</del>", r"", replaced, count = 0, flags = reflags)
 
     res_file = open(sys.argv[2], 'w')
     res_file.write(replaced)
