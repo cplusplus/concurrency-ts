@@ -87,8 +87,8 @@ namespace std {
 <h1>Class template <code>future</code></h1>
 
 <p>
-The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.unique_future"></cxx-ref>
-and its sub-clauses are the same as the corresponding declarations,
+The specification<ins>s</ins> of all declarations within this subclause <cxx-ref to="futures.unique_future"></cxx-ref>
+and its subclauses are the same as the corresponding declarations,
 as specified in <cxx-ref in="cxx" to="futures.unique_future"></cxx-ref>,
 unless explicitly specified otherwise.
 </p>
@@ -252,8 +252,8 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
 <cxx-section id="futures.shared_future">
 <h1>Class template <code>shared_future</code></h1>
 <p>
-The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.shared_future"></cxx-ref>
-and its sub-clauses are the same as the corresponding declarations,
+The specification<ins>s</ins> of all declarations within this subclause <cxx-ref to="futures.shared_future"></cxx-ref>
+and its subclauses are the same as the corresponding declarations,
 as specified in <cxx-ref in="cxx" to="futures.shared_future"></cxx-ref>,
 unless explicitly specified otherwise.
 </p>
@@ -400,8 +400,8 @@ template &lt;class F>
     <h1>Class template <code>promise</code></h1>
 
     <p>
-      The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.promise"></cxx-ref>
-      and its sub-clauses are the same as the corresponding declarations,
+      The specification<ins>s</ins> of all declarations within this subclause <cxx-ref to="futures.promise"></cxx-ref>
+      and its subclauses are the same as the corresponding declarations,
       as specified in <cxx-ref in="cxx" to="futures.promise"></cxx-ref>,
       unless explicitly specified otherwise.
     </p>
@@ -416,8 +416,8 @@ template &lt;class F>
     <h1>Class template <code>packaged_task</code></h1>
 
     <p>
-      The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.task"></cxx-ref>
-      and its sub-clauses are the same as the corresponding declarations,
+      The specification<ins>s</ins> of all declarations within this subclause <cxx-ref to="futures.task"></cxx-ref>
+      and its subclauses are the same as the corresponding declarations,
       as specified in <cxx-ref in="cxx" to="futures.task"></cxx-ref>,
       unless explicitly specified otherwise.
     </p>
@@ -458,16 +458,14 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 
   All <code>future</code>s and <code>shared_future</code>s passed into 
   <code>when_all</code> must be in a valid state (i.e. <code>valid() == true</code>).
-  <ins>Otherwise, the program is ill-formed.</ins>
 </cxx-requires>
 
 <cxx-remarks>
   <ul>
     <li>
       <ins>
-      For the first overload, 
-      This function shall not participate in overload resolution unless <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>, for some type <code>R</code>.
+      The first overload shall not participate in overload resolution unless <code>iterator_traits&lt;InputIterator&gt;::value_type</code> is <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code> for some type <code>R</code>.
       </ins>
     </li>
     <li>
@@ -492,7 +490,7 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 
     <li>
     A new shared state containing a <code>Sequence</code> is
-    created, where <code>Sequence</code> is either <code>vector</code><del><code>tuple</code></del> or a
+    created, where <code>Sequence</code> is either <code>vector</code><del><code>tuple</code></del> or
     <code>tuple</code><del><code>vector</code></del> based on the overload, as specified above.
 
     A new <code>future</code> object that refers to that shared state is created
@@ -599,16 +597,14 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...>>> when_any(Futu
 
   All <code>future</code>s and <code>shared_future</code>s passed into 
   <code>when_all</code> must be in a valid state (i.e. <code>valid() == true</code>).
-  <ins>Otherwise, the program is ill-formed.</ins>
 </cxx-requires>
 
 <cxx-remarks>
   <ul>
     <li>
       <ins>
-      For the first overload, 
-      This function shall not participate in overload resolution unless <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R></code>
-      or <code>shared_future&lt;R></code>, for some type <code>R</code>.
+      The first overload shall not participate in overload resolution unless <code>iterator_traits&lt;InputIterator&gt;::value_type</code> is <code>future&lt;R></code>
+      or <code>shared_future&lt;R></code> for some type <code>R</code>.
       </ins>
     </li>
     <li>
@@ -727,7 +723,7 @@ future&lt;void> make_ready_future();
       that is immediately ready and returns a <code>future</code> associated 
       with that shared state.
       For the first overload, the type of the shared state is <code>V</code> and the result is
-      constructed from <code>forward&lt;T>(value)</code>.
+      constructed from <code>std::forward&lt;T>(value)</code>.
       For the second overload, the type of the shared state is <code>void</code>.
     </ins>
 <del>

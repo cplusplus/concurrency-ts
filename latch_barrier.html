@@ -15,7 +15,7 @@ This section uses the term 'thread' throughout. Where relevant, it should be upd
 <cxx-section id="thread.coordination.terminology">
 <h1>Terminology</h1>
 <p>
-In this sub-clause, a <em>synchronization point</em> represents a point at which a thread may block until a given condition has been reached.
+In this subclause, a <em>synchronization point</em> represents a point at which a thread may block until a given condition has been reached.
 </p>
 </cxx-section>
 
@@ -113,10 +113,10 @@ Calls to <code>count<ins>_</ins>down_and_wait()</code>, <code>count_down()</code
 Barriers are a thread coordination mechanism that allow a <em>set of participating threads</em> to block until an operation is completed. Unlike a latch, a barrier is re<del>-</del>usable: once the participating threads are released from a barrier's synchronization point, they can re-use the same barrier. It is thus useful for managing repeated tasks, or phases of a larger task, that are handled by multiple threads.
 </p>
 <p>
-The <em>barrier types</em> are the standard library types <code>barrier</code> and <code>flex_barrier</code>. They shall meet the requirements set out in this sub-clause. In this description, <code>b</code> denotes an object of a barrier type.
+The <em>barrier types</em> are the standard library types <code>barrier</code> and <code>flex_barrier</code>. They shall meet the requirements set out in this subclause. In this description, <code>b</code> denotes an object of a barrier type.
 </p>
 <p>
-Each barrier type defines a <em>completion phase</em> as a (possibly empty) set of effects. When the member functions defined in this sub-clause <em>arrive at the barrier's synchronization point</em>, they have the following effects: 
+Each barrier type defines a <em>completion phase</em> as a (possibly empty) set of effects. When the member functions defined in this subclause <em>arrive at the barrier's synchronization point</em>, they have the following effects: 
 </p>
 <ol>
 <li>
@@ -220,12 +220,9 @@ class flex_barrier {
     flex_barrier(ptrdiff_t num_threads, F completion);
   explicit flex_barrier(ptrdiff_t num_threads);
   flex_barrier(const flex_barrier&) = delete;
-  flex_barrier(flex_barrier&&) = delete;
+  flex_barrier& operator=(const flex_barrier&) = delete;
 
   ~flex_barrier();
-
-  flex_barrier& operator=(const flex_barrier&) = delete;
-  flex_barrier& operator=(flex_barrier&&) = delete;
 
   void arrive_and_wait();
   void arrive_and_drop();
@@ -263,9 +260,9 @@ flex_barrier(ptrdiff_t num_threads, F completion);
   <cxx-effects>
   Initializes the <code>flex_barrier</code> for <code>num_threads</code> participating threads,
   and initializes <code>completion_</code> with <code>std::move(completion)</code>.
-  <cxx-note>The set of participating threads is the first <code>num_threads</code> threads to arrive at the
+  <cxx-note>The set of participating threads consists of the first <code>num_threads</code> threads to arrive at the
   synchronization point.</cxx-note>
-  <cxx-note>If <code>num_threads</code> is <del>zero</del><ins>0</ins> the set of participating threads is empty, and this object may only be destroyed.</cxx-note>
+  <cxx-note>If <code>num_threads</code> is <del>zero</del><ins><code>0</code></ins> the set of participating threads is empty, and this object may only be destroyed.</cxx-note>
   </cxx-effects>
 
 </cxx-function>

@@ -87,7 +87,7 @@ namespace std {
     bool compare_exchange_strong(shared_ptr&lt;T&gt;&, shared_ptr&lt;T&gt;&&, 
       memory_order = memory_order_seq_cst) noexcept;
 
-    atomic_shared_ptr() noexcept = default;
+    <ins><code>constexpr</code></ins> atomic_shared_ptr() noexcept = default;
     <del>constexpr </del>atomic_shared_ptr(shared_ptr&lt;T&gt;) noexcept;
     atomic_shared_ptr(const atomic_shared_ptr&) = delete;
     atomic_shared_ptr& operator=(const atomic_shared_ptr&) = delete;
@@ -98,7 +98,7 @@ namespace std {
 } // namespace std</code></pre>
 <br>
 <cxx-function>
-  <cxx-signature><del>atomic_shared_ptr::</del>atomic_shared_ptr() noexcept = default;</cxx-signature>
+  <cxx-signature><ins><code>constexpr</code></ins> <del>atomic_shared_ptr::</del>atomic_shared_ptr() noexcept = default;</cxx-signature>
   <cxx-effects>Initializes the atomic object to an empty value.</cxx-effects>
 </cxx-function>
 
@@ -139,7 +139,7 @@ namespace std {
     bool compare_exchange_strong(weak_ptr&lt;T&gt;&, weak_ptr&lt;T&gt;&&, 
       memory_order = memory_order_seq_cst) noexcept;
 
-    atomic_weak_ptr() noexcept = default;
+    <ins><code>constexpr</code></ins> atomic_weak_ptr() noexcept = default;
     <del>constexpr </del>atomic_weak_ptr(weak_ptr&lt;T&gt;) noexcept;
     atomic_weak_ptr(const atomic_weak_ptr&) = delete;
     atomic_weak_ptr& operator=(const atomic_weak_ptr&) = delete;
@@ -151,7 +151,7 @@ namespace std {
 </code></pre>
 <br>
 <cxx-function>
-  <cxx-signature><del>atomic_weak_ptr::</del>atomic_weak_ptr() noexcept = default;</cxx-signature>
+  <cxx-signature><ins><code>constexpr</code></ins> <del>atomic_weak_ptr::</del>atomic_weak_ptr() noexcept = default;</cxx-signature>
   <cxx-effects>Initializes the atomic object to an empty value.</cxx-effects>
 </cxx-function>
 <p>
