@@ -4,7 +4,7 @@
 <cxx-section id="coordination.general">
 <h1>General</h1>
 <p>
-This section describes various concepts related to thread co<del>-</del>ordination, and defines the <code>latch</code>, <code>barrier</code> and <code>flex_barrier</code> classes.
+This section describes various concepts related to thread coordination, and defines the <code>latch</code>, <code>barrier</code> and <code>flex_barrier</code> classes.
 </p>
 <cxx-ednote>
 This section uses the term 'thread' throughout. Where relevant, it should be updated to refer to execution agents when these are adopted in the standard. See N4231 and N4156.
@@ -36,11 +36,11 @@ inline namespace concurrency_v1 {
    public:
     explicit latch(ptrdiff_t count);
     latch(const latch&) = delete;
-    <del>latch(latch&&) = delete;</del>
+    
     latch& operator=(const latch&) = delete;
     ~latch();
 
-    <del>latch& operator=(latch&&) = delete;</del>
+    
     void count_down_and_wait();
     void count_down(ptrdiff_t n);
 
@@ -62,13 +62,13 @@ inline namespace concurrency_v1 {
 A latch maintains an internal <code>counter_</code> that is initialized when the latch is created. Threads may block at a synchronization point waiting for <code>counter_</code> to be decremented to <code>0</code>. When <code>counter_</code> reaches <code>0</code>, all such blocked threads are released.
 </p>
 <p>
-Calls to <code>count<ins>_</ins>down_and_wait()</code>, <code>count_down()</code>, <code>wait()</code>, and <code>is_ready()</code> behave as atomic operations.
+Calls to <code>count_down_and_wait()</code>, <code>count_down()</code>, <code>wait()</code>, and <code>is_ready()</code> behave as atomic operations.
 </p>
 
 <cxx-function>
   <cxx-signature>explicit latch(ptrdiff_t count);</cxx-signature>
   <cxx-requires><code>count &gt;= 0.</code></cxx-requires>
-  <cxx-synchronization>None<ins>.</ins></cxx-synchronization>
+  <cxx-synchronization>None.</cxx-synchronization>
   <cxx-postconditions><code>counter_ == count</code>.</cxx-postconditions>
 </cxx-function>
 
@@ -110,7 +110,7 @@ Calls to <code>count<ins>_</ins>down_and_wait()</code>, <code>count_down()</code
 <cxx-section id="thread.coordination.barrier">
 <h1>Barrier types</h1>
 <p>
-Barriers are a thread coordination mechanism that allow a <em>set of participating threads</em> to block until an operation is completed. Unlike a latch, a barrier is re<del>-</del>usable: once the participating threads are released from a barrier's synchronization point, they can re-use the same barrier. It is thus useful for managing repeated tasks, or phases of a larger task, that are handled by multiple threads.
+Barriers are a thread coordination mechanism that allow a <em>set of participating threads</em> to block until an operation is completed. Unlike a latch, a barrier is reusable: once the participating threads are released from a barrier's synchronization point, they can re-use the same barrier. It is thus useful for managing repeated tasks, or phases of a larger task, that are handled by multiple threads.
 </p>
 <p>
 The <em>barrier types</em> are the standard library types <code>barrier</code> and <code>flex_barrier</code>. They shall meet the requirements set out in this subclause. In this description, <code>b</code> denotes an object of a barrier type.
@@ -181,11 +181,11 @@ class barrier {
  public:
   explicit barrier(ptrdiff_t num_threads);
   barrier(const barrier&) = delete;
-  <del>barrier(barrier&&) = delete;</del>
+  
   barrier& operator=(const barrier&) = delete;
   ~barrier();
   
-  <del>barrier& operator=(barrier&&) = delete;</del>
+  
 
   void arrive_and_wait();
   void arrive_and_drop();
@@ -201,7 +201,7 @@ class barrier {
 <cxx-function>
   <cxx-signature>~barrier();</cxx-signature>
   <cxx-requires>No threads are blocked at the synchronization point.</cxx-requires>
-  <cxx-effects>Destroys the barrier<ins>.</ins></cxx-effects>
+  <cxx-effects>Destroys the barrier.</cxx-effects>
 </cxx-function>
 
 </cxx-section>
@@ -210,7 +210,7 @@ class barrier {
 <h1>Class <code>flex_barrier</code></h1>
 <p>
 <code>flex_barrier</code> is a barrier type whose completion phase can be controlled 
-by a <del>constructor parameter</del> <ins>function object</ins>.
+by a  function object.
 </p>
 
 <pre><code>
@@ -245,24 +245,22 @@ flex_barrier(ptrdiff_t num_threads, F completion);
     <li>
     <code>num_threads >= 0.</code>
     </li><li>
-    <code>F</code> shall <del>meet the requirements of</del><ins>be</ins> <code>CopyConstructible</code>.
+    <code>F</code> shall be <code>CopyConstructible</code>.
     </li><li>
-    <code>completion</code> shall be Callable (C++14 §[func.wrap.func]) with no arguments and return type <del>convertible to</del> <code>ptrdiff_t</code>.
+    <code>completion</code> shall be Callable (C++14 §[func.wrap.func]) with no arguments and return type  <code>ptrdiff_t</code>.
     </li><li>
     Invoking <code>completion</code> shall return a value greater than or equal to <code>-1</code> and shall not exit via an exception.
     </li>
   </ul></cxx-requires>
 
-<del>  <cxx-effects>Initializes the <code>flex_barrier</code> with the set of participating threads, of size <code>num_threads</code>, and initializes <code>completion_</code> with <code>std::move(completion)</code>. 
 
-  <cxx-note>The set of participating threads consists of the first <code>num_threads</code> threads that will arrive at the synchronization point.</cxx-note></cxx-effects></del>
   
   <cxx-effects>
   Initializes the <code>flex_barrier</code> for <code>num_threads</code> participating threads,
   and initializes <code>completion_</code> with <code>std::move(completion)</code>.
   <cxx-note>The set of participating threads consists of the first <code>num_threads</code> threads to arrive at the
   synchronization point.</cxx-note>
-  <cxx-note>If <code>num_threads</code> is <del>zero</del><ins><code>0</code></ins> the set of participating threads is empty, and this object may only be destroyed.</cxx-note>
+  <cxx-note>If <code>num_threads</code> is <code>0</code> the set of participating threads is empty, and this object may only be destroyed.</cxx-note>
   </cxx-effects>
 
 </cxx-function>
