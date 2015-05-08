@@ -907,7 +907,7 @@ translation will fail.)
         <td>Improvements to std::future&lt;T&gt; and Related APIs</td>
         <td><cxx-ref to="futures"><a title="futures" href="#futures">2</a></cxx-ref></td>
         <td><code>future_continuations</code></td>
-        <td>201410</td>
+        <td>201<del>410</del><ins>509</ins></td>
         <td><code>&lt;experimental/future&gt;</code></td>
       </tr>
 
@@ -916,7 +916,7 @@ translation will fail.)
         <td>C++ Latches and Barriers</td>
         <td><cxx-ref to="coordination"><a title="coordination" href="#coordination">3</a></cxx-ref></td>
         <td><code>latch</code></td>
-        <td>201411</td> <!-- TODO: verify if this value is OK -->
+        <td>201<del>410</del><ins>509</ins></td>
         <td><code>&lt;experimental/latch&gt;</code></td>
       </tr>
 
@@ -925,7 +925,7 @@ translation will fail.)
         <td>C++ Latches and Barriers</td>
         <td><cxx-ref to="coordination"><a title="coordination" href="#coordination">3</a></cxx-ref></td>
         <td><code>barrier</code></td>
-        <td>201412</td> <!-- TODO: verify if this value is OK -->
+        <td>201<del>410</del><ins>509</ins></td>
         <td><code>&lt;experimental/barrier&gt;</code></td>
       </tr>
 
@@ -934,7 +934,7 @@ translation will fail.)
         <td>Atomic Smart Pointers</td>
         <td><cxx-ref to="atomic"><a title="atomic" href="#atomic">4</a></cxx-ref></td>
         <td><code>atomic_smart_pointers</code></td>
-        <td>201413</td> <!-- TODO: verify if this value is OK -->
+        <td>201<del>410</del><ins>509</ins></td>
         <td><code>&lt;experimental/atomics&gt;</code></td>
       </tr>
 
@@ -967,7 +967,7 @@ translation will fail.)
 
 The extensions proposed here are an evolution of the functionality of
 <code>std::future</code> and <code>std::shared_future</code>. The extensions
-enable wait free composition of asynchronous operations. Class templates
+enable wait<ins>-</ins>free composition of asynchronous operations. Class templates
 <code>std::promise</code> and <code>std::packaged_task</code> are also updated
 to be compatible with the updated <code>std::future</code>.
 
@@ -1020,10 +1020,11 @@ namespace std {
       void swap(packaged_task&lt;R(ArgTypes...)&gt;&amp;, packaged_task&lt;R(ArgTypes...)&gt;&amp;) noexcept;
 
     template &lt;class T&gt;
-      future&lt;decay_t&lt;T&gt;&gt; make_ready_future(T&amp;&amp; value);
+      <del>future&lt;decay_t&lt;T&gt;&gt;</del><ins><em>see below</em></ins> make_ready_future(T&amp;&amp; value);
     future&lt;void&gt; make_ready_future();
 
-    future&lt;T&gt; make_exceptional_future(exception_ptr ex);
+    <ins>template &lt;class T&gt;</ins>
+      future&lt;T&gt; make_exceptional_future(exception_ptr ex);
     template &lt;class T, class E&gt;
       future&lt;T&gt; make_exceptional_future(E ex);
 
@@ -1063,7 +1064,7 @@ namespace std {
 
 
 <p para_num="1" id="futures.unique_future.1">
-The specification of all declarations within this sub-clause <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.3</a></cxx-ref>
+The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.3</a></cxx-ref>
 and its sub-clauses are the same as the corresponding declarations,
 as specified in <cxx-ref in="cxx" to="futures.unique_future">C++14 <span title="futures.unique_future">§30.6.6</span></cxx-ref>,
 unless explicitly specified otherwise.
@@ -1101,7 +1102,7 @@ unless explicitly specified otherwise.
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const <del>noexcept</del>;
+      bool is_ready() const;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -1185,7 +1186,7 @@ template &lt;class F&gt;
     
     <dt>Effects:</dt><dd>
     The function creates a shared state that is associated with the returned
-    <code>future</code> object. The further behavior of the function is defined below.
+    <code>future</code> object. <del>The further behavior of the function is defined below.</del><ins>Additionally,</ins>
     <ul>
       <li>
         When the object's shared state is ready, the continuation
@@ -1206,20 +1207,17 @@ template &lt;class F&gt;
   <cxx-returns para_num="10" id="futures.unique_future.10">
     
     <dt>Returns:</dt><dd>
-    The return type of <code>then</code> depends on the return type of 
-    <code>func</code> as defined below:
+<del>    The return type of <code>then</code> depends on the return type of 
+    <code>func</code> as defined below:</del>
 
-    <ul>
-      <li>
         When <code>result_of_t&lt;decay_t&lt;F&gt;(future&lt;R&gt;)&gt;</code>
         is <code>future&lt;R2&gt;</code>, for some type <code>R2</code>, the function returns <code>future&lt;R2&gt;</code>.
-      </li>
-      <li>
+
         Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F&gt;(future&lt;R&gt;)&gt;&gt;</code>.
-        <p></p>
+
       <cxx-note><span class="nowrap">[ <em>Note:</em></span>
     
-        The first rule above is called <em>implicit unwrapping</em>. Without this rule,
+        The <del>first </del>rule above <del>is called</del><ins>is referred to as</ins> <em>implicit unwrapping</em>. Without this rule,
         the return type of <code>then</code> taking a callable returning a
         <code>future&lt;R&gt;</code> would have been <code>future&lt;future&lt;R&gt;&gt;</code>.
         This rule avoids such nested <code>future</code> objects.
@@ -1241,8 +1239,8 @@ future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
         
     <span class="nowrap">— <em>end note</em> ]</span>
   </cxx-note>
-      </li>
-    </ul>
+      
+    
   </dd>
   </cxx-returns>
 
@@ -1272,7 +1270,7 @@ future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
 
 <cxx-function para_num="12" id="futures.unique_future.12">
     
-    <pre><code><cxx-signature>bool is_ready() const <del>noexcept</del>;</cxx-signature></code></pre>
+    <pre><code><cxx-signature>bool is_ready() const;</cxx-signature></code></pre>
 
     <dl>
       
@@ -1297,7 +1295,7 @@ future&lt;int&gt; f2 = f1.then([](future&lt;int&gt; f) {
       
 
 <p para_num="1" id="futures.shared_future.1">
-The specification of all declarations within this sub-clause <cxx-ref to="futures.shared_future"><a title="futures.shared_future" href="#futures.shared_future">2.4</a></cxx-ref>
+The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.shared_future"><a title="futures.shared_future" href="#futures.shared_future">2.4</a></cxx-ref>
 and its sub-clauses are the same as the corresponding declarations,
 as specified in <cxx-ref in="cxx" to="futures.shared_future">C++14 <span title="futures.shared_future">§30.6.7</span></cxx-ref>,
 unless explicitly specified otherwise.
@@ -1323,7 +1321,7 @@ unless explicitly specified otherwise.
 
       // functions to check state
       bool valid() const noexcept;
-      bool is_ready() const <del>noexcept</del>;
+      bool is_ready() const;
 
       void wait() const;
       template &lt;class Rep, class Period&gt;
@@ -1407,7 +1405,7 @@ template &lt;class F&gt;
     
     <dt>Effects:</dt><dd>
     The function creates a shared state that is associated with the returned
-    <code>future</code> object. The further behavior of the function is defined below.
+    <code>future</code> object. <del>The further behavior of the function is defined below.</del><ins>Additionally</ins>,
     <ul>
       <li>
         When the object's shared state is ready, the continuation
@@ -1428,26 +1426,23 @@ template &lt;class F&gt;
   <cxx-returns para_num="9" id="futures.shared_future.9">
     
     <dt>Returns:</dt><dd>
-    The return type of <code>then</code> depends on the return type of 
+<del>    The return type of <code>then</code> depends on the return type of 
     <code>func</code> as defined below:
-
-    <ul>
-      <li>
-        When <code>result_of_t&lt;decay_t&lt;F&gt;(shared_future&lt;R&gt;)&gt;</code>
+</del>
+        When <code>result_of_t&lt;decay_t&lt;F&gt;(<ins>const</ins> shared_future<del>&lt;R&gt;</del><ins>&amp;</ins>)&gt;</code>
         is <code>future&lt;R2&gt;</code>, for some type <code>R2</code>, the function returns <code>future&lt;R2&gt;</code>.
-      </li>
-      <li>
-        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F&gt;(shared_future&lt;R&gt;)&gt;&gt;</code>.
-        <p>
+
+        Otherwise, the function returns <code>future&lt;result_of_t&lt;decay_t&lt;F&gt;(<ins>const</ins> shared_future<del>&lt;R&gt;</del><ins>&amp;</ins>)&gt;&gt;</code>.
+
         <cxx-note><span class="nowrap">[ <em>Note:</em></span>
     
           This analogous to <code>future</code>. See the notes on
-          <code>future::then</code> return type in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.3</a></cxx-ref>.
+          <ins>the return type of </ins><code>future::then</code><del> return type</del> in <cxx-ref to="futures.unique_future"><a title="futures.unique_future" href="#futures.unique_future">2.3</a></cxx-ref>.
         
     <span class="nowrap">— <em>end note</em> ]</span>
   </cxx-note>
-      </p></li>
-    </ul>
+      
+    
 
   </dd>
   </cxx-returns>
@@ -1455,36 +1450,28 @@ template &lt;class F&gt;
 <cxx-postconditions para_num="10" id="futures.shared_future.10">
     
     <dt>Postconditions:</dt><dd>
-  <ul>
-    <li>
-    <code>valid() == true</code> on the original <code>shared_future</code> object.
-    <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code>
+  <code>valid() == true</code> on the original <code>shared_future</code> object.
+  <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code>
 
-    <cxx-notes>
+  <cxx-note><span class="nowrap">[ <em>Note:</em></span>
     
-    <dt>Notes:</dt><dd>
+    In case of implicit unwrapping, the validity of the <code>future</code> returned from
+    <code>then</code> cannot be established until after the completion of the
+    continuation. In such case, the resulting <code>future</code>
+    becomes ready with an exception of type <code>std::future_error</code>,
+    with an error condition of <code>std::future_errc::broken_promise</code>.
+  
 
-      In case of implicit unwrapping, the validity of the <code>future</code> returned from
-      <code>then</code> cannot be established until after the completion of the
-      continuation. In such case, the resulting <code>future</code>
-      becomes ready with an exception of type <code>std::future_error</code>,
-      with an error condition of <code>std::future_errc::broken_promise</code>.
-
-    </dd>
-  </cxx-notes>
-
-    </li>
-  </ul>
-</dd>
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note></dd>
   </cxx-postconditions>
-
 
     </dl>
   </cxx-function>
 
 <cxx-function para_num="11" id="futures.shared_future.11">
     
-    <pre><code><cxx-signature>bool is_ready() const <del>noexcept</del>;</cxx-signature></code></pre>
+    <pre><code><cxx-signature>bool is_ready() const;</cxx-signature></code></pre>
 
     <dl>
       
@@ -1510,7 +1497,7 @@ template &lt;class F&gt;
     
 
     <p para_num="1" id="futures.promise.1">
-      The specification of all declarations within this sub-clause <cxx-ref to="futures.promise"><a title="futures.promise" href="#futures.promise">2.5</a></cxx-ref>
+      The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.promise"><a title="futures.promise" href="#futures.promise">2.5</a></cxx-ref>
       and its sub-clauses are the same as the corresponding declarations,
       as specified in <cxx-ref in="cxx" to="futures.promise">C++14 <span title="futures.promise">§30.6.5</span></cxx-ref>,
       unless explicitly specified otherwise.
@@ -1533,7 +1520,7 @@ template &lt;class F&gt;
     
 
     <p para_num="1" id="futures.task.1">
-      The specification of all declarations within this sub-clause <cxx-ref to="futures.task"><a title="futures.task" href="#futures.task">2.6</a></cxx-ref>
+      The specification<ins>s</ins> of all declarations within this sub-clause <cxx-ref to="futures.task"><a title="futures.task" href="#futures.task">2.6</a></cxx-ref>
       and its sub-clauses are the same as the corresponding declarations,
       as specified in <cxx-ref in="cxx" to="futures.task">C++14 <span title="futures.task">§30.6.9</span></cxx-ref>,
       unless explicitly specified otherwise.
@@ -1583,44 +1570,39 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...&gt;&gt; when_all(Futures&amp;&amp;.
 <cxx-requires para_num="3" id="futures.when_all.3">
     
     <dt>Requires:</dt><dd>
-  <ul>
-    <li>
-      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R&gt;</code>
-      or <code>shared_future&lt;R&gt;</code>, for some type <code>R</code>.
-    </li>
+  <del>
+  For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R&gt;</code> or <code>shared_future&lt;R&gt;</code>, for some type <code>R</code>.
+  </del>
 
-    <li>
-      All <code>future</code>s and <code>shared_future</code>s passed into 
-      <code>when_all</code> must be in a valid state (i.e. <code>valid() == true</code>).
-    </li>
-  </ul>
+  All <code>future</code>s and <code>shared_future</code>s passed into 
+  <code>when_all</code> must be in a valid state (i.e. <code>valid() == true</code>).
+  <ins>Otherwise, the program is ill-formed.</ins>
 </dd>
   </cxx-requires>
 
 <cxx-remarks para_num="4" id="futures.when_all.4">
     
     <dt>Remarks:</dt><dd>
-  For the second overload, 
-
-<ins>
-let <em><code>D<sub>i</sub></code></em> be 
-  <code>decay_t&lt;F<sub>i</sub>&gt;</code>,
-and </ins>
-
-  let <em><code>U<sub>i</sub></code></em> be 
-  <code><ins>remove_reference_t</ins><del>decay_t</del>&lt;F<sub>i</sub>&gt;</code> 
-  for each <code>F<sub>i</sub></code> in
-  <code>Futures</code>. This function shall not participate in overload resolution unless 
-
-  <del>each <em><code>U<sub>i</sub></code></em> is either
-    <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-    or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
-  </del>
-  <ins>
-  for each <em>i</em> 
-    either <em><code>D<sub>i</sub></code></em> is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
-    or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-  </ins>
+  <ul>
+    <li>
+      <ins>
+      For the first overload, 
+      This function shall not participate in overload resolution unless <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R&gt;</code>
+      or <code>shared_future&lt;R&gt;</code>, for some type <code>R</code>.
+      </ins>
+    </li>
+    <li>
+      For the second overload, let <em><code>D<sub>i</sub></code></em> be 
+      <code>decay_t&lt;F<sub>i</sub>&gt;</code>, and
+      let <em><code>U<sub>i</sub></code></em> be 
+      <code>remove_reference_t&lt;F<sub>i</sub>&gt;</code> 
+      for each <code>F<sub>i</sub></code> in
+      <code>Futures</code>. This function shall not participate in overload resolution unless 
+      for each <em>i</em> either <em><code>D<sub>i</sub></code></em> 
+      is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
+      or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code><ins>.</ins>
+    </li>
+  </ul>
 </dd>
   </cxx-remarks>
 
@@ -1634,57 +1616,46 @@ and </ins>
 
     <li>
     A new shared state containing a <code>Sequence</code> is
-    created, where <code>Sequence</code> is either <code>tuple</code> or a
-    <code>vector</code> based on the overload, as specified above.
+    created, where <code>Sequence</code> is either <code>vector</code><del><code>tuple</code></del> or a
+    <code>tuple</code><del><code>vector</code></del> based on the overload, as specified above.
 
     A new <code>future</code> object that refers to that shared state is created
     and returned from <code>when_all</code>.
     </li>
 
-<p><ins><em>Editor's note: moved Notes into normative text:</em></ins></p>
-
     <li>
       If the first overload is called with <code>first == last</code>, <code>when_all</code>
-      returns a <code>future</code> with an empty vector that is immediately
+      returns a <code>future</code> with an empty <code>vector</code> that is immediately
       ready.
     </li>
 
-    <li>Otherwise, if the second overload is called with no arguments,
+    <li><del>Otherwise, i</del><ins>I</ins>f the second overload is called with no arguments,
     <code>when_all</code> returns a <code>future&lt;tuple&lt;&gt;&gt;</code> 
     that is immediately ready.</li>
 
     <li>
-    <ins>
       Otherwise, any <code>future</code>s are moved, and any <code>shared_future</code>s
-      are copied, into, correspondingly, <code>future</code>s or 
+      are copied<del>,</del> into, correspondingly, <code>future</code>s or 
       <code>shared_future</code>s of 
       <code>Sequence</code> in the shared state.
-    </ins></li>
+    </li>
 
     <li>
       The order of the objects in the shared state matches the order
       of the arguments supplied to <code>when_all</code>.
     </li>
     <li>
-    <ins>
       Once all the <code>future</code>s and <code>shared_future</code>s supplied
       to the call to <code>when_all</code> are ready, the resulting <code>future</code>,
       as well as the <code>future</code>s and <code>shared_future</code>s
       of the <code>Sequence</code>, are ready.
-    </ins>
     </li>
     <li>
-    <del>
-    Once all the <code>future</code>s and <code>shared_future</code>s supplied
-    to the call to <code>when_all</code> are ready, the <code>future</code>s
-    are moved, and the <code>shared_future</code>s are copied, into,
-    correspondingly, <code>future</code>s or <code>shared_future</code>s
-    of the <code>futures</code> member of <code>Sequence</code> in the shared state.
-    </del>
+
     </li>
-    <li>The <ins>shared state of the </ins><code>future</code> returned by <code>when_all</code> 
-      will not <del>throw</del><ins>store<ins> an exception, but the
-      <ins>shared states of</ins> of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</ins></ins></li>
+    <li>The shared state of the <code>future</code> returned by <code>when_all</code> 
+      will not store an exception, but the
+      shared states of<del> of</del> <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
   </ul>
 </dd>
   </cxx-effects>
@@ -1693,9 +1664,9 @@ and </ins>
     
     <dt>Postconditions:</dt><dd>
   <ul>
-    <li><ins>For the returned <code>future</code>, </ins> <code>valid() == true</code>.</li>
-    <li>For all input <code>future<del>&lt;T&gt;</del></code>s, <code>valid() == false</code>.</li>
-    <li>For all input <code>shared_future<del>&lt;T&gt;</del></code>s, <code>valid() == true</code>.</li>
+    <li>For the returned <code>future</code>, <code>valid() == true</code>.</li>
+    <li>For all input <code>future</code>s, <code>valid() == false</code>.</li>
+    <li>For all input <code>shared_future</code>s, <code>valid() == true</code>.</li>
   </ul>
 </dd>
   </cxx-postconditions>
@@ -1703,15 +1674,12 @@ and </ins>
 <cxx-returns para_num="7" id="futures.when_all.7">
     
     <dt>Returns:</dt><dd>
-<ins>
 
 A <code>future</code> object that becomes ready when all of the input
-<code>future</code>s/<code>shared_future</code>s are ready.
-</ins>
+<code>future</code>s<del>/</del><ins>and </ins><code>shared_future</code>s are ready.
+
 </dd>
   </cxx-returns>
-
-
 
     </dl>
   </cxx-function>
@@ -1779,45 +1747,39 @@ future&lt;when_any_result&lt;tuple&lt;decay_t&lt;Futures&gt;...&gt;&gt;&gt; when
 <cxx-requires para_num="3" id="futures.when_any.3">
     
     <dt>Requires:</dt><dd>
-  <ul>
-    <li>
-      For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R&gt;</code>
-      or <code>shared_future&lt;R&gt;</code>, for some type <code>R</code>.
-    </li>
+  <del>
+  For the first overload, <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R&gt;</code> or <code>shared_future&lt;R&gt;</code>, for some type <code>R</code>.
+  </del>
 
-    <li>
-      All <code>future</code>s and <code>shared_future</code>s passed into 
-      <code>when_any</code> must be in a valid state (i.e. <code>valid() == true</code>).
-    </li>
-
-  </ul>
+  All <code>future</code>s and <code>shared_future</code>s passed into 
+  <code>when_all</code> must be in a valid state (i.e. <code>valid() == true</code>).
+  <ins>Otherwise, the program is ill-formed.</ins>
 </dd>
   </cxx-requires>
 
 <cxx-remarks para_num="4" id="futures.when_any.4">
     
     <dt>Remarks:</dt><dd>
-  For the second overload, 
-
-<ins>
-let <em><code>D<sub>i</sub></code></em> be 
-  <code>decay_t&lt;F<sub>i</sub>&gt;</code>,
-and </ins>
-
-  let <em><code>U<sub>i</sub></code></em> be 
-  <code><ins>remove_reference_t</ins><del>decay_t</del>&lt;F<sub>i</sub>&gt;</code> 
-  for each <code>F<sub>i</sub></code> in
-  <code>Futures</code>. This function shall not participate in overload resolution unless 
-
-  <del>each <em><code>U<sub>i</sub></code></em> is either
-    <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-    or <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>.
-  </del>
-  <ins>
-  for each <em>i</em> 
-    either <em><code>D<sub>i</sub></code></em> is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
-    or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code>
-  </ins>
+  <ul>
+    <li>
+      <ins>
+      For the first overload, 
+      This function shall not participate in overload resolution unless <code>iterator_traits&lt;InputIterator&gt;::value_type</code> must be <code>future&lt;R&gt;</code>
+      or <code>shared_future&lt;R&gt;</code>, for some type <code>R</code>.
+      </ins>
+    </li>
+    <li>
+      For the second overload, let <em><code>D<sub>i</sub></code></em> be 
+      <code>decay_t&lt;F<sub>i</sub>&gt;</code>, and
+      let <em><code>U<sub>i</sub></code></em> be 
+      <code>remove_reference_t&lt;F<sub>i</sub>&gt;</code> 
+      for each <code>F<sub>i</sub></code> in
+      <code>Futures</code>. This function shall not participate in overload resolution unless 
+      for each <em>i</em> either <em><code>D<sub>i</sub></code></em> 
+      is a <code>shared_future&lt;<em>R<sub>i</sub></em>&gt;</code>
+      or <em><code>U<sub>i</sub></code></em> is a <code>future&lt;<em>R<sub>i</sub></em>&gt;</code><ins>.</ins>
+    </li>
+  </ul>
 </dd>
   </cxx-remarks>
 
@@ -1838,39 +1800,36 @@ and </ins>
     from <code>when_any</code>.
     </li>
 
-<p><ins><em>Editor's note: moved Notes into normative text:</em></ins></p>
-
-
     <li>
       If the first overload is called with <code>first == last</code>,
       <code>when_any</code> returns a <code>future</code> that is immediately ready.
       The value of the <code>index</code> field of the <code>when_any_result</code> is
-      unspecified. The <code>futures</code> field is an empty <code>vector</code>.
+      <del>unspecified</del><ins><code>static_cast&lt;size_t&gt;(-1)</code></ins>. The <code>futures</code> field is an empty <code>vector</code>.
     </li>
 
-    <li>Otherwise, if the second overload of is called with no arguments,
+    <li><del>Otherwise, i</del><ins>I</ins>f the second overload of is called with no arguments,
       <code>when_any</code> returns a <code>future</code> that is immediately ready.
       The value of the <code>index</code> field of the <code>when_any_result</code> is
-      unspecified. The <code>futures</code> field is <code>tuple&lt;&gt;</code>.
+      <del>unspecified</del><ins><code>static_cast&lt;size_t&gt;(-1)</code></ins>. 
+      The <code>futures</code> field is <code>tuple&lt;&gt;</code>.
     </li>
 
     <li>
-    <ins>
       Otherwise, any <code>future</code>s are moved, and any <code>shared_future</code>s
-      are copied, into, correspondingly, <code>future</code>s or 
+      are copied<del>,</del> into, correspondingly, <code>future</code>s or 
       <code>shared_future</code>s of the <code>futures</code> member of 
       <code>when_any_result&lt;Sequence&gt;</code> in the shared state.
-    </ins>
+
     </li>
     <li>
       The order of the objects in the <code>futures</code> shared state matches the order
       of the arguments supplied to <code>when_any</code>. 
     </li>
     <li>
-    <ins>
+
       Once at least one of the <code>future</code>s or <code>shared_future</code>s supplied
       to the call to <code>when_any</code> is ready, the resulting <code>future</code>
-      is are ready.
+      is <del>are </del>ready.
 
       Given the result future <code>f</code>,
       <code>f.get().index</code> is the position of the ready <code>future</code> 
@@ -1878,28 +1837,11 @@ and </ins>
       <code>futures</code> member of 
       <code>when_any_result&lt;Sequence&gt;</code> in the shared state.
 
-    </ins>
     </li>
-<!--     <li>
-    <ins>
-      Given the result future <code>f</code>, for the first overload, 
-      <code>f.get().Sequence[f.get().index].is_ready() == true</code>;
-      for the second overload, <code>first[f.get().index].is_ready == true</code>.
-    </ins>
-    </li> -->
 
-    <li>
-    <del>
-      Once at least one of the <code>future</code>s or <code>shared_future</code>s
-      supplied to the call to <code>when_any</code> is ready, the <code>future</code>s
-      are moved, and the <code>shared_future</code>s are copied into,
-      correspondingly, <code>future</code>s or <code>shared_future</code>s
-      of the <code>futures</code> member of <code>Sequence</code> in the shared state.
-    </del>
-
-    </li><li>The <ins>shared state of the </ins><code>future</code> returned by <code>when_all</code> 
-      will not <del>throw</del><ins>store<ins> an exception, but the
-      <ins>shared states of</ins> of <code>future</code>s and <code>shared_future</code>s held in the shared state may.</ins></ins></li>
+    <li>The shared state of the <code>future</code> returned by <code>when_all</code> 
+      will not store an exception, but the
+      shared states of<del> of</del> <code>future</code>s and <code>shared_future</code>s held in the shared state may.</li>
     
   </ul>
 </dd>
@@ -1909,9 +1851,9 @@ and </ins>
     
     <dt>Postconditions:</dt><dd>
   <ul>
-    <li><ins>For the returned <code>future</code>, </ins> <code>valid() == true</code>.</li>
-    <li>For all input <code>future<del>&lt;T&gt;</del></code>s, <code>valid() == false</code>.</li>
-    <li>For all input <code>shared_future<del>&lt;T&gt;</del></code>s, <code>valid() == true</code>.</li>
+    <li>For the returned <code>future</code>, <code>valid() == true</code>.</li>
+    <li>For all input <code>future</code>s, <code>valid() == false</code>.</li>
+    <li>For all input <code>shared_future</code>s, <code>valid() == true</code>.</li>
   </ul>
 </dd>
   </cxx-postconditions>
@@ -1921,7 +1863,7 @@ and </ins>
     <dt>Returns:</dt><dd>
 <ul>
   <li>A <code>future</code> object that becomes ready when any of the input
-    <code>future</code>s/<code>shared_future</code>s are ready.
+    <code>future</code>s and <code>shared_future</code>s are ready.
   </li>
 </ul>
 </dd>
@@ -1941,11 +1883,11 @@ and </ins>
       <header><span class="section-number">2.10</span> <h1 data-bookmark-label="2.10  Function template make_ready_future"> Function template <code>make_ready_future</code></h1> <span style="float:right"><a href="#futures.make_ready_future">[futures.make_ready_future]</a></span></header>
       
 
-<p para_num="1" id="futures.make_ready_future.1">
+<del>
 A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
-</p>
+</del>
 
-<cxx-function para_num="2" id="futures.make_ready_future.2">
+<cxx-function para_num="1" id="futures.make_ready_future.1">
     
     <pre><code><cxx-signature>
 template &lt;class T&gt;
@@ -1957,13 +1899,21 @@ future&lt;void&gt; make_ready_future();
     <dl>
       
   
-<p para_num="3" id="futures.make_ready_future.3">
+<p para_num="2" id="futures.make_ready_future.2">
   Let <code>U</code> be <code>decay_t&lt;T&gt;</code>. Then <code>V</code> is <code>X&amp;</code> if <code>U</code> equals
   <code>reference_wrapper&lt;X&gt;</code>, otherwise <code>V</code> is <code>U</code>.
 </p>
-  <cxx-effects para_num="4" id="futures.make_ready_future.4">
+  <cxx-effects para_num="3" id="futures.make_ready_future.3">
     
-    <dt>Effects:</dt><dd> 
+    <dt>Effects:</dt><dd>
+    <ins>The function creates a shared state
+      that is immediately ready and returns a <code>future</code> associated 
+      with that shared state.
+      For the first overload, the type of the shared state is <code>V</code> and the result is
+      constructed from <code>forward&lt;T&gt;(value)</code>.
+      For the second overload, the type of the shared state is <code>void</code>.
+    </ins>
+<del>
     <ul>
       <li>
         For the first overload, the value that is passed in to the 
@@ -1971,7 +1921,6 @@ future&lt;void&gt; make_ready_future();
         is an rvalue. Otherwise the value is copied to the shared state of the returned
         <code>future</code>.
       </li>
-      
       <li>
         The second overload creates a shared state for the returned <code>future</code>.
       </li>
@@ -1979,26 +1928,25 @@ future&lt;void&gt; make_ready_future();
 
   The value that is passed in to the function is moved to the shared state of the returned <code>future</code> if it
   is an rvalue. Otherwise the value is copied to the shared state of the returned <code>future</code>.
+</del>
   </dd>
   </cxx-effects>
-
-  <cxx-returns para_num="5" id="futures.make_ready_future.5">
+<del>
+  <cxx-returns>
     
     <dt>Returns:</dt><dd>
     <ul>
       <li><code>future&lt;V&gt;</code>, if function is given a value of type <code>T</code>.</li>
-      <li><code>future&lt;void&gt;</code>, if the function is not given any inputs. </li>
+      <li><code>future&lt;void&gt;</code>, if the function is not given any inputs.</li>
     </ul>
   </dd>
   </cxx-returns>
+</del>
 
-  <cxx-postconditions para_num="6" id="futures.make_ready_future.6">
+  <cxx-postconditions para_num="4" id="futures.make_ready_future.4">
     
     <dt>Postconditions:</dt><dd>
-    <ul>
-      <li>Returned <code>future&lt;V&gt;, valid() == true</code>.</li>
-      <li>Returned <code>future&lt;V&gt;, is_ready() == true</code>.</li>
-    </ul>
+      <ins>For the </ins>returned <code>future, valid() == true</code> and <code>is_ready() == true</code>.
   </dd>
   </cxx-postconditions>
 
@@ -2015,11 +1963,11 @@ future&lt;void&gt; make_ready_future();
       <header><span class="section-number">2.11</span> <h1 data-bookmark-label="2.11 Function template make_exceptional_future">Function template <code>make_exceptional_future</code></h1> <span style="float:right"><a href="#futures.make_exceptional_future">[futures.make_exceptional_future]</a></span></header>
       
 
-<p para_num="1" id="futures.make_exceptional_future.1">
+<del>
 A new section 30.6.13 shall be inserted at the end of <cxx-ref in="cxx" to="futures">C++14 <span title="futures">§30.6</span></cxx-ref>. Below is the content of that section.
-</p>
+</del>
 
-<cxx-function para_num="2" id="futures.make_exceptional_future.2">
+<cxx-function para_num="1" id="futures.make_exceptional_future.1">
     
     <pre><code><cxx-signature>
 template &lt;class T&gt;
@@ -2030,7 +1978,7 @@ future&lt;T&gt; make_exceptional_future(exception_ptr ex);
       
   
 
-  <cxx-effects para_num="3" id="futures.make_exceptional_future.3">
+  <cxx-effects para_num="2" id="futures.make_exceptional_future.2">
     
     <dt>Effects:</dt><dd>Equivalent to
   <cxx-codeblock>
@@ -2045,7 +1993,7 @@ return p.get_future();</code></pre>
 
     </dl>
   </cxx-function>
-<cxx-function para_num="4" id="futures.make_exceptional_future.4">
+<cxx-function para_num="3" id="futures.make_exceptional_future.3">
     
     <pre><code></code></pre>
 
@@ -2057,7 +2005,7 @@ return p.get_future();</code></pre>
 future&lt;T&gt; make_exceptional_future(E ex);</code></pre>
   </cxx-codeblock>
 
-  <cxx-effects para_num="5" id="futures.make_exceptional_future.5">
+  <cxx-effects para_num="4" id="futures.make_exceptional_future.4">
     
     <dt>Effects:</dt><dd>Equivalent to
   <cxx-codeblock>
@@ -2098,7 +2046,7 @@ return p.get_future();</code></pre>
       
 
 <p para_num="1" id="coordination.general.1">
-This section describes various concepts related to thread co-ordination, and defines the <code>latch</code>, <code>barrier</code> and <code>flex_barrier</code> classes.
+This section describes various concepts related to thread co<del>-</del>ordination, and defines the <code>latch</code>, <code>barrier</code> and <code>flex_barrier</code> classes.
 </p>
 <cxx-ednote>
     
@@ -2159,23 +2107,19 @@ inline namespace concurrency_v1 {
    public:
     explicit latch(ptrdiff_t count);
     latch(const latch&amp;) = delete;
-    latch(latch&amp;&amp;) = delete;
-    
+    <del>latch(latch&amp;&amp;) = delete;</del>
+    latch&amp; operator=(const latch&amp;) = delete;
     ~latch();
 
-
-    latch&amp; operator=(const latch&amp;) = delete;
-    latch&amp; operator=(latch&amp;&amp;) = delete;
-
+    <del>latch&amp; operator=(latch&amp;&amp;) = delete;</del>
     void count_down_and_wait();
     void count_down(ptrdiff_t n);
-
 
     bool is_ready() const noexcept;
     void wait() const;
 
    private:
-    ptrdiff_t counter_; // exposition only
+    ptrdiff_t counter_; // <em>exposition only</em>
   };
 } // namespace concurrency_v1
 } // namespace experimental
@@ -2196,7 +2140,7 @@ inline namespace concurrency_v1 {
 A latch maintains an internal <code>counter_</code> that is initialized when the latch is created. Threads may block at a synchronization point waiting for <code>counter_</code> to be decremented to <code>0</code>. When <code>counter_</code> reaches <code>0</code>, all such blocked threads are released.
 </p>
 <p para_num="2" id="coordination.latch.class.2">
-Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wait()</code>, and <code>is_ready()</code> behave as atomic operations.
+Calls to <code>count<ins>_</ins>down_and_wait()</code>, <code>count_down()</code>, <code>wait()</code>, and <code>is_ready()</code> behave as atomic operations.
 </p>
 
 <cxx-function para_num="3" id="coordination.latch.class.3">
@@ -2212,7 +2156,7 @@ Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wai
   </cxx-requires>
   <cxx-synchronization para_num="5" id="coordination.latch.class.5">
     
-    <dt>Synchronization:</dt><dd>None</dd>
+    <dt>Synchronization:</dt><dd>None<ins>.</ins></dd>
   </cxx-synchronization>
   <cxx-postconditions para_num="6" id="coordination.latch.class.6">
     
@@ -2261,7 +2205,7 @@ Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wai
   </cxx-effects>
   <cxx-synchronization para_num="13" id="coordination.latch.class.13">
     
-    <dt>Synchronization:</dt><dd>Synchronizes with all calls that block on this latch and with all is_ready calls on this latch that return true.</dd>
+    <dt>Synchronization:</dt><dd>Synchronizes with all calls that block on this latch and with all <code>is_ready</code> calls on this latch that return true.</dd>
   </cxx-synchronization>
   <cxx-throws para_num="14" id="coordination.latch.class.14">
     
@@ -2288,7 +2232,7 @@ Calls to <code>countdown_and_wait()</code>, <code>count_down()</code>, <code>wai
   </cxx-effects>
   <cxx-synchronization para_num="18" id="coordination.latch.class.18">
     
-    <dt>Synchronization:</dt><dd>Synchronizes with all calls that block on this latch and with all is_ready calls on this latch that return true.</dd>
+    <dt>Synchronization:</dt><dd>Synchronizes with all calls that block on this latch and with all <code>is_ready</code> calls on this latch that return true.</dd>
   </cxx-synchronization>
   <cxx-throws para_num="19" id="coordination.latch.class.19">
     
@@ -2351,9 +2295,8 @@ accordingly.</aside>
       
 
 <p para_num="1" id="thread.coordination.barrier.1">
-Barriers are a thread coordination mechanism that allow a <em>set of participating threads</em>
- to block until an operation is completed. Unlike a latch, a barrier is 
-re-usable: once the participating threads are released from a barrier's 
+Barriers are a thread coordination mechanism that allow a <em>set of participating threads</em> to block until an operation is completed. Unlike a latch, a barrier is re<del>-</del>usable:
+ once the participating threads are released from a barrier's 
 synchronization point, they can re-use the same barrier. It is thus 
 useful for managing repeated tasks, or phases of a larger task, that are
  handled by multiple threads.
@@ -2497,13 +2440,11 @@ class barrier {
  public:
   explicit barrier(ptrdiff_t num_threads);
   barrier(const barrier&amp;) = delete;
-  barrier(barrier&amp;&amp;) = delete;
-
-  ~barrier();
-
-
+  <del>barrier(barrier&amp;&amp;) = delete;</del>
   barrier&amp; operator=(const barrier&amp;) = delete;
-  barrier&amp; operator=(barrier&amp;&amp;) = delete;
+  ~barrier();
+  
+  <del>barrier&amp; operator=(barrier&amp;&amp;) = delete;</del>
 
   void arrive_and_wait();
   void arrive_and_drop();
@@ -2548,7 +2489,7 @@ class barrier {
   </cxx-requires>
   <cxx-effects para_num="7" id="coordination.barrier.class.7">
     
-    <dt>Effects:</dt><dd>Destroys the barrier</dd>
+    <dt>Effects:</dt><dd>Destroys the barrier<ins>.</ins></dd>
   </cxx-effects>
 
     </dl>
@@ -2566,7 +2507,8 @@ class barrier {
       
 
 <p para_num="1" id="coordination.flexbarrier.class.1">
-<code>flex_barrier</code> is a barrier type whose completion phase can be controlled by a constructor parameter.
+<code>flex_barrier</code> is a barrier type whose completion phase can be controlled 
+by a <del>constructor parameter</del> <ins>function object</ins>.
 </p>
 
 <pre><code>
@@ -2580,16 +2522,14 @@ class flex_barrier {
 
   ~flex_barrier();
 
-
   flex_barrier&amp; operator=(const flex_barrier&amp;) = delete;
   flex_barrier&amp; operator=(flex_barrier&amp;&amp;) = delete;
 
   void arrive_and_wait();
   void arrive_and_drop();
 
-
  private:
-  function&lt;ptrdiff_t()&gt; completion_;  // exposition only
+  function&lt;ptrdiff_t()&gt; completion_;  // <em>exposition only</em>
 };
 
 </code></pre>
@@ -2619,31 +2559,47 @@ flex_barrier(ptrdiff_t num_threads, F completion);
     <li>
     <code>num_threads &gt;= 0.</code>
     </li><li>
-    <code>F</code> shall meet the requirements of <code>CopyConstructible</code>.
+    <code>F</code> shall <del>meet the requirements of</del><ins>be</ins> <code>CopyConstructible</code>.
     </li><li>
-    <code>completion</code> shall be Callable (C++14 §[func.wrap.func]) with no arguments and return type convertible to <code>ptrdiff_t</code>.
+    <code>completion</code> shall be Callable (C++14 §[func.wrap.func]) with no arguments and return type <del>convertible to</del> <code>ptrdiff_t</code>.
     </li><li>
     Invoking <code>completion</code> shall return a value greater than or equal to <code>-1</code> and shall not exit via an exception.
     </li>
   </ul></dd>
   </cxx-requires>
 
-  <cxx-effects para_num="5" id="coordination.flexbarrier.class.5">
+<del>  <cxx-effects>
     
-    <dt>Effects:</dt><dd>Initializes the <code>flex_barrier</code> with the set of participating threads, of size <code>num_threads</code>, and initializes <code>completion_</code> with <code>std::move(completion)</code>. <cxx-note><span class="nowrap">[ <em>Note:</em></span>
-    The set of participating threads consists of the first num_threads threads that will arrive at the synchronization point.
+    <dt>Effects:</dt><dd>Initializes the <code>flex_barrier</code> with the set of participating threads, of size <code>num_threads</code>, and initializes <code>completion_</code> with <code>std::move(completion)</code>. 
+
+  <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    The set of participating threads consists of the first <code>num_threads</code> threads that will arrive at the synchronization point.
     <span class="nowrap">— <em>end note</em> ]</span>
   </cxx-note></dd>
-  </cxx-effects>
-  <cxx-notes para_num="6" id="coordination.flexbarrier.class.6">
+  </cxx-effects></del>
+  
+  <cxx-effects para_num="5" id="coordination.flexbarrier.class.5">
     
-    <dt>Notes:</dt><dd>If num_threads is zero the set of participating threads is empty, and this object may only be destroyed.</dd>
-  </cxx-notes>
+    <dt>Effects:</dt><dd>
+  Initializes the <code>flex_barrier</code> for <code>num_threads</code> participating threads,
+  and initializes <code>completion_</code> with <code>std::move(completion)</code>.
+  <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    The set of participating threads is the first <code>num_threads</code> threads to arrive at the
+  synchronization point.
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note>
+  <cxx-note><span class="nowrap">[ <em>Note:</em></span>
+    If <code>num_threads</code> is <del>zero</del><ins>0</ins> the set of participating threads is empty, and this object may only be destroyed.
+    <span class="nowrap">— <em>end note</em> ]</span>
+  </cxx-note>
+  </dd>
+  </cxx-effects>
+
 
     </dl>
   </cxx-function>
 
-<cxx-function para_num="7" id="coordination.flexbarrier.class.7">
+<cxx-function para_num="6" id="coordination.flexbarrier.class.6">
     
     <pre><code><cxx-signature>explicit flex_barrier(ptrdiff_t num_threads);</cxx-signature></code></pre>
 
@@ -2651,11 +2607,11 @@ flex_barrier(ptrdiff_t num_threads, F completion);
       
   
   
-  <cxx-requires para_num="8" id="coordination.flexbarrier.class.8">
+  <cxx-requires para_num="7" id="coordination.flexbarrier.class.7">
     
     <dt>Requires:</dt><dd><code>num_threads &gt;= 0.</code></dd>
   </cxx-requires>
-  <cxx-effects para_num="9" id="coordination.flexbarrier.class.9">
+  <cxx-effects para_num="8" id="coordination.flexbarrier.class.8">
     
     <dt>Effects:</dt><dd>Has the same effect as creating a <code>flex_barrier</code> with <code>num_threads</code> and with a callable object whose invocation returns <code>-1</code> and has no side effects.</dd>
   </cxx-effects>
@@ -2663,18 +2619,18 @@ flex_barrier(ptrdiff_t num_threads, F completion);
     </dl>
   </cxx-function>
 
-<cxx-function para_num="10" id="coordination.flexbarrier.class.10">
+<cxx-function para_num="9" id="coordination.flexbarrier.class.9">
     
     <pre><code><cxx-signature>~flex_barrier();</cxx-signature></code></pre>
 
     <dl>
       
   
-  <cxx-requires para_num="11" id="coordination.flexbarrier.class.11">
+  <cxx-requires para_num="10" id="coordination.flexbarrier.class.10">
     
     <dt>Requires:</dt><dd>No threads are blocked at the synchronization point.</dd>
   </cxx-requires>
-  <cxx-effects para_num="12" id="coordination.flexbarrier.class.12">
+  <cxx-effects para_num="11" id="coordination.flexbarrier.class.11">
     
     <dt>Effects:</dt><dd>Destroys the barrier.</dd>
   </cxx-effects>
@@ -2710,7 +2666,7 @@ flex_barrier(ptrdiff_t num_threads, F completion);
 
 This section provides alternatives to raw pointers for thread-safe atomic 
 pointer operations, and defines the <code>atomic_shared_ptr</code> and 
-<code>atomic_weak_ptr</code> classes.
+<code>atomic_weak_ptr</code> class<del>es</del><ins> templates</ins>.
 
 </p>
 <p para_num="2" id="atomic.smartptr.general.2">
@@ -2743,10 +2699,21 @@ unless stated otherwise.
 
 
 <pre><code>
-#include &lt;memory&gt;
+#include &lt;<del>memory</del><ins>atomic</ins>&gt;
 
-template &lt;class T&gt; struct atomic_shared_ptr;
-template &lt;class T&gt; struct atomic_weak_ptr;
+<ins>
+namespace std {
+namespace experimental {
+inline namespace concurrency_v1 {
+</ins>
+  template &lt;class T&gt; struct atomic_shared_ptr;
+  template &lt;class T&gt; struct atomic_weak_ptr;
+<ins>
+} // namespace concurrency_v1
+} // namespace experimental
+} // namespace st
+</ins>
+
 </code></pre>
 
 
@@ -2794,7 +2761,7 @@ namespace std {
       memory_order = memory_order_seq_cst) noexcept;
 
     atomic_shared_ptr() noexcept = default;
-    constexpr atomic_shared_ptr(shared_ptr&lt;T&gt;) noexcept;
+    <del>constexpr </del>atomic_shared_ptr(shared_ptr&lt;T&gt;) noexcept;
     atomic_shared_ptr(const atomic_shared_ptr&amp;) = delete;
     atomic_shared_ptr&amp; operator=(const atomic_shared_ptr&amp;) = delete;
     atomic_shared_ptr&amp; operator=(shared_ptr&lt;T&gt;) noexcept;
@@ -2805,7 +2772,7 @@ namespace std {
 <br>
 <cxx-function para_num="1" id="atomic.shared_ptr.1">
     
-    <pre><code><cxx-signature>atomic_shared_ptr::atomic_shared_ptr() noexcept = default;</cxx-signature></code></pre>
+    <pre><code><cxx-signature><del>atomic_shared_ptr::</del>atomic_shared_ptr() noexcept = default;</cxx-signature></code></pre>
 
     <dl>
       
@@ -2837,11 +2804,12 @@ namespace std {
 
   template &lt;class T&gt; struct atomic_weak_ptr {
     bool is_lock_free() const noexcept;
-
     void store(weak_ptr&lt;T&gt;, memory_order = memory_order_seq_cst) noexcept;
     weak_ptr&lt;T&gt; load(memory_order = memory_order_seq_cst) const noexcept;
-      operator weak_ptr&lt;T&gt;() const noexcept;
-    weak_ptr&lt;T&gt; exchange(weak_ptr&lt;T&gt;, memory_order = memory_order_seq_cst) noexcept;
+    operator weak_ptr&lt;T&gt;() const noexcept;
+
+    weak_ptr&lt;T&gt; exchange(weak_ptr&lt;T&gt;,
+      memory_order = memory_order_seq_cst) noexcept;
 
     bool compare_exchange_weak(weak_ptr&lt;T&gt;&amp;, const weak_ptr&lt;T&gt;&amp;,
       memory_order, memory_order) noexcept;
@@ -2862,7 +2830,7 @@ namespace std {
       memory_order = memory_order_seq_cst) noexcept;
 
     atomic_weak_ptr() noexcept = default;
-    constexpr atomic_weak_ptr(weak_ptr&lt;T&gt;) noexcept;
+    <del>constexpr </del>atomic_weak_ptr(weak_ptr&lt;T&gt;) noexcept;
     atomic_weak_ptr(const atomic_weak_ptr&amp;) = delete;
     atomic_weak_ptr&amp; operator=(const atomic_weak_ptr&amp;) = delete;
     atomic_weak_ptr&amp; operator=(weak_ptr&lt;T&gt;) noexcept;
@@ -2874,7 +2842,7 @@ namespace std {
 <br>
 <cxx-function para_num="1" id="atomic.weak_ptr.1">
     
-    <pre><code><cxx-signature>atomic_weak_ptr::atomic_weak_ptr() noexcept = default;</cxx-signature></code></pre>
+    <pre><code><cxx-signature><del>atomic_weak_ptr::</del>atomic_weak_ptr() noexcept = default;</cxx-signature></code></pre>
 
     <dl>
       
