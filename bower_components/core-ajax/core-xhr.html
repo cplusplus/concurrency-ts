@@ -22,47 +22,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="core-xhr">
-
-  <template>
-
-    <style>
-      :host {
-        display: none;
-      }
-    </style>
-
-  </template>
+<polymer-element name="core-xhr" hidden>
 
   <script>
 
     Polymer('core-xhr', {
-
-      makeReadyStateHandler: function(xhr, callback) {
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState == 4) {
-            callback && callback.call(null, xhr.response, xhr);
-          }
-        };
-      },
-
-      setRequestHeaders: function(xhr, headers) {
-        if (headers) {
-          for (var name in headers) {
-            xhr.setRequestHeader(name, headers[name]);
-          }
-        }
-      },
-
-      toQueryString: function(params) {
-        var r = [];
-        for (var n in params) {
-          var v = params[n];
-          n = encodeURIComponent(n);
-          r.push(v == null ? n : (n + '=' + encodeURIComponent(v)));
-        }
-        return r.join('&');
-      },
 
       /**
        * Sends a HTTP request to the server and returns the XHR object.
@@ -85,10 +49,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var url = options.url;
         var method = options.method || 'GET';
         var async = !options.sync;
+        //
         var params = this.toQueryString(options.params);
         if (params && method == 'GET') {
           url += (url.indexOf('?') > 0 ? '&' : '?') + params;
         }
+        var xhrParams = this.isBodyMethod(method) ? (options.body || params) : null;
+        //
         xhr.open(method, url, async);
         if (options.responseType) {
           xhr.responseType = options.responseType;
@@ -98,11 +65,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         this.makeReadyStateHandler(xhr, options.callback);
         this.setRequestHeaders(xhr, options.headers);
-        xhr.send(method == 'POST' ? (options.body || params) : null);
+        xhr.send(xhrParams);
         if (!async) {
           xhr.onreadystatechange(xhr);
         }
         return xhr;
+      },
+    
+      toQueryString: function(params) {
+        var r = [];
+        for (var n in params) {
+          var v = params[n];
+          n = encodeURIComponent(n);
+          r.push(v == null ? n : (n + '=' + encodeURIComponent(v)));
+        }
+        return r.join('&');
+      },
+
+      isBodyMethod: function(method) {
+        return this.bodyMethods[(method || '').toUpperCase()];
+      },
+      
+      bodyMethods: {
+        POST: 1,
+        PUT: 1,
+        PATCH: 1,
+        DELETE: 1
+      },
+
+      makeReadyStateHandler: function(xhr, callback) {
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == 4) {
+            callback && callback.call(null, xhr.response, xhr);
+          }
+        };
+      },
+
+      setRequestHeaders: function(xhr, headers) {
+        if (headers) {
+          for (var name in headers) {
+            xhr.setRequestHeader(name, headers[name]);
+          }
+        }
       }
 
     });

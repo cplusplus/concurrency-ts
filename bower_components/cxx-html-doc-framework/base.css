@@ -15,18 +15,29 @@ limitations under the License.
 
 @page {
     margin: 10%;
-    @top-left { content: "© ISO/IEC"; font-size: 10pt; }
-    @top-right { content: string(docnum); font-weight: bold; font-size: 10pt; }
-    @bottom-left { content: string(current-section, last); font-size: 10pt; }
+}
+@page :left {
+    @top-left { content: string(docname); font-weight: bold; font-size: 10pt; }
+    @top-right { content: normal; }
+    @bottom-left { content: counter(page); font-size: 10pt; }
+    @bottom-right { content: "© ISO/IEC " string(pubyear) " — All rights reserved";
+                    font-size: 10pt; }
+}
+@page :right {
+    @top-left { content: normal; }
+    @top-right { content: string(docname); font-weight: bold; font-size: 10pt; }
+    @bottom-left { content: "© ISO/IEC " string(pubyear) " — All rights reserved";
+                   font-size: 10pt; }
     @bottom-right { content: counter(page); font-size: 10pt; }
 }
-cxx-titlepage { page: title; page-break-after: always; }
-@page title {
-    @top-left { content: "© ISO 2014 — All rights reserved"; }
+@page :first {
+    @top-left { content: normal; }
     @top-right { content: normal; }
     @bottom-left { content: normal; }
     @bottom-right { content: normal; }
 }
+
+body { margin: 0; }
 
 @media screen {
     body { max-width: 7in;
@@ -36,22 +47,26 @@ cxx-titlepage { page: title; page-break-after: always; }
 
 @media print {
     html { font-size: 10pt; }
-    * /deep/ pre, * /deep/ code { font-size: 8pt; }
+    * /deep/ code { font-size: 80%; }
     /* Note that only Prince generates clickable links. */
     * /deep/ a[href] { text-decoration:none; }
 }
 
-/* Needed to make the <cxx-titlepage>'s vertical spacing work. */
-html, body {height: 100%}
-
-cxx-docnum { string-set: docnum content(); }
-
-cxx-clause { page-break-before: always; }
 @media screen {
-    cxx-clause, cxx-toc { margin-top: 3em; }
+    /* Needed to make the <cxx-titlepage>'s vertical spacing work.
+       For print see the <cxx-titlepage> definition. */
+    html, body {height: 100%}
 }
 
-cxx-clause::shadow header { font-size: 150%; }
+* /deep/ .docname { string-set: docname content(); }
+* /deep/ .pubyear { string-set: pubyear content(); }
+
+cxx-clause, cxx-foreword { page-break-before: always; }
+@media screen {
+    cxx-clause, cxx-toc, cxx-foreword { margin-top: 3em; }
+}
+
+cxx-clause::shadow header, cxx-foreword::shadow h1 { font-size: 150%; }
 cxx-toc::shadow h1 { font-size: 150%; }
 cxx-clause cxx-section::shadow header { font-size: 117%; }
 cxx-clause cxx-section cxx-section::shadow header { font-size: 100%; }
@@ -59,9 +74,11 @@ cxx-clause cxx-section cxx-section::shadow header { font-size: 100%; }
 [data-bookmark-label] { bookmark-label: attr(data-bookmark-label); }
 h1 { bookmark-level: 1; }
 cxx-toc::shadow h1 { bookmark-level: 2; }
-cxx-clause h1 { bookmark-level: 2; }
+cxx-clause h1, cxx-foreword h1 { bookmark-level: 2; }
 cxx-clause cxx-section h1 { bookmark-level: 3; }
 cxx-clause cxx-section cxx-section h1 { bookmark-level: 4; }
+/* The <h2> is a subtitle, which shouldn't get a PDF bookmark. */
+cxx-titlepage::shadow h2 { bookmark-level: none; }
 
 *::shadow .section-number { string-set: current-section "§ " content(); }
 
@@ -71,27 +88,58 @@ p:first-child, ul, ol {margin-top: 0}
 [para_num]::before { content: attr(para_num); float: left;
                      font-size: 70%; margin-left: -2.5em; width: 1.5em; text-align: right; }
 
-del {text-decoration: line-through; background-color: red; color: #8B0040;}
-ins {text-decoration: underline; background-color: yellow; color: #005100;}
+del {text-decoration: line-through; color: #8B0040;}
+ins {text-decoration: underline; color: #005100;}
 
 pre {
     margin-left: 1em;
     margin-top: .5em;
     margin-bottom: .5em;
 }
-pre > code { display: inline-block; }
 
-
-/* Use an em-dash for the list bullet. */
-ul {
-    list-style: none;
-    /* Relative positioning on the 'ul' lets the absolutely-positioned
-       marker align relative to it.*/
-    position: relative;
+* /deep/ wbr::after {
+    white-space: normal;
+    content: '\200B';
 }
-ul li:before {
-    content: "\2014";
-    position: absolute; left: 10px;
+* /deep/ code {
+    /* Make inline code avoid line wraps unless we override it with <wbr>. */
+    white-space: nowrap;
+}
+* /deep/ pre code {
+    /* Keep block-code wrapping according to its context. */
+    white-space: inherit;
+}
+
+* /deep/ table {
+    border-collapse: collapse;
+}
+* /deep/ td, th {
+    padding-left: .2em;
+    padding-right: .2em;
+    border: thin solid black;
+}
+
+/* Use an em-dash for the list bullet.
+   'print' is a proxy for supporting ::marker. */
+@media screen {
+    ul {
+        list-style: none;
+        /* Relative positioning on the 'ul' lets the absolutely-positioned
+           marker align relative to it.*/
+        position: relative;
+    }
+    ul li:before {
+        content: "\2014";
+        position: absolute; left: 10px;
+    }
+}
+@media print {
+    ul li::marker {
+        content: "\2014";
+    }
+    [is=cxx-table].list ul li::marker {
+        content: none;
+    }
 }
 
 /* This is here rather than inside elements/toc.html because browsers
