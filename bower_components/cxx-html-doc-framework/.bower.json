@@ -1,6 +1,5 @@
 {
   "name": "cxx-html-doc-framework",
-  "version": "0.2.0",
   "description": "A set of custom HTML elements to make writing well-formatted C++ papers and ISO documents easier.",
   "main": "framework.html",
   "homepage": "https://github.com/cplusplus/html-doc-framework",
@@ -11,17 +10,18 @@
     "tests"
   ],
   "dependencies": {
-    "platform": "Polymer/platform#0.2.3",
-    "polymer": "Polymer/polymer#0.2.3",
-    "core-ajax": "Polymer/core-ajax#0.2.3"
+    "polymer": "Polymer/polymer#0.5.2",
+    "core-ajax": "Polymer/core-ajax#0.5.2"
   },
-  "_release": "0.2.0",
+  "version": "0.3.2",
+  "_release": "0.3.2",
   "_resolution": {
     "type": "version",
-    "tag": "0.2.0",
-    "commit": "65ef4d3372b41ee9f38dce9d3c3b50f153666e9d"
+    "tag": "0.3.2",
+    "commit": "9604bb1ff78b2f33fbcbcb941ea0fbae2e65d943"
   },
   "_source": "git://github.com/cplusplus/html-doc-framework.git",
-  "_target": "*",
-  "_originalSource": "cplusplus/html-doc-framework"
+  "_target": "^0.3.2",
+  "_originalSource": "cplusplus/html-doc-framework",
+  "_direct": true
 }

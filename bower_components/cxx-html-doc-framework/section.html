@@ -14,18 +14,24 @@ limitations under the License.
 -->
 
 <!--
-    Recognizes attributes 'id' and 'title', but marking these as attributes
+    Sections auto-number themselves and their paragraphs. The chosen number can
+    be overridden by setting the 'number' attribute. A paragraph can also be
+    marked as a continuation of the previous paragraph (without its own number)
+    by giving it a 'cont' class.
+
+    Also recognizes attributes 'id' and 'title', but marking these as attributes
     cause problems for the ShadowDOM polyfill.
 -->
-<polymer-element name="cxx-section" constructor="CxxSectionElement">
+<polymer-element name="cxx-section" constructor="CxxSectionElement" attributes="number">
   <template>
     <style>
       :host { display: block; }
       :host:target {background-color: inherit;}
       :host:target > section > h1 {background-color: #fed;}
-      /* @polyfill header > h1 */
+      polyfill-next-selector { content: 'header > h1' }
       ::content h1 { display: inline; font-size: 100%; }
-      header { font-weight: bold; margin-top: 20px; margin-bottom: 20px; }
+      header { font-weight: bold; margin-top: 20px; margin-bottom: 20px;
+               page-break-inside: avoid; page-break-after: avoid; }
       header::after { clear:both; display: block; content: " "; height: 0 }
     </style>
 

@@ -8,10 +8,14 @@ writing ISO C++ documents and papers.  To use it for your document, you should
 2. Install this package by running `bower install cplusplus/html-doc-framework` in the root directory of your document.
 3. Import this package into your main HTML file by adding two lines inside the `<head>` element:
 
-```HTML
-<script src="bower_components/platform/platform.js"></script>
-<link rel="import" href="bower_components/cxx-html-doc-framework/framework.html"/>
-```
+   ```HTML
+   <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+   <link rel="import" href="bower_components/cxx-html-doc-framework/framework.html"/>
+   ```
+
+4. Run an HTTP server (e.g. [`python3 -m http.server`](https://docs.python.org/3/library/http.server.html#http-server-cli) or [`http-server`](https://www.npmjs.org/package/http-server)) in the directory of your main HTML file, and preview through that instead of a `file:///` URL.
+
+I recommend the [Prince rendering engine](http://www.princexml.com/) for converting your HTML file to PDF. It has significantly better support for page-related features than any browser as of 2014.
 
 Before I can accept a contribution to this project, you'll need to sign the
 Contributor License Agreement at https://developers.google.com/open-source/cla/individual.
@@ -47,6 +51,10 @@ Wraps the title page of an ISO document. The title page takes a
 `stage` attribute whose value can be `draft` or (once I implement
 them) `CD`, `DTS`, `TS`, etc.  The title page recognizes several
 nested elements that describe the document.
+
+#### `<cxx-project-number>`
+
+The ISO project number for this TS or IS.  Find this on https://isocpp.org/std/status.
 
 #### `<cxx-docnum>`
 
@@ -90,13 +98,19 @@ number, and formats and links the `id`.
 ### `<cxx-ednote>`
 
 An editor's note that won't appear in the final published document.
-This is formatted as a separate box on the side of the document.
+This is formatted as a separate box on the side of the document,
+unless it's marked with class="para", in which case it's formatted as a normal paragraph in a box.
 
 
 ### `<cxx-email>`
 
 Must contain an email address as text, and wraps it into an
 appropriate `mailto:` link.
+
+### `<w-br>`
+
+Introduces a soft line-break inside an otherwise-nowrap context. This works in
+Firefox and Prince, where <wbr> fails, in addition to other browsers.
 
 ### `<cxx-function>`
 
