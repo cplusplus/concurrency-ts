@@ -226,7 +226,7 @@ future&lt;int> f2 = f1.then([](future&lt;int> f) {
     <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code>
     <cxx-Note>
       In case of implicit unwrapping, the validity of the <code>future</code> returned from
-      <code>then</code> cannot be established until after the completion of the
+      <code><del>then</del><ins>func</ins></code> cannot be established until after the completion of the
       continuation. If it is not valid, the resulting <code>future</code>
       becomes ready with an exception of type <code>std::future_error</code>,
       with an error condition of <code>std::future_errc::broken_promise</code>.
@@ -369,6 +369,7 @@ template &lt;class F>
   <code>valid() == true</code> on the original <code>shared_future</code> object.
   <code>valid() == true</code> on the <code>future</code> returned from <code>then.</code>
 
+  <del>
   <cxx-Note>
     In case of implicit unwrapping, the validity of the <code>future</code> returned from
     <code>then</code> cannot be established until after the completion of the
@@ -376,6 +377,7 @@ template &lt;class F>
     becomes ready with an exception of type <code>std::future_error</code>,
     with an error condition of <code>std::future_errc::broken_promise</code>.
   </cxx-Notes>
+  </del>
 </cxx-postconditions>
 </cxx-function>
 
@@ -478,8 +480,13 @@ future&lt;tuple&lt;decay_t&lt;Futures&gt;...>> when_all(Futures&amp;&amp;... fut
 
     <li>
     A new shared state containing a <code>Sequence</code> is
-    created, where <code>Sequence</code> is either <code>vector</code> or
-    <code>tuple</code> based on the overload, as specified above.
+    created, where <code>Sequence</code> is 
+
+    <del>either <code>vector</code> or
+    <code>tuple</code> based on the overload, as specified above.</del>
+
+    <ins>a <code>vector</code> for the first overload and a
+    <code>tuple</code> for the second overload.</ins>
 
     A new <code>future</code> object that refers to that shared state is created
     and returned from <code>when_all</code>.

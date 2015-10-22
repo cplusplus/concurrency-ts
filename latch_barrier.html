@@ -42,7 +42,7 @@ inline namespace concurrency_v1 {
 
     
     void count_down_and_wait();
-    void count_down(ptrdiff_t n);
+    void count_down(ptrdiff_t n<ins> = 1</ins>);
 
     bool is_ready() const noexcept;
     void wait() const;
@@ -87,7 +87,7 @@ Calls to <code>count_down_and_wait()</code>, <code>count_down()</code>, <code>wa
 </cxx-function>
 
 <cxx-function>
-  <cxx-signature>void count_down(ptrdiff_t n);</cxx-signature>
+  <cxx-signature>void count_down(ptrdiff_t n<ins> = 1</ins>);</cxx-signature>
   <cxx-requires><code>counter_ &gt;= n</code> and <code>n &gt;= 0</code>.</cxx-requires>
   <cxx-effects>Decrements <code>counter_</code> by <code>n</code>. Does not block.</cxx-effects>
   <cxx-synchronization>Synchronizes with all calls that block on this latch and with all <code>is_ready</code> calls on this latch that return true.</cxx-synchronization>
@@ -145,7 +145,19 @@ The expression <code>b.arrive_and_drop()</code> shall be well-formed and have th
 <cxx-function>
   <cxx-signature>void arrive_and_drop();</cxx-signature>
   <cxx-requires>The current thread is a member of the set of participating threads.</cxx-requires>
-  <cxx-effects>Either arrives at the barrier's synchronization point and then removes the current thread from the set of participating threads, or just removes the current thread from the set of participating threads. <cxx-note>Removing the current thread from the set of participating threads can cause the completion phase to start. </cxx-note></cxx-effects>
+  <cxx-effects>
+    <del>
+    Either arrives at the barrier's synchronization point and then removes the current thread from the set of participating threads, or just removes the current thread from the set of participating threads. <cxx-note>Removing the current thread from the set of participating threads can cause the completion phase to start. </cxx-note>
+    </del>
+    <ins>
+    Removes the current thread from the set of participating threads. If all other
+    participating threads are blocked at the synchronization point, the completion
+    phase will start. It is unspecified whether the function blocks until
+    the completion phase has ended. <cxx-note>If the function blocks, the calling
+    thread may be chosen to execute the completion phase. </cxx-note>
+    </ins>
+  </cxx-effects>
+
   <cxx-synchronization>The call to <code>arrive_and_drop()</code> synchronizes with the start of the completion phase.</cxx-synchronization>
   <cxx-throws>Nothing.</cxx-throws>
   <cxx-notes>If all participating threads call <code>arrive_and_drop()</code>, any further operations on the barrier are undefined, apart from calling the destructor.
@@ -184,8 +196,6 @@ class barrier {
   
   barrier& operator=(const barrier&) = delete;
   ~barrier();
-  
-  
 
   void arrive_and_wait();
   void arrive_and_drop();
