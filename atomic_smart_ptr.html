@@ -27,7 +27,7 @@ unless stated otherwise.
 
 </p>
 
-<p><ins> All atomic operations in this section perform the indicated
+<p> All atomic operations in this section perform the indicated
 <code>shared_ptr</code> operations.  All changes to the atomic smart pointer
 itself, and all associated <code>use_count</code> increments, are guaranteed to
 be performed atomically.  Associated <code>use_count</code> decrements shall be
@@ -38,29 +38,29 @@ and shall not be part of the atomic operation.
 <cxx-note>If the atomic operation uses locks, locks acquired by the
 implementation shall be held when any <code>use_count</code> increments are
 performed, and shall not be held when any destruction or deallocation resulting
-from this is performed. </cxx-note> </ins></p>
+from this is performed. </cxx-note> </p>
 
-<p><ins> Compare_exchange operations shall atomically perform a comparison and a
+<p> Compare_exchange operations shall atomically perform a comparison and a
 <code>shared_ptr</code> move or copy operation using the appropriate
 <code>shared_ptr</code> operations, as in <cxx-ref in="cxx"
 to="util.smartptr.shared.atomic"></cxx-ref>. If the <code>desired</code> value
 is passed by rvalue reference then it shall be moved from only if the
-compare_exchange operation returns <code>true</code>. </ins></p>
+compare_exchange operation returns <code>true</code>. </p>
 
-<p><ins> If the compare_exchange operation returns <code>true</code>,
+<p> If the compare_exchange operation returns <code>true</code>,
 <code>expected</code> is not accessed after the atomic update. If it returns
 <code>false</code>, <code>expected</code> is updated with the existing value
 read from the <code>atomic_shared_ptr</code> object in the attempted atomic
 update. The count update corresponding to the write to <code>expected</code> is
 part of the atomic operation. The write to <code>expected</code> itself is not
-required to be part of the atomic operation. </ins></p>
+required to be part of the atomic operation. </p>
 
-<p><ins> If the <code>desired</code> value is passed by lvalue reference then it
-is not accessed after the atomic update step. </ins></p>
+<p> If the <code>desired</code> value is passed by lvalue reference then it
+is not accessed after the atomic update step. </p>
 
-<p><ins> If the <code>desired</code> value is passed by rvalue reference and the
+<p> If the <code>desired</code> value is passed by rvalue reference and the
 compare_exchange operation returns <code>true</code>, then <code>desired</code>
-is moved-from after the atomic update step. </ins></p>
+is moved-from after the atomic update step. </p>
 
 </cxx-section>
 
@@ -125,8 +125,8 @@ namespace std {
     <code>constexpr</code> atomic_shared_ptr() noexcept = default;
     atomic_shared_ptr(shared_ptr&lt;T&gt;) noexcept;
     atomic_shared_ptr(const atomic_shared_ptr&) = delete;
-    <del>atomic_shared_ptr&</del><ins>void</ins> operator=(const atomic_shared_ptr&) = delete;
-    <del>atomic_shared_ptr&</del><ins>void</ins> operator=(shared_ptr&lt;T&gt;) noexcept;
+    void operator=(const atomic_shared_ptr&) = delete;
+    void operator=(shared_ptr&lt;T&gt;) noexcept;
   };
   } // namespace concurrency_v1
   } // namespace experimental
@@ -177,8 +177,8 @@ namespace std {
     <code>constexpr</code> atomic_weak_ptr() noexcept = default;
     atomic_weak_ptr(weak_ptr&lt;T&gt;) noexcept;
     atomic_weak_ptr(const atomic_weak_ptr&) = delete;
-    <del>atomic_shared_ptr&</del><ins>void</ins> operator=(const atomic_weak_ptr&) = delete;
-    <del>atomic_shared_ptr&</del><ins>void</ins> operator=(weak_ptr&lt;T&gt;) noexcept;
+    void operator=(const atomic_weak_ptr&) = delete;
+    void operator=(weak_ptr&lt;T&gt;) noexcept;
   };
   } // namespace concurrency_v1
   } // namespace experimental
@@ -189,23 +189,9 @@ namespace std {
   <cxx-signature><code>constexpr</code> atomic_weak_ptr() noexcept = default;</cxx-signature>
   <cxx-effects>Initializes the atomic object to an empty value.</cxx-effects>
 </cxx-function>
-<p><del>
-When any operation on an <code>atomic_shared_ptr</code> or <code>atomic_weak_ptr</code>
-causes an object to be destroyed or memory to be deallocated, that destruction or deallocation
-shall be sequenced after the changes to the atomic object's state. 
-</del></p>
-<p><del>
-<cxx-Note>
-This prevents potential deadlock if the atomic smart pointer operation is not 
-lock-free, such as by including a spinlock as part of the atomic object's state, 
-and the destruction or the deallocation may attempt to acquire a lock.
-</cxx-Note> 
-</del></p>
-<p>
 <cxx-Note>
 These types replace all known uses of the functions
 in <cxx-ref in="cxx" to="util.smartptr.shared.atomic"></cxx-ref>.
 </cxx-Note>
 </p>
-
-  </cxx-section>
+</cxx-section>
