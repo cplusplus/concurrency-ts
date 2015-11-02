@@ -120,9 +120,7 @@ Each barrier type defines a <em>completion phase</em> as a (possibly empty) set 
 </p>
 <ol>
 <li>
-<del>
-The function blocks.
-</del>
+
 </li>
 <li>
 When all threads in the barrier's set of participating threads are blocked at its synchronization point, one participating thread is unblocked and executes the barrier type's completion phase.
@@ -137,7 +135,7 @@ The expression <code>b.arrive_and_wait()</code> shall be well-formed and have th
 <cxx-function>
   <cxx-signature>void arrive_and_wait();</cxx-signature>
   <cxx-requires>The current thread is a member of the set of participating threads.</cxx-requires>
-  <cxx-effects><ins>Blocks and a</ins><del>A</del>rrives at the barrier&#39;s synchronization point. <cxx-note>It is safe for a thread to call <code>arrive_and_wait()</code> or <code>arrive_and_drop()</code> again immediately. It is not necessary to ensure that all blocked threads have exited <code>arrive_and_wait()</code> before one thread calls it again.</cxx-note></cxx-effects>
+  <cxx-effects>Blocks and arrives at the barrier&#39;s synchronization point. <cxx-note>It is safe for a thread to call <code>arrive_and_wait()</code> or <code>arrive_and_drop()</code> again immediately. It is not necessary to ensure that all blocked threads have exited <code>arrive_and_wait()</code> before one thread calls it again.</cxx-note></cxx-effects>
   <cxx-synchronization>The call to <code>arrive_and_wait()</code> synchronizes with the start of the completion phase.</cxx-synchronization>
   <cxx-throws>Nothing.</cxx-throws>
 </cxx-function>
@@ -149,10 +147,8 @@ The expression <code>b.arrive_and_drop()</code> shall be well-formed and have th
   <cxx-requires>The current thread is a member of the set of participating threads.</cxx-requires>
   <cxx-effects>
 
-    Removes the current thread from the set of participating threads. <del>If all other
-    participating threads are blocked at the synchronization point, the completion
-    phase will start.</del>
-    <ins>Arrives at the barrier's synchronization point.</ins> 
+    Removes the current thread from the set of participating threads. 
+    Arrives at the barrier's synchronization point. 
     It is unspecified whether the function blocks until
     the completion phase has ended. <cxx-note>If the function blocks, the calling
     thread may be chosen to execute the completion phase. </cxx-note>
